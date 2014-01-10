@@ -21,6 +21,11 @@
     "winston": "latest",
     "jade": "latest",
     "marked": "latest",
-    "coffee-script": "latest"
+    "coffee-script": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-banner": "latest"
   }
 }
