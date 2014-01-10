@@ -2769,6 +2769,3 @@ th.hide-for-touch { display: table-cell !important; }
 
 /* line 659, ../js/bower_components/foundation/scss/foundation/components/_visibility.scss */
 .touch th.show-for-touch { display: table-cell !important; }
-
-/* line 1, ../../sass/_rex-site.scss */
-body { background: #eee; }

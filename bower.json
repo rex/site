@@ -15,8 +15,8 @@
   ],
   "dependencies": {
     "prism": "gh-pages",
-    "foundation": "latest",
     "backbone": "latest",
-    "underscore": "latest"
+    "underscore": "latest",
+    "semantic": "latest"
   }
 }

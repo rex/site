@@ -3,6 +3,7 @@ if req.xhr
   block content
 else
   doctype html
+  <!--[if IE 9]<html class="lt-ie10" lang="en"><![endif]] -->
   html(lang="en")
     head
       if uri == '/'
@@ -11,14 +12,119 @@ else
         title="p.rex - " + uri
       else
         title="p.rex"
+
+      //- Meta and Resource Tags
+      meta(charset='utf-8')
+      meta(name='viewport', content='width=device-width, initial-scale=1.0')
       link(rel='stylesheet', href='/css/rex.css', type='text/css')
       link(rel='stylesheet', href='/js/bower_components/prism/themes/prism-twilight.css', type='text/css')
       script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
 
     body
-      div(class='row')
-        div(class='large-12 columns')
-          block content
+      header(style="text-align: center;")
+        h1 pierce moore
 
+        div(class='row')
+          div(class='small-10 medium-6 small-centered columns', style='text-align: center;background: #222;')
+            div(data-magellan-expedition='fixed')
+              dl(class='sub-nav')
+                dd(data-magellan-arrival='github')
+                  a(href='#github') github
+                dd(data-magellan-arrival='portfolio')
+                  a(href='#portfolio') portfolio
+                dd(data-magellan-arrival='music')
+                  a(href='#music') music
+
+        div(class='row')
+          div(class='small-12 columns')
+            a(name='github')
+            h3(data-magellan-destination='github') github
+            div(style='height: 500px;display: block;')
+              &nbsp;
+
+        div(class='row')
+          div(class='small-12 columns')
+            a(name='portfolio')
+            h3(data-magellan-destination='portfolio') portfolio
+            div(style='height: 500px;display: block;')
+              &nbsp;
+
+        div(class='row')
+          div(class='small-12 columns')
+            a(name='music')
+            h3(data-magellan-destination='music') music
+            div(style='height: 500px;display: block;')
+              &nbsp;
+
+
+
+      //- div(class='off-canvas-wrap')
+      //-   div(class='inner-wrap')
+      //-     nav(class='tab-bar')
+      //-       section(class='left-small')
+      //-         a(class='left-off-canvas-toggle menu-icon')
+      //-           span
+      //-       section(class='middle tab-bar-section')
+      //-         h1(class='title') p.rex
+      //-       section(class='right-small')
+      //-         a(class='right-off-canvas-toggle menu-icon')
+      //-           span
+
+      //-     aside(class='left-off-canvas-menu')
+      //-       ul(class='off-canvas-list')
+      //-         li
+      //-           label Title One
+      //-         li
+      //-           a(href='#') Item 1
+      //-         li
+      //-           a(href='#') Item 2
+      //-         li
+      //-           a(href='#') Item 3
+      //-         li
+      //-           a(href='#') Item 4
+      //-         li
+      //-           label Title Two
+      //-         li
+      //-           a(href='#') Item 1
+      //-         li
+      //-           a(href='#') Item 2
+      //-         li
+      //-           a(href='#') Item 3
+      //-         li
+      //-           a(href='#') Item 4
+
+
+      //-     aside(class='right-off-canvas-menu')
+      //-       ul(class='off-canvas-list')
+      //-         li
+      //-           label Title One
+      //-         li
+      //-           a(href='#') Item 1
+      //-         li
+      //-           a(href='#') Item 2
+      //-         li
+      //-           a(href='#') Item 3
+      //-         li
+      //-           a(href='#') Item 4
+      //-         li
+      //-           label Title Two
+      //-         li
+      //-           a(href='#') Item 1
+      //-         li
+      //-           a(href='#') Item 2
+      //-         li
+      //-           a(href='#') Item 3
+      //-         li
+      //-           a(href='#') Item 4
+
+      //-     section(class='main-section')
+      //-       div(class='row')
+      //-         div(class='large-12 columns')
+      //-           block content
+
+      //-     a(class='exit-off-canvas')
 
       script(src='/js/rex.min.js')
+
+      script
+        $(document).foundation()
