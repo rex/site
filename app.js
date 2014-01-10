@@ -13,6 +13,9 @@ app = express();
 
 app.configure(function() {
   app.set('port', process.env.VCAP_APP_PORT || 3000);
+  app.engine('jade', require('jade').__express);
+  app.set('view engine', 'jade');
+  app.set('views', "" + (process.cwd()) + "/views");
   app.use(express["static"]("" + __dirname + "/public"));
   app.use(express.logger('short'));
   app.use(express.cookieParser());

@@ -5,6 +5,9 @@ logger = require('../lib/logger');
 
 module.exports = function(app) {
   return app.get('/', function(req, res) {
-    return res.send("Hello and welcome to this fully functioning site!");
+    return res.render('index', {
+      uri: req.originalUrl,
+      time: new Date().toLocaleString()
+    });
   });
 };

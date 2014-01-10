@@ -1,0 +1,13 @@
+doctype html
+html(lang="en")
+  head
+    if uri == '/'
+      title="p.rex"
+    else if uri
+      title="p.rex - " + uri
+    else
+      title="p.rex"
+
+  body
+    h1 Welcome to my domain
+    p Time: #{time}
