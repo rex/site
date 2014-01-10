@@ -19,6 +19,8 @@
     "express": "latest",
     "underscore": "latest",
     "winston": "latest",
-    "jade": "latest"
+    "jade": "latest",
+    "marked": "latest",
+    "coffee-script": "latest",
   }
 }

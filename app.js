@@ -21,6 +21,13 @@ app.configure(function() {
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(function(req, res, next) {
+    res.locals.req = {
+      xhr: req.xhr,
+      path: req.originalUrl
+    };
+    return next();
+  });
   return app.use(app.router);
 });
 

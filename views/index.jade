@@ -1,13 +1,27 @@
-doctype html
-html(lang="en")
-  head
-    if uri == '/'
-      title="p.rex"
-    else if uri
-      title="p.rex - " + uri
-    else
-      title="p.rex"
+extends layout
+block content
+  p This is inside a content block!
+  h1 Welcome to my domain
+  p Time: <code>#{time}</code>
 
-  body
-    h1 Welcome to my domain
-    p Time: #{time}
+  :markdown
+    # This is a markdown header!
+    * This is a ul
+      * This is an li
+      * This is another li
+
+  pre(class='line-numbers')
+    code(class='language-javascript')
+      :coffee
+        console.log "The time is #{time}"
+
+  pre
+    code(class='language-coffeescript').
+      unless somethingBroken then proceed() else stopAndFixIt()
+
+  pre(class='line-numbers')
+    code(class='language-javascript').
+      var blah = []
+      blah.forEach(function(item) {
+        item.play()
+      })

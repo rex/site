@@ -16,6 +16,14 @@ app.configure ->
   app.use express.cookieParser()
   app.use express.bodyParser()
   app.use express.methodOverride()
+
+  # Create locals based on request data
+  app.use (req, res, next) ->
+    res.locals.req =
+      xhr: req.xhr
+      path: req.originalUrl
+    next()
+
   app.use app.router
 
 app.configure 'development', ->

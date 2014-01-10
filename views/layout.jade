@@ -1,0 +1,24 @@
+//- http://codetunnel.com/blog/post/how-to-toggle-jade-layout-in-express-for-nodejs
+if req.xhr
+  block content
+else
+  doctype html
+  html(lang="en")
+    head
+      if uri == '/'
+        title="p.rex"
+      else if uri
+        title="p.rex - " + uri
+      else
+        title="p.rex"
+      link(rel='stylesheet', href='/bower_components/prism/themes/prism-twilight.css', type='text/css')
+      link(rel='stylesheet', href='/bower_components/prism/plugins/line-numbers/prism-line-numbers.css', type='text/css')
+
+    body
+      p Rendering content block!
+      block content
+      p Content block rendered!
+
+      script(src='/bower_components/prism/prism.js')
+      script(src='/bower_components/prism/components/prism-coffeescript.js')
+      script(src='/bower_components/prism/plugins/line-numbers/prism-line-numbers.js')
