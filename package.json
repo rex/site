@@ -18,6 +18,7 @@
   "dependencies": {
     "express": "latest",
     "underscore": "latest",
-    "winston": "latest"
+    "winston": "latest",
+    "jade": "latest"
   }
 }

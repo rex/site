@@ -13,7 +13,8 @@ app = express();
 
 app.configure(function() {
   app.set('port', process.env.VCAP_APP_PORT || 3000);
-  app.use(express.logger('tiny'));
+  app.use(express["static"]("" + __dirname + "/public"));
+  app.use(express.logger('short'));
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());

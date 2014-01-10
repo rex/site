@@ -4,11 +4,7 @@ var logger;
 logger = require('../lib/logger');
 
 module.exports = function(app) {
-  app.get('/', function(req, res) {
+  return app.get('/', function(req, res) {
     return res.send("Hello and welcome to this fully functioning site!");
-  });
-  return app.get('/*', function(req, res) {
-    logger("Redirecting: " + req.originalUrl);
-    return res.redirect(301, '/');
   });
 };
