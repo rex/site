@@ -21,6 +21,6 @@
     "winston": "latest",
     "jade": "latest",
     "marked": "latest",
-    "coffee-script": "latest",
+    "coffee-script": "latest"
   }
 }
