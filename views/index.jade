@@ -1,6 +1,5 @@
 extends layout
 block content
-  p This is inside a content block!
   h1 Welcome to my domain
   p Time: <code>#{time}</code>
 
@@ -14,7 +13,6 @@ block content
     code(class='language-javascript')
       :coffee
         console.log "The time is #{time}"
-
   pre
     code(class='language-coffeescript').
       unless somethingBroken then proceed() else stopAndFixIt()

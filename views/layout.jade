@@ -11,11 +11,14 @@ else
         title="p.rex - " + uri
       else
         title="p.rex"
-      link(rel='stylesheet', href='/bower_components/prism/themes/prism-twilight.css', type='text/css')
-      link(rel='stylesheet', href='/bower_components/prism/plugins/line-numbers/prism-line-numbers.css', type='text/css')
-      script(src='/js/rex.min.js')
+      link(rel='stylesheet', href='/css/rex.css', type='text/css')
+      link(rel='stylesheet', href='/js/bower_components/prism/themes/prism-twilight.css', type='text/css')
+      script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
 
     body
-      p Rendering content block!
-      block content
-      p Content block rendered!
+      div(class='row')
+        div(class='large-12 columns')
+          block content
+
+
+      script(src='/js/rex.min.js')

@@ -38,14 +38,8 @@ module.exports = (grunt) ->
           "#{BOWER}/foundation/js/foundation.min.js"
           "#{BOWER}/underscore/underscore-min.js"
           "#{BOWER}/backbone/backbone-min.js"
-          "#{BOWER}/prism/components/prism-coffeescript.min.js"
-          "#{BOWER}/prism/components/prism-css.min.js"
-          "#{BOWER}/prism/components/prism-php.min.js"
-          "#{BOWER}/prism/components/prism-ruby.min.js"
-          "#{BOWER}/prism/components/prism-scss.min.js"
-          "#{BOWER}/prism/components/prism-sql.min.js"
-          "#{BOWER}/prism/components/prism-bash.min.js"
-          "#{DIST}/lib/*.min.js"
+          "#{DIST}/lib/prism/prism.min.js"
+          "#{DIST}/lib/**/*.min.js"
           "#{DIST}/main.min.js"
           "#{DIST}/**/*.min.js"
         ]
@@ -58,9 +52,16 @@ module.exports = (grunt) ->
       lib:
         files: [{
           expand: true
-          cwd: JS
+          cwd: BOWER
           src: [
-            "#{BOWER}/prism/prism.js"
+            "prism/prism.js"
+            "prism/components/prism-coffeescript.js"
+            "prism/components/prism-css.js"
+            "prism/components/prism-php.js"
+            "prism/components/prism-ruby.js"
+            "prism/components/prism-scss.js"
+            "prism/components/prism-sql.js"
+            "prism/components/prism-bash.js"
           ]
           dest: "#{DIST}/lib"
           ext: '.min.js'
