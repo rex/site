@@ -1,0 +1,16 @@
+{
+  "name": "site",
+  "version": "0.0.1",
+  "homepage": "http://prex.io",
+  "authors": [
+    "Pierce Moore <me@prex.io>"
+  ],
+  "description": "Nerdy home page of Pierce Moore",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

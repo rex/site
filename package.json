@@ -1,0 +1,23 @@
+{
+  "name": "site",
+  "version": "0.0.1",
+  "description": "Nerdy home page of Pierce Moore",
+  "main": "app.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rex/site.git"
+  },
+  "author": "Pierce Moore <me@prex.io>",
+  "bugs": {
+    "url": "https://github.com/rex/site/issues"
+  },
+  "homepage": "http://prex.io",
+  "dependencies": {
+    "express": "latest",
+    "underscore": "latest",
+    "winston": "latest"
+  }
+}
