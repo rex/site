@@ -33,6 +33,7 @@
     "grunt-express-server": "latest",
     "grunt-contrib-copy": "latest",
     "grunt-banner": "latest",
-    "grunt-bump": "latest"
+    "grunt-bump": "latest",
+    "octonode": "latest"
   }
 }

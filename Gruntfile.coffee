@@ -1,5 +1,18 @@
 # Easy Config variables
-prism_theme = "tomorrow"
+
+###
+  Pick your theme for the Prism syntax highlighter
+  Available themes:
+    coy, dark, funky, okaidia, tomorrow, twilight, or default
+###
+prism_theme = "default"
+get_prism_theme = ->
+  str = 'prism'
+  if prism_theme != 'default'
+    str += "-#{prism_theme}"
+
+  console.log "Prism Theme File: #{str}.css"
+  str
 
 # Generic processing function
 process = (src, path) ->
@@ -66,7 +79,6 @@ module.exports = (grunt) ->
         process: process
       app:
         src: [
-          "#{BUILD}/lib/semantic/**/*.js"
           "#{BUILD}/lib/prism/prism.min.js"
           "#{BUILD}/lib/prism/**/*.js"
           "#{BUILD}/app/rex.min.js"
@@ -97,39 +109,12 @@ module.exports = (grunt) ->
           "#{BOWER}/prism/components/prism-bash.min.js"
         ]
         dest: 'build/lib/prism'
-      semantic:
-        expand: true
-        flatten: true
-        filter: 'isFile'
-        cwd: "#{BOWER}/semantic/build/minified/modules/"
-        src: [
-          'behavior/api.min.js'
-          'behavior/colorize.min.js'
-          # 'behavior/form.min.js'
-          # 'behavior/state.min.js'
-          # 'accordion.min.js'
-          # 'chatroom.min.js'
-          # 'checkbox.min.js'
-          # 'dimmer.min.js'
-          # 'dropdown.min.js'
-          # 'modal.min.js'
-          # 'nag.min.js'
-          # 'popup.min.js'
-          # 'rating.min.js'
-          # 'search.min.js'
-          # 'shape.min.js'
-          # 'sidebar.min.js'
-          # 'tab.min.js'
-          # 'transition.min.js'
-          # 'video.min.js'
-        ]
-        dest: 'build/lib/semantic'
       css:
         expand: true
         flatten: true
         filter: 'isFile'
         src: [
-          "#{BOWER}/prism/themes/prism-#{prism_theme}.css"
+          "#{BOWER}/prism/themes/#{get_prism_theme()}.css"
         ]
         dest: 'build/css'
       fonts:

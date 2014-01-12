@@ -15,9 +15,8 @@
   ],
   "dependencies": {
     "prism": "gh-pages",
-    "backbone": "latest",
-    "underscore": "latest",
-    "semantic": "latest",
-    "mrmrs-colors": "latest"
+    "mrmrs-colors": "latest",
+    "normalize-css": "latest",
+    "jquery-pjax": "latest"
   }
 }

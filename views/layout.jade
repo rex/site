@@ -16,46 +16,29 @@ else
       //- Meta and Resource Tags
       meta(charset='utf-8')
       meta(name='viewport', content='width=device-width, initial-scale=1.0')
+      link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/normalize/2.1.3/normalize.min.css', type='text/css')
+      link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Open+Sans:300|Montserrat:400,700', type='text/css')
+      link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.11.0/css/semantic.min.css', type='text/css')
       link(rel='stylesheet', href='/css/rex.min.css', type='text/css')
+    body
+      header
+        h1(class='centered logo') PIERCE MOORE
+
+      div(class='ui grid')
+        div(class='row')
+          div(class='ui four wide column')
+            include sidebar
+          div(class='ui twelve wide column')
+            div(class='ui segment')
+              block content
+
+              div(class='ui dimmer')
+                div(class='ui loader')
+
+      script(src='//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js')
       script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
       script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
       script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js')
-    body
-      header(style="text-align: center;")
-        h1 pierce moore
-
-        div(class='row')
-          div(class='small-10 medium-6 small-centered columns', style='text-align: center;background: #222;')
-            div(data-magellan-expedition='fixed')
-              dl(class='sub-nav')
-                dd(data-magellan-arrival='github')
-                  a(href='#github') github
-                dd(data-magellan-arrival='portfolio')
-                  a(href='#portfolio') portfolio
-                dd(data-magellan-arrival='music')
-                  a(href='#music') music
-
-        div(class='row')
-          div(class='small-12 columns')
-            a(name='github')
-            h3(data-magellan-destination='github') github
-            div(style='height: 500px;display: block;')
-              &nbsp;
-
-        div(class='row')
-          div(class='small-12 columns')
-            a(name='portfolio')
-            h3(data-magellan-destination='portfolio') portfolio
-            div(style='height: 500px;display: block;')
-              &nbsp;
-
-        div(class='row')
-          div(class='small-12 columns')
-            a(name='music')
-            h3(data-magellan-destination='music') music
-            div(style='height: 500px;display: block;')
-              &nbsp;
-
-
-
+      script(src='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.11.0/javascript/semantic.min.js')
+      script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js')
       script(src='/js/rex.min.js')
