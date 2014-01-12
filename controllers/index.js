@@ -20,6 +20,9 @@ module.exports = function(app) {
       }
     });
   });
+  app.get('/env', function(req, res) {
+    return res.json(process.env);
+  });
   app.get('/github', function(req, res) {
     return github.repos(function(err, body) {
       return res.json({

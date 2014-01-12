@@ -13,6 +13,8 @@ module.exports = (app) ->
           data: data
           pagination: pagination
     })
+  app.get '/env', (req, res) ->
+    res.json process.env
 
   app.get '/github', (req, res) ->
     github.repos (err, body) ->

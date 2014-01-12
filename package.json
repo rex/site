@@ -38,6 +38,7 @@
     "octonode": "latest",
     "instagram-node-lib": "latest",
     "ntwitter": "latest",
-    "request": "latest"
+    "request": "latest",
+    "mongoose": "latest"
   }
 }

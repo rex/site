@@ -19,15 +19,35 @@ mixin github_item(item)
     .content
       .date
         | #{_.age(item.created_at)}
-
+      //- EVENTS TO IMPLEMENT:
+      //- CommitCommentEvent
+      //- DeleteEvent
+      //- DownloadEvent
+      //- FollowEvent
+      //- ForkEvent
+      //- ForkApplyEvent
+      //- GistEvent
+      //- GollumEvent
+      //- IssueCommentEvent
+      //- IssuesEvent
+      //- MemberEvent
+      //- PublicEvent
+      //- PullRequestEvent
+      //- PullRequestReviewCommentEvent
+      //- ReleaseEvent
+      //- StatusEvent
+      //- TeamAddEvent
+      //- Starred a Repository
       if item.type == "WatchEvent"
         .summary
           | #{me} starred a repository:
           a(href='https://github.com/#{item.repo.name}') #{item.repo.name}
+      //- Created a new Repository
       else if item.type == "CreateEvent"
         .summary
           | #{me} created a repository:
           a(href='https://github.com/#{item.repo.name}') #{item.repo.name}
+      //- Pushed commits to a Repository
       else if item.type == "PushEvent"
         .summary
           | #{me} pushed #{item.payload.commits.length} commits to GitHub
