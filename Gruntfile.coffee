@@ -25,7 +25,7 @@ module.exports = (grunt) ->
         tagName: 'v%VERSION%'
         tagMessage: 'Version %VERSION%'
         push: true
-        pushTo: 'upstream'
+        pushTo: 'origin'
     clean:
       public: [
         'public/'
@@ -249,8 +249,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-lesslint'
   grunt.loadNpmTasks 'grunt-express-server'
   grunt.loadNpmTasks 'grunt-contrib-copy'
+  grunt.loadNpmTasks 'grunt-bump'
 
-  grunt.registerTask 'release', ['app']
-  grunt.registerTask 'build', ['app']
+  grunt.registerTask 'major', ['app', 'bump:major']
+  grunt.registerTask 'release', ['app', 'bump:minor']
+  grunt.registerTask 'patch', ['app', 'bump:patch']
   grunt.registerTask 'app', ['clean:public', 'coffee', 'less:development', 'copy', 'uglify', 'concat', 'cssmin', 'clean:build'] #
   grunt.registerTask 'default', ['app', 'express:dev','watch']
