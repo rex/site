@@ -33,7 +33,7 @@ module.exports = function(app) {
   });
   app.get('/code', function(req, res) {
     return github.repos(function(err, body) {
-      return res.render('code', {
+      return res.render('code/repos', {
         repos: body,
         uri: req.originalUrl
       });
