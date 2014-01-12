@@ -22,6 +22,7 @@
     "jade": "latest",
     "marked": "latest",
     "coffee-script": "latest",
+    "moment": "latest",
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-watch": "latest",
@@ -34,6 +35,9 @@
     "grunt-contrib-copy": "latest",
     "grunt-banner": "latest",
     "grunt-bump": "latest",
-    "octonode": "latest"
+    "octonode": "latest",
+    "instagram-node-lib": "latest",
+    "ntwitter": "latest",
+    "request": "latest"
   }
 }

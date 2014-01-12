@@ -8,7 +8,7 @@ app = express()
 app.configure ->
   app.set 'port', process.env.VCAP_APP_PORT or 3000
   app.engine 'jade', require('jade').__express
-  # app.enable 'view cache'
+  app.disable 'view cache'
   app.set 'view engine', 'jade'
   app.set 'views', "#{process.cwd()}/views"
   app.use express.favicon "#{__dirname}/public/images/favicon.ico"
@@ -23,6 +23,8 @@ app.configure ->
     res.locals.req =
       xhr: req.xhr
       path: req.originalUrl
+    res.locals._ = _
+    res.locals.me = "Pierce"
     next()
 
   app.use app.router

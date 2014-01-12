@@ -16,7 +16,6 @@
   "dependencies": {
     "prism": "gh-pages",
     "mrmrs-colors": "latest",
-    "normalize-css": "latest",
     "jquery-pjax": "latest"
   }
 }

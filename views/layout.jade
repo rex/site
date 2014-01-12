@@ -25,15 +25,20 @@ else
         h1(class='centered logo') PIERCE MOORE
 
       div(class='ui grid')
-        div(class='row')
-          div(class='ui four wide column')
-            include sidebar
-          div(class='ui twelve wide column')
+        div(class='three wide column')
+        div(class='three wide column')
+          include sidebar
+        div(class='seven wide column')
+          if isBlogPost
             div(class='ui segment')
               block content
+          else
+            block content
 
-              div(class='ui dimmer')
-                div(class='ui loader')
+          div(class='ui dimmer')
+            div(class='ui loader')
+        div(class='three wide column')
+
 
       script(src='//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js')
       script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')

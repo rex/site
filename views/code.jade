@@ -1,0 +1,15 @@
+extends layout
+block content
+
+  .ui.small.feed.segment
+    .header
+      h3 MY GITHUB REPOSITORIES
+    each repo in repos
+      .event
+        .label
+          .ui.blue.label #{repo.stargazers_count}
+          //- i.circular.github.icon
+        .content
+          .date #{_.age(repo.created_at)}
+          .summary #{repo.name}
+          .extra.text #{repo.description}

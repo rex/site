@@ -1,25 +1,47 @@
+mixin instagram_item(item)
+  .event
+    .label
+      i.circular.instagram.icon
+    .content
+      .date
+        | #{_.age(parseInt(item.date) * 1000 )}
+      .summary
+        | #{me} uploaded a photo to Instagram
+      .extra.text
+        | #{item.caption}
+      .extra.images
+        img(src=item.image)
+
+mixin github_item(item)
+  .event
+    .label
+      i.circular.github.icon
+    .content
+      .date
+        | #{_.age(item.created_at)}
+
+      if item.type == "WatchEvent"
+        .summary
+          | #{me} starred a repository:
+          a(href='https://github.com/#{item.repo.name}') #{item.repo.name}
+      else if item.type == "CreateEvent"
+        .summary
+          | #{me} created a repository:
+          a(href='https://github.com/#{item.repo.name}') #{item.repo.name}
+      else if item.type == "PushEvent"
+        .summary
+          | #{me} pushed #{item.payload.commits.length} commits to GitHub
+        each commit in item.payload.commits
+          .extra text
+            a(href='#{commit.url}') #{_.sha_stub(commit.sha)}
+            | - #{commit.message}
+
 extends layout
 block content
-  h1 Welcome to my domain
-  p Time: <code>#{time}</code>
 
-  :markdown
-    # This is a markdown header!
-    * This is a ul
-      * This is an li
-      * This is another li
+  .ui.small.attached.feed.segment
+    each feed_item in feed
+      +github_item(feed_item)
 
-  pre(class='line-numbers')
-    code(class='language-javascript')
-      :coffee
-        console.log "The time is #{time}"
-  pre
-    code(class='language-coffeescript').
-      unless somethingBroken then proceed() else stopAndFixIt()
-
-  pre(class='line-numbers')
-    code(class='language-javascript').
-      var blah = []
-      blah.forEach(function(item) {
-        item.play()
-      })
+  .ui.bottom.attached.center.aligned.segment
+    a(href='#') Get More Posts

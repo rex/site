@@ -57,8 +57,6 @@ module.exports = (grunt) ->
           src: [
             '**/*.coffee'
             '!public/**/*.coffee'
-            "!#{BOWER}/**"
-            "!node_modules/**"
           ]
           dest: './'
           ext: '.js'
@@ -218,8 +216,7 @@ module.exports = (grunt) ->
         tasks: ['less:development', 'copy:css', 'cssmin']
       coffee:
         files: [
-          "#{JS}/**/*.js"
-          "!#{JS}/rex.min.js"
+          "coffee/**/*.coffee"
         ]
         tasks: ['app']
 
