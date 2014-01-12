@@ -11,6 +11,7 @@ app.configure ->
   # app.enable 'view cache'
   app.set 'view engine', 'jade'
   app.set 'views', "#{process.cwd()}/views"
+  app.use express.favicon "#{__dirname}/public/images/favicon.ico"
   app.use express.static "#{__dirname}/public"
   app.use express.logger('short')
   app.use express.cookieParser()

@@ -3,4 +3,5 @@ bower_components/
 .DS_Store
 *.log
 .sass-cache/
-public/js/dist/
+public/
+build/

@@ -17,6 +17,7 @@
     "prism": "gh-pages",
     "backbone": "latest",
     "underscore": "latest",
-    "semantic": "latest"
+    "semantic": "latest",
+    "mrmrs-colors": "latest"
   }
 }

@@ -16,10 +16,10 @@ else
       //- Meta and Resource Tags
       meta(charset='utf-8')
       meta(name='viewport', content='width=device-width, initial-scale=1.0')
-      link(rel='stylesheet', href='/css/rex.css', type='text/css')
-      link(rel='stylesheet', href='/js/bower_components/prism/themes/prism-twilight.css', type='text/css')
+      link(rel='stylesheet', href='/css/rex.min.css', type='text/css')
       script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-
+      script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
+      script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js')
     body
       header(style="text-align: center;")
         h1 pierce moore
@@ -58,73 +58,4 @@ else
 
 
 
-      //- div(class='off-canvas-wrap')
-      //-   div(class='inner-wrap')
-      //-     nav(class='tab-bar')
-      //-       section(class='left-small')
-      //-         a(class='left-off-canvas-toggle menu-icon')
-      //-           span
-      //-       section(class='middle tab-bar-section')
-      //-         h1(class='title') p.rex
-      //-       section(class='right-small')
-      //-         a(class='right-off-canvas-toggle menu-icon')
-      //-           span
-
-      //-     aside(class='left-off-canvas-menu')
-      //-       ul(class='off-canvas-list')
-      //-         li
-      //-           label Title One
-      //-         li
-      //-           a(href='#') Item 1
-      //-         li
-      //-           a(href='#') Item 2
-      //-         li
-      //-           a(href='#') Item 3
-      //-         li
-      //-           a(href='#') Item 4
-      //-         li
-      //-           label Title Two
-      //-         li
-      //-           a(href='#') Item 1
-      //-         li
-      //-           a(href='#') Item 2
-      //-         li
-      //-           a(href='#') Item 3
-      //-         li
-      //-           a(href='#') Item 4
-
-
-      //-     aside(class='right-off-canvas-menu')
-      //-       ul(class='off-canvas-list')
-      //-         li
-      //-           label Title One
-      //-         li
-      //-           a(href='#') Item 1
-      //-         li
-      //-           a(href='#') Item 2
-      //-         li
-      //-           a(href='#') Item 3
-      //-         li
-      //-           a(href='#') Item 4
-      //-         li
-      //-           label Title Two
-      //-         li
-      //-           a(href='#') Item 1
-      //-         li
-      //-           a(href='#') Item 2
-      //-         li
-      //-           a(href='#') Item 3
-      //-         li
-      //-           a(href='#') Item 4
-
-      //-     section(class='main-section')
-      //-       div(class='row')
-      //-         div(class='large-12 columns')
-      //-           block content
-
-      //-     a(class='exit-off-canvas')
-
       script(src='/js/rex.min.js')
-
-      script
-        $(document).foundation()
