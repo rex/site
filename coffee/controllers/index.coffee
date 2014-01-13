@@ -4,6 +4,12 @@ github = require '../lib/github'
 
 module.exports = (app) ->
   require('./webhooks') app
+  require('./admin') app
+  require('./bookmarks') app
+  require('./code') app
+  require('./portfolio') app
+  require('./resume') app
+  require('./tools') app
 
   app.get '/instagram', (req, res) ->
     instagram.users.info({
