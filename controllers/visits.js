@@ -9,8 +9,7 @@ module.exports = function(app) {
     return Visit.find().sort({
       timestamp: -1
     }).exec(function(err, recent_visits) {
-      return res.json({
-        err: err,
+      return res.render('visits/index', {
         visits: recent_visits
       });
     });

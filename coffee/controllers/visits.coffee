@@ -8,6 +8,5 @@ module.exports = (app) ->
       .sort
         timestamp: -1
       .exec (err, recent_visits) ->
-        res.json
-          err: err
+        res.render 'visits/index',
           visits: recent_visits

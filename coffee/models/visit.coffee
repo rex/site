@@ -25,15 +25,15 @@ VisitSchema = new Schema
   subdomains:
     type: Array
     default: []
-  originalUrl:
+  original_url:
     type: String
     default: ''
   protocol:
     type: String
     default: 'http'
-  acceptedLanguages:
+  accepted_languages:
     type: Array
-  acceptedCharsets:
+  accepted_charsets:
     type: Array
   params:
     type: Array
@@ -43,11 +43,12 @@ VisitSchema = new Schema
     type: Object
   pjax:
     type: Boolean
-  contentType:
+  content_type:
     type: String
+  browser_info:
+    type: Object
 
-VisitSchema.methods.createFromRequest = (req) ->
-  logger "Logging visit from #{req.ip}..."
+VisitSchema.methods.createFromRequest = (req, res, done) ->
   self = this
 
   this.set 'hr_timestamp', _.pretty_utc_date()
@@ -66,6 +67,12 @@ VisitSchema.methods.createFromRequest = (req) ->
   this.set 'content_type', req.get 'content-type'
 
   this.save (err) ->
-    unless err then logger "Visit ##{self._id} saved!" else logger.error "Visit unable to be saved :("
+    if err
+      logger.error "Error saving visit:", err
+    else
+      req.visit_id = self._id
+      res.locals.visit_id = self._id
+
+    done()
 
 module.exports = VisitSchema

@@ -36,7 +36,7 @@ VisitSchema = new Schema({
     type: Array,
     "default": []
   },
-  originalUrl: {
+  original_url: {
     type: String,
     "default": ''
   },
@@ -44,10 +44,10 @@ VisitSchema = new Schema({
     type: String,
     "default": 'http'
   },
-  acceptedLanguages: {
+  accepted_languages: {
     type: Array
   },
-  acceptedCharsets: {
+  accepted_charsets: {
     type: Array
   },
   params: {
@@ -62,14 +62,16 @@ VisitSchema = new Schema({
   pjax: {
     type: Boolean
   },
-  contentType: {
+  content_type: {
     type: String
+  },
+  browser_info: {
+    type: Object
   }
 });
 
-VisitSchema.methods.createFromRequest = function(req) {
+VisitSchema.methods.createFromRequest = function(req, res, done) {
   var self;
-  logger("Logging visit from " + req.ip + "...");
   self = this;
   this.set('hr_timestamp', _.pretty_utc_date());
   this.set('ip', req.ip);
@@ -86,11 +88,13 @@ VisitSchema.methods.createFromRequest = function(req) {
   this.set('pjax', req.headers['X-PJAX'] != null ? true : false);
   this.set('content_type', req.get('content-type'));
   return this.save(function(err) {
-    if (!err) {
-      return logger("Visit #" + self._id + " saved!");
+    if (err) {
+      logger.error("Error saving visit:", err);
     } else {
-      return logger.error("Visit unable to be saved :(");
+      req.visit_id = self._id;
+      res.locals.visit_id = self._id;
     }
+    return done();
   });
 };
 

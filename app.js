@@ -35,8 +35,7 @@ app.configure(function() {
   app.use(function(req, res, next) {
     var visit;
     visit = new Visit;
-    visit.createFromRequest(req);
-    return next();
+    return visit.createFromRequest(req, res, next);
   });
   app.use(function(req, res, next) {
     req.isPJAX = req.headers['X-PJAX'] != null ? true : false;

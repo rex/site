@@ -1,0 +1,24 @@
+extends ../layout
+block content
+  h3 Visit Log
+
+  table.ui.table.segment
+    thead
+      tr
+        th Time
+        th IP Address
+        th URL
+        th Secure?
+        th AJAX?
+        th PJAX?
+    tbody
+      each visit in visits
+        tr
+          td #{_.age(visit.timestamp)}
+          td #{visit.ip}
+          td #{visit.original_url}
+          td #{visit.protocol}
+          td #{visit.xhr}
+          td #{visit.pjax}
+
+  strong Visit ID #{visit_id}

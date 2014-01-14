@@ -30,9 +30,7 @@ app.configure ->
   # Use the Visit Model's middleware
   app.use (req, res, next) ->
     visit = new Visit
-    visit.createFromRequest req
-
-    next()
+    visit.createFromRequest req, res, next
 
   # Create locals based on request data
   app.use (req, res, next) ->
