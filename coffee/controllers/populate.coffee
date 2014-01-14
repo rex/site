@@ -20,6 +20,15 @@ module.exports = (app) ->
       jobs: (complete) ->
         Models.job.find {}, (err, jobs) ->
           complete err, jobs
+      activity: (complete) ->
+        Models.activity.find {}, (err, activities) ->
+          complete err, activities
+      posts: (complete) ->
+        Models.post.find {}, (err, posts) ->
+          complete err, posts
+      snippets: (complete) ->
+        Models.snippet.find {}, (err, snippets) ->
+          complete err, snippets
     , (err, results) ->
       res.json results
 

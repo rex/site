@@ -28,6 +28,21 @@ module.exports = function(app) {
         return Models.job.find({}, function(err, jobs) {
           return complete(err, jobs);
         });
+      },
+      activity: function(complete) {
+        return Models.activity.find({}, function(err, activities) {
+          return complete(err, activities);
+        });
+      },
+      posts: function(complete) {
+        return Models.post.find({}, function(err, posts) {
+          return complete(err, posts);
+        });
+      },
+      snippets: function(complete) {
+        return Models.snippet.find({}, function(err, snippets) {
+          return complete(err, snippets);
+        });
       }
     }, function(err, results) {
       return res.json(results);

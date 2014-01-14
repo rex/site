@@ -35,8 +35,13 @@ app.configure(function() {
   app.use(express.methodOverride());
   app.use(function(req, res, next) {
     var visit;
-    visit = new Visit;
-    return visit.createFromRequest(req, res, next);
+    if (_.contains(['/webhooks/github', '/webhooks/instagram', '/webhooks/twitter'], req.path)) {
+      logger("Skipping webhook request");
+      return next();
+    } else {
+      visit = new Visit;
+      return visit.createFromRequest(req, res, next);
+    }
   });
   app.use(function(req, res, next) {
     req.isPJAX = req.headers['X-PJAX'] != null ? true : false;

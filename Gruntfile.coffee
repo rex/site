@@ -50,6 +50,11 @@ module.exports = (grunt) ->
       lib: [
         "#{BUILD}/**"
       ]
+      app: [
+        "controllers/**"
+        "lib/**"
+        "models/**"
+      ]
     coffee:
       app:
         options:

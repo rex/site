@@ -1,4 +1,6 @@
-var ActivitySchema, Schema, mongoose;
+var ActivitySchema, Schema, logger, mongoose;
+
+logger = require('../lib/logger');
 
 mongoose = require('mongoose');
 
@@ -29,5 +31,14 @@ ActivitySchema = new Schema({
     "default": true
   }
 });
+
+ActivitySchema.methods.fromGithubWebhook = function(payload, callback) {
+  this.set('service', 'github');
+  this.set('type', 'post-receive-hook');
+  this.set('params', payload);
+  return this.save(function(err) {
+    return callback(err);
+  });
+};
 
 module.exports = ActivitySchema;

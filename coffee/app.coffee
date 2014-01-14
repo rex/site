@@ -30,8 +30,12 @@ app.configure ->
 
   # Use the Visit Model's middleware
   app.use (req, res, next) ->
-    visit = new Visit
-    visit.createFromRequest req, res, next
+    if _.contains ['/webhooks/github', '/webhooks/instagram', '/webhooks/twitter'], req.path
+      logger "Skipping webhook request"
+      next()
+    else
+      visit = new Visit
+      visit.createFromRequest req, res, next
 
   # Create locals based on request data
   app.use (req, res, next) ->
