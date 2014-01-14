@@ -7,8 +7,8 @@ block content
       .event
         .label
           .ui.blue.label #{repo.stargazers_count}
-          //- i.circular.github.icon
         .content
-          .date #{_.age(repo.created_at)}
-          .summary #{repo.name}
+          .date Created #{_.age(repo.created_at)}
+          .summary
+            a(href='#{repo.html_url}', target='_blank') #{repo.name}
           .extra.text #{repo.description}

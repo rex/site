@@ -3,5 +3,8 @@ bower_components/
 .DS_Store
 *.log
 .sass-cache/
-public/
 build/
+public/js/
+public/css/
+public/images/
+public/fonts/
