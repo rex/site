@@ -16,6 +16,7 @@
   },
   "homepage": "http://prex.io",
   "dependencies": {
+    "async": "latest",
     "express": "latest",
     "underscore": "latest",
     "winston": "latest",

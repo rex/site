@@ -62,6 +62,9 @@ VisitSchema = new Schema({
   content_type: {
     type: String
   },
+  referer: {
+    type: String
+  },
   browser_info: {
     type: Object
   }
@@ -83,6 +86,7 @@ VisitSchema.methods.createFromRequest = function(req, res, done) {
   this.set('query', req.query);
   this.set('pjax', req.headers['X-PJAX'] != null ? true : false);
   this.set('content_type', req.get('content-type'));
+  this.set('referer', req.headers['referer']);
   return this.save(function(err) {
     if (err) {
       logger.error("Error saving visit:", err);

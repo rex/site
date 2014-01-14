@@ -43,6 +43,8 @@ VisitSchema = new Schema
     type: Boolean
   content_type:
     type: String
+  referer:
+    type: String
   browser_info:
     type: Object
 
@@ -62,6 +64,7 @@ VisitSchema.methods.createFromRequest = (req, res, done) ->
   this.set 'query', req.query
   this.set 'pjax', if req.headers['X-PJAX']? then true else false
   this.set 'content_type', req.get 'content-type'
+  this.set 'referer', req.headers['referer']
 
   this.save (err) ->
     if err

@@ -1,3 +1,18 @@
 extends ../layout
 block content
-  h3 Resume
+  h1.huge Resume
+  each job in jobs
+    .ui.horizontal.icon.divider
+      i.circular.code.icon
+
+    .ui.raised.left.aligned.feed.segment
+      h3.ui.left.floated.header #{job.title} - #{job.company}
+      h4.ui.right.floated.header #{_.age(job.date_started)} - #{_.age(job.date_ended)}
+      .event
+        .label
+          i.circular.text.file.icon
+        .content
+          .summary #{job.summary}
+
+          each task in job.tasks
+            .extra.text #{task}

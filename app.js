@@ -22,6 +22,7 @@ app.configure(function() {
   app.set('port', process.env.VCAP_APP_PORT || 3000);
   app.set('host', process.env.VCAP_APP_HOST || 'localhost');
   app.engine('jade', require('jade').__express);
+  app.enable('trust proxy');
   app.disable('view cache');
   app.set('view engine', 'jade');
   app.set('views', "" + (process.cwd()) + "/views");

@@ -18,6 +18,7 @@ module.exports = function(app) {
   require('./resume')(app);
   require('./tools')(app);
   require('./visits')(app);
+  require('./populate')(app);
   app.get('/instagram', function(req, res) {
     return instagram.users.info({
       user_id: 11843229,

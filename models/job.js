@@ -31,6 +31,9 @@ JobSchema = new Schema({
   state: {
     type: String
   },
+  image: {
+    type: String
+  },
   summary: {
     type: String
   },

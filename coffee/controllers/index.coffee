@@ -13,6 +13,7 @@ module.exports = (app) ->
   require('./resume') app
   require('./tools') app
   require('./visits') app
+  require('./populate') app
 
   app.get '/instagram', (req, res) ->
     instagram.users.info({

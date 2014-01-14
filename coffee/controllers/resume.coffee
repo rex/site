@@ -1,4 +1,8 @@
+mongoose = require 'mongoose'
+Jobs = mongoose.model 'job'
+
 module.exports = (app) ->
   app.get '/resume', (req, res) ->
-    res.render 'resume/index',
-      env: process.env
+    Jobs.find {}, (err, jobs) ->
+      res.render 'resume/index',
+        jobs: jobs

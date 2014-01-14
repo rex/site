@@ -20,6 +20,8 @@ JobSchema = new Schema
     type: String
   state:
     type: String
+  image:
+    type: String
   summary:
     type: String
   tasks: [{
