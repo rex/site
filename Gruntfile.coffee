@@ -31,11 +31,11 @@ module.exports = (grunt) ->
       options:
         files: ['package.json', 'bower.json']
         updateConfigs: ['pkg']
-        commitMessage: "Release v%VERSION% <%= grunt.template.today('yyyy-mm-dd hh:MM:ss TT'); %>"
+        commitMessage: "Version %VERSION% built on #{grunt.template.today('yyyy-mm-dd')} at #{grunt.template.today('hh:MM:ss TT')}"
         commitFiles: ['package.json', 'bower.json']
         createTag: true
         tagName: 'v%VERSION%'
-        tagMessage: "Version %VERSION% <%= grunt.template.today('yyyy-mm-dd hh:MM:ss TT'); %>"
+        tagMessage: "Version %VERSION% built on #{grunt.template.today('yyyy-mm-dd')} at #{grunt.template.today('hh:MM:ss TT')}"
         push: true
         pushTo: 'origin'
     clean:
