@@ -1,15 +1,18 @@
 logger = require '../lib/logger'
 instagram = require '../lib/instagram'
 github = require '../lib/github'
+config = require '../config'
 
 module.exports = (app) ->
   require('./webhooks') app
   require('./admin') app
+  require('./blog') app
   require('./bookmarks') app
   require('./code') app
   require('./portfolio') app
   require('./resume') app
   require('./tools') app
+  require('./visits') app
 
   app.get '/instagram', (req, res) ->
     instagram.users.info({
@@ -21,19 +24,15 @@ module.exports = (app) ->
     })
 
   app.get '/env', (req, res) ->
-    res.json process.env
+    res.json
+      config: config
+      env: process.env
 
   app.get '/github', (req, res) ->
     github.repos (err, body) ->
       res.json
         err: err
         body: body
-
-  app.get '/code', (req, res) ->
-    github.repos (err, body) ->
-      res.render 'code/repos',
-        repos: body
-        uri: req.originalUrl
 
   app.get '/', (req, res) ->
     github.events (err, body) ->

@@ -1,0 +1,7 @@
+extends ../layout
+block content
+  h3 Blog!
+  h4 #{path}
+
+  each val, key in env
+    p #{key} - #{val}

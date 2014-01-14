@@ -179,6 +179,7 @@ module.exports = (grunt) ->
           flatten: true
           cwd: BOWER
           src: [
+            "jquery-pjax/jquery.pjax.js"
             "prism/prism.js"
           ]
           dest: "#{BUILD}/lib"

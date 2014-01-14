@@ -1,38 +1,38 @@
 .ui.large.vertical.sidebar.menu.active
-  a.hide.item
+  a.hide.item.closemenu
     i.close.icon
     | HIDE MENU
-  a.active.header.item
+  a.active.header.item(href='/')
     i.home.icon
     | HOME
-  a.header.item(href='#blog')
+  a.header.item(href='/blog')
     i.rss.icon
     | BLOG
     .menu
       .item
         .ui.input
           input(type='text', placeholder='SEARCH...')
-      a.item(href='#blog/tag/javascript') JAVASCRIPT
+      a.item(href='/blog/tag/javascript') JAVASCRIPT
         .ui.blue.label 0
-      a.item(href='#blog/tag/git') GIT
+      a.item(href='/blog/tag/git') GIT
         .ui.blue.label 0
-      a.item(href='#blog/tag/node') NODE
+      a.item(href='/blog/tag/node') NODE
         .ui.blue.label 0
-      a.item(href='#blog/tag/php') PHP
+      a.item(href='/blog/tag/php') PHP
         .ui.blue.label 0
 
   .header.item
     i.code.icon
     | CODE
     .menu
-      a.item(href='#') SNIPPETS
+      a.item(href='/snippets') SNIPPETS
         .ui.blue.label 0
-      a.item(href='#') REPOSITORIES
+      a.item(href='/repos') REPOSITORIES
         .ui.blue.label 0
-  a.header.item
+  a.header.item(href='/portfolio')
     i.folder.open.outline.icon
     | PORTFOLIO
-  a.header.item
+  a.header.item(href='/resume')
     i.list.icon
     | RESUME
   .header.item LINKS
@@ -44,6 +44,6 @@
       a.item(href='http://twitter.com/kiapierce') TWITTER
       a.item(href='#') LINKEDIN
 
-.ui.black.menutoggle.right.attached.button(style='width: 75px;')
+.ui.blue.huge.menutoggle.right.attached.button(style='width: 60px;')
   i.icon.list.layout
   span.text(style='display: none;') MENU

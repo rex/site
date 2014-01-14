@@ -1,4 +1,4 @@
-var github, instagram, logger;
+var config, github, instagram, logger;
 
 logger = require('../lib/logger');
 
@@ -6,14 +6,18 @@ instagram = require('../lib/instagram');
 
 github = require('../lib/github');
 
+config = require('../config');
+
 module.exports = function(app) {
   require('./webhooks')(app);
   require('./admin')(app);
+  require('./blog')(app);
   require('./bookmarks')(app);
   require('./code')(app);
   require('./portfolio')(app);
   require('./resume')(app);
   require('./tools')(app);
+  require('./visits')(app);
   app.get('/instagram', function(req, res) {
     return instagram.users.info({
       user_id: 11843229,
@@ -26,21 +30,16 @@ module.exports = function(app) {
     });
   });
   app.get('/env', function(req, res) {
-    return res.json(process.env);
+    return res.json({
+      config: config,
+      env: process.env
+    });
   });
   app.get('/github', function(req, res) {
     return github.repos(function(err, body) {
       return res.json({
         err: err,
         body: body
-      });
-    });
-  });
-  app.get('/code', function(req, res) {
-    return github.repos(function(err, body) {
-      return res.render('code/repos', {
-        repos: body,
-        uri: req.originalUrl
       });
     });
   });

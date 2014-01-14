@@ -1,12 +1,20 @@
 # Require first to ensure proper instantiation of the winston CLI logger
 logger = require './lib/logger'
+mongoose = require 'mongoose'
 _ = require './lib/_'
 express = require 'express'
 http = require 'http'
 app = express()
 
+# Here we instantiate our models
+models = require './models'
+models.initialize()
+
+Visit = mongoose.model 'visit'
+
 app.configure ->
   app.set 'port', process.env.VCAP_APP_PORT or 3000
+  app.set 'host', process.env.VCAP_APP_HOST or 'localhost'
   app.engine 'jade', require('jade').__express
   app.disable 'view cache'
   app.set 'view engine', 'jade'
@@ -19,12 +27,20 @@ app.configure ->
   app.use express.bodyParser()
   app.use express.methodOverride()
 
+  # Use the Visit Model's middleware
+  app.use (req, res, next) ->
+    visit = new Visit
+    visit.createFromRequest req
+
+    next()
+
   # Create locals based on request data
   app.use (req, res, next) ->
+    req.isPJAX = if req.headers['X-PJAX']? then true else false
     res.locals.req =
       xhr: req.xhr
       path: req.originalUrl
-      pjax: if req.headers['X-PJAX']? then true else false
+      isPJAX: req.isPJAX
     res.locals._ = _
     res.locals.me = "Pierce"
     next()
@@ -38,12 +54,12 @@ app.configure 'production', ->
 
 require('./controllers') app
 
-server = http.createServer(app).listen app.get('port'), () ->
-  logger "prex.io running on port #{app.get 'port'}"
+server = http.createServer(app).listen app.get('port'), app.get('host'), () ->
+  logger "prex.io running at #{app.get 'host'} on port #{app.get 'port'}"
 
 logger "Loaded Routes:"
 
 _.each app.routes, (methods, verb) ->
-  console.log "#{verb} methods: (#{methods.length})"
+  logger "#{verb} methods: (#{methods.length})"
   _.each _.pluck(methods, 'path'), (path) ->
-    console.log " > #{path}"
+    logger " > #{path}"

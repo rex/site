@@ -1,5 +1,5 @@
 //- http://codetunnel.com/blog/post/how-to-toggle-jade-layout-in-express-for-nodejs
-if req.xhr
+if req.isPJAX
   block content
 else
   doctype html
@@ -40,12 +40,8 @@ else
       .ui.grid
         .ui.center.aligned.one.column.grid
           .column
-            block content
+            #main-content
+              block content
 
-            .ui.dimmer
+            #loader.ui.dimmer
               .ui.loader
-
-      script
-        :coffee(bare=true)
-          $ ->
-            $('.ui.sidebar').sidebar('push page')
