@@ -17,6 +17,22 @@ Models = {
 };
 
 module.exports = function(app) {
+  app.get('/dump', function(req, res) {
+    return async.series({
+      links: function(complete) {
+        return Models.link.find({}, function(err, links) {
+          return complete(err, links);
+        });
+      },
+      jobs: function(complete) {
+        return Models.job.find({}, function(err, jobs) {
+          return complete(err, jobs);
+        });
+      }
+    }, function(err, results) {
+      return res.json(results);
+    });
+  });
   return app.get('/populate', function(req, res) {
     var jobs, links;
     links = [

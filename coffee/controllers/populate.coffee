@@ -12,6 +12,17 @@ Models =
 
 
 module.exports = (app) ->
+  app.get '/dump', (req, res) ->
+    async.series
+      links: (complete) ->
+        Models.link.find {}, (err, links) ->
+          complete err, links
+      jobs: (complete) ->
+        Models.job.find {}, (err, jobs) ->
+          complete err, jobs
+    , (err, results) ->
+      res.json results
+
   app.get '/populate', (req, res) ->
     links = [
       {
