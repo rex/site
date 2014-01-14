@@ -16,6 +16,7 @@
   "dependencies": {
     "prism": "gh-pages",
     "mrmrs-colors": "latest",
-    "jquery-pjax": "latest"
+    "jquery-pjax": "latest",
+    "semantic": "git@github.com:Semantic-Org/Semantic-UI.git#0.12.0"
   }
 }

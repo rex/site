@@ -49,14 +49,14 @@ mixin github_item(item)
         .summary
           | #{me} pushed #{item.payload.commits.length} commits to GitHub
         each commit in item.payload.commits
-          .extra text
+          .extra
             a(href='#{commit.url}') #{_.sha_stub(commit.sha)}
             | - #{commit.message}
 
 extends layout
 block content
 
-  .ui.small.attached.feed.segment
+  .ui.small.feed.segment
     each feed_item in feed
       +github_item(feed_item)
 

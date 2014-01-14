@@ -20,25 +20,6 @@ else
       link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Open+Sans:300|Montserrat:400,700', type='text/css')
       link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.11.0/css/semantic.min.css', type='text/css')
       link(rel='stylesheet', href='/css/rex.min.css', type='text/css')
-    body
-      header
-        h1(class='centered logo') PIERCE MOORE
-
-      div(class='ui grid')
-        div(class='three wide column')
-        div(class='three wide column')
-          include sidebar
-        div(class='seven wide column')
-          if isBlogPost
-            div(class='ui segment')
-              block content
-          else
-            block content
-
-          div(class='ui dimmer')
-            div(class='ui loader')
-        div(class='three wide column')
-
 
       script(src='//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js')
       script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
@@ -47,3 +28,22 @@ else
       script(src='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.11.0/javascript/semantic.min.js')
       script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js')
       script(src='/js/rex.min.js')
+
+    body
+      header
+        h1(class='centered logo') PIERCE MOORE
+
+      include sidebar
+
+      .ui.grid
+        .ui.center.aligned.one.column.grid
+          .column
+            block content
+
+            .ui.dimmer
+              .ui.loader
+
+      script
+        :coffee(bare=true)
+          $ ->
+            $('.ui.sidebar').sidebar('push page')

@@ -16,6 +16,7 @@ app.configure(function() {
   app.disable('view cache');
   app.set('view engine', 'jade');
   app.set('views', "" + (process.cwd()) + "/views");
+  app.use(express.compress());
   app.use(express.favicon("" + __dirname + "/public/images/favicon.ico"));
   app.use(express["static"]("" + __dirname + "/public"));
   app.use(express.logger('short'));
@@ -25,7 +26,8 @@ app.configure(function() {
   app.use(function(req, res, next) {
     res.locals.req = {
       xhr: req.xhr,
-      path: req.originalUrl
+      path: req.originalUrl,
+      pjax: req.headers['X-PJAX'] != null ? true : false
     };
     res.locals._ = _;
     res.locals.me = "Pierce";

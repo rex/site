@@ -19,12 +19,11 @@ process = (src, path) ->
   return "//##### #{path} \n#{src}\n"
 
 
-
 module.exports = (grunt) ->
   JS = 'public/js'
   BOWER = "bower_components"
   BUILD = "build"
-
+  PUBLIC = "public"
 
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
@@ -32,20 +31,24 @@ module.exports = (grunt) ->
       options:
         files: ['package.json', 'bower.json']
         updateConfigs: ['pkg']
-        commitMessage: 'Release v%VERSION%'
+        commitMessage: "Release v%VERSION% <%= grunt.template.today('yyyy-mm-dd hh:MM:ss TT'); %>"
         commitFiles: ['package.json', 'bower.json']
         createTag: true
         tagName: 'v%VERSION%'
-        tagMessage: 'Version %VERSION%'
+        tagMessage: "Version %VERSION% <%= grunt.template.today('yyyy-mm-dd hh:MM:ss TT'); %>"
         push: true
         pushTo: 'origin'
     clean:
-      public: [
-        'public/'
+      js: [
+        "#{BUILD}/public/**"
+        "#{PUBLIC}/js/**"
       ]
-      build: [
+      css: [
+        "#{BUILD}/css/**"
+        "#{PUBLIC}/css/**"
+      ]
+      lib: [
         "#{BUILD}/**"
-        "public/css/style.css"
       ]
     coffee:
       app:
@@ -56,7 +59,7 @@ module.exports = (grunt) ->
           cwd: 'coffee/'
           src: [
             '**/*.coffee'
-            '!public/**/*.coffee'
+            "!#{PUBLIC}/**/*.coffee"
           ]
           dest: './'
           ext: '.js'
@@ -66,22 +69,23 @@ module.exports = (grunt) ->
           bare: true
           separator: '\n\n'
           sourceMap: true
-          sourceMapDir: 'public/js/maps/'
+          sourceMapDir: "#{JS}/maps/"
           join: true
         files:
-          'build/app/rex.js': ['coffee/public/**/*.coffee']
+          'build/public/rex.js': ['coffee/public/**/*.coffee']
     concat:
       options:
         separator: '\n'
         stripBanners: true
         process: process
-      app:
+      public:
         src: [
-          "#{BUILD}/lib/prism/prism.min.js"
-          "#{BUILD}/lib/prism/**/*.js"
-          "#{BUILD}/app/rex.min.js"
-          "#{BUILD}/app/**/*.js"
-          "!#{BUILD}/app/rex.js"
+          "#{BUILD}/lib/prism.min.js"
+          "#{BUILD}/lib/prism-*.js"
+          "#{BUILD}/lib/**/*.js"
+          "#{BUILD}/public/rex.min.js"
+          "#{BUILD}/public/**/*.js"
+          "!#{BUILD}/public/rex.js"
         ]
         dest: "#{JS}/rex.min.js"
     copy:
@@ -90,14 +94,7 @@ module.exports = (grunt) ->
         flatten: true
         filter: 'isFile'
         src: [
-
-        ]
-        dest: 'build/lib'
-      prism:
-        expand: true
-        flatten: true
-        filter: 'isFile'
-        src: [
+          "#{BOWER}/build/packaged/javascript/semantic.min.js"
           "#{BOWER}/prism/components/prism-coffeescript.min.js"
           "#{BOWER}/prism/components/prism-css.min.js"
           "#{BOWER}/prism/components/prism-php.min.js"
@@ -106,12 +103,13 @@ module.exports = (grunt) ->
           "#{BOWER}/prism/components/prism-sql.min.js"
           "#{BOWER}/prism/components/prism-bash.min.js"
         ]
-        dest: 'build/lib/prism'
+        dest: 'build/lib'
       css:
         expand: true
         flatten: true
         filter: 'isFile'
         src: [
+          "#{BOWER}/semantic/build/packaged/css/semantic.min.css"
           "#{BOWER}/prism/themes/#{get_prism_theme()}.css"
         ]
         dest: 'build/css'
@@ -120,7 +118,7 @@ module.exports = (grunt) ->
         flatten: true
         filter: 'isFile'
         src: "#{BOWER}/semantic/build/less/fonts/*"
-        dest: 'public/fonts/'
+        dest: "#{PUBLIC}/fonts/"
       images:
         expand: true
         flatten: true
@@ -129,7 +127,7 @@ module.exports = (grunt) ->
           "#{BOWER}/semantic/build/less/images/*"
           "src/images/*"
         ]
-        dest: 'public/images/'
+        dest: "#{PUBLIC}/images/"
     cssmin:
       options:
         report: 'min'
@@ -183,7 +181,7 @@ module.exports = (grunt) ->
           src: [
             "prism/prism.js"
           ]
-          dest: "#{BUILD}/lib/prism"
+          dest: "#{BUILD}/lib"
           ext: '.min.js'
         }]
       public:
@@ -192,33 +190,37 @@ module.exports = (grunt) ->
           flatten: true
           cwd: 'build/'
           src: [
-            'app/**/*.js'
+            "#{PUBLIC}/**/*.js"
           ]
-          dest: "build/app"
+          dest: "build/public/"
           ext: '.min.js'
         }]
     watch:
       options:
         debounceDelay: 250
-      express:
+      gruntfile:
         files: [
-          'controllers/**/*.js'
-          'lib/**/*.js'
-          'app.js'
+          'Gruntfile.coffee'
         ]
-        tasks: ['express:dev']
+        tasks: ['build', 'express:dev']
+      app:
+        files: [
+          'coffee/**/*.coffee'
+          '!coffee/public/**/*.coffee'
+        ]
+        tasks: ['app', 'express:dev']
         options:
           spawn: false
-      less:
+      css:
         files: [
           'less/**/*.less'
         ]
-        tasks: ['less:development', 'copy:css', 'cssmin']
-      coffee:
+        tasks: ['css']
+      js:
         files: [
-          "coffee/**/*.coffee"
+          'coffee/public/**/*.coffee'
         ]
-        tasks: ['app']
+        tasks: ['js']
 
   grunt.loadNpmTasks 'grunt-banner'
   grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -233,8 +235,23 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-bump'
 
+  ###
+    Release tasks
+  ###
   grunt.registerTask 'major', ['app', 'bump:major']
   grunt.registerTask 'release', ['app', 'bump:minor']
   grunt.registerTask 'patch', ['app', 'bump:patch']
-  grunt.registerTask 'app', ['clean:public', 'coffee', 'less:development', 'copy', 'uglify', 'concat', 'cssmin', 'clean:build'] #
-  grunt.registerTask 'default', ['app', 'express:dev','watch']
+
+  ###
+    Actual code/build tasks
+  ###
+  grunt.registerTask 'css', ['clean:css', 'less:development', 'copy:css', 'cssmin']
+  grunt.registerTask 'js', ['clean:js', 'coffee:public', 'copy:js', 'uglify', 'concat:public']
+  grunt.registerTask 'assets', ['copy:fonts', 'copy:images']
+  grunt.registerTask 'app', ['coffee:app']
+
+  ###
+    Development tasks
+  ###
+  grunt.registerTask 'build', ['clean', 'css', 'js', 'assets', 'app']
+  grunt.registerTask 'default', ['clean', 'build', 'express:dev', 'watch']

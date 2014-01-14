@@ -1,39 +1,49 @@
-div(class='ui fluid vertical menu')
-  a(class='active header item')
-    i(class='home icon')
+.ui.large.vertical.sidebar.menu.active
+  a.hide.item
+    i.close.icon
+    | HIDE MENU
+  a.active.header.item
+    i.home.icon
     | HOME
-  div(class='header item')
-    i(class='rss icon')
+  a.header.item(href='#blog')
+    i.rss.icon
     | BLOG
-    div(class='menu')
-      div(class='item')
-        div(class='ui input')
+    .menu
+      .item
+        .ui.input
           input(type='text', placeholder='SEARCH...')
-      a(class='item') SNIPPETS
-        div(class='ui blue circular label') 74
-      a(class='item') JAVASCRIPT
-        div(class='ui blue circular label') 86
-      a(class='item') GIT
-        div(class='ui blue circular label') 18
-      a(class='item') NPM
-        div(class='ui blue circular label') 7
-      a(class='item') PHP
-        div(class='ui blue circular label') 39
+      a.item(href='#blog/tag/javascript') JAVASCRIPT
+        .ui.blue.label 0
+      a.item(href='#blog/tag/git') GIT
+        .ui.blue.label 0
+      a.item(href='#blog/tag/node') NODE
+        .ui.blue.label 0
+      a.item(href='#blog/tag/php') PHP
+        .ui.blue.label 0
 
-  a(class='header item')
-    i(class='code icon')
+  .header.item
+    i.code.icon
     | CODE
-  a(class='header item')
-    i(class='folder open outline icon')
+    .menu
+      a.item(href='#') SNIPPETS
+        .ui.blue.label 0
+      a.item(href='#') REPOSITORIES
+        .ui.blue.label 0
+  a.header.item
+    i.folder.open.outline.icon
     | PORTFOLIO
-  a(class='header item')
-    i(class='list icon')
+  a.header.item
+    i.list.icon
     | RESUME
-  div(class='header item') LINKS
-    div(class='menu')
-      a(class='item', href='https://github.com/rex')
-        i(class='github icon')
+  .header.item LINKS
+    .menu
+      a.item(href='https://github.com/rex')
+        i.github.icon
         | GITHUB
-      a(class='item', href='https://npmjs.org/~piercemoore') NPM
-      a(class='item', href='http://twitter.com/kiapierce') TWITTER
-      a(class='item', href='#') LINKEDIN
+      a.item(href='https://npmjs.org/~piercemoore') NPM
+      a.item(href='http://twitter.com/kiapierce') TWITTER
+      a.item(href='#') LINKEDIN
+
+.ui.black.menutoggle.right.attached.button(style='width: 75px;')
+  i.icon.list.layout
+  span.text(style='display: none;') MENU

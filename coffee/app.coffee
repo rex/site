@@ -11,6 +11,7 @@ app.configure ->
   app.disable 'view cache'
   app.set 'view engine', 'jade'
   app.set 'views', "#{process.cwd()}/views"
+  app.use express.compress()
   app.use express.favicon "#{__dirname}/public/images/favicon.ico"
   app.use express.static "#{__dirname}/public"
   app.use express.logger('short')
@@ -23,6 +24,7 @@ app.configure ->
     res.locals.req =
       xhr: req.xhr
       path: req.originalUrl
+      pjax: if req.headers['X-PJAX']? then true else false
     res.locals._ = _
     res.locals.me = "Pierce"
     next()
