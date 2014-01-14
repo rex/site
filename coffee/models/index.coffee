@@ -4,24 +4,24 @@ logger = require '../lib/logger'
 _ = require '../lib/_'
 
 schemas =
-  # post: require './post'
-  # lob: require './job'
-  # snippet: require './snippet'
-  # link: require './link'
-  # activity: require './activity'
+  post: require './post'
+  job: require './job'
+  snippet: require './snippet'
+  tag: require './tag'
+  link: require './link'
+  activity: require './activity'
   visit: require './visit'
 
 exports.initialize = ->
-  logger "Beginning model initialization..."
-
   # Instantiate our models
   logger "Initializing models..."
 
-  # mongoose.model 'post', schemas.post
-  # mongoose.model 'job', schemas.job
-  # mongoose.model 'snippet', schemas.snippet
-  # mongoose.model 'link', schemas.link
-  # mongoose.model 'activity', schemas.activity, 'activities'
+  mongoose.model 'post', schemas.post
+  mongoose.model 'job', schemas.job
+  mongoose.model 'snippet', schemas.snippet
+  mongoose.model 'tag', schemas.tag
+  mongoose.model 'link', schemas.link
+  mongoose.model 'activity', schemas.activity, 'activities'
   mongoose.model 'visit', schemas.visit
 
   # Get connection instance to operate on

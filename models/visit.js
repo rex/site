@@ -11,13 +11,10 @@ logger = require('../lib/logger');
 logger("Instantiating visit schema");
 
 VisitSchema = new Schema({
-  timestamp: {
+  created_on: {
     type: Date,
     "default": Date.now,
     index: true
-  },
-  hr_timestamp: {
-    type: String
   },
   ip: {
     type: String,
@@ -73,7 +70,6 @@ VisitSchema = new Schema({
 VisitSchema.methods.createFromRequest = function(req, res, done) {
   var self;
   self = this;
-  this.set('hr_timestamp', _.pretty_utc_date());
   this.set('ip', req.ip);
   this.set('path', req.path);
   this.set('xhr', req.xhr);

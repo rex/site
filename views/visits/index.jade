@@ -14,7 +14,7 @@ block content
     tbody
       each visit in visits
         tr
-          td #{_.age(visit.timestamp)}
+          td #{_.age(visit.created_on)}
           td #{visit.ip}
           td #{visit.original_url}
           td #{visit.protocol}
