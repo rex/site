@@ -14,6 +14,7 @@ module.exports = (app) ->
   require('./tools') app
   require('./visits') app
   require('./populate') app
+  require('./cron') app
 
   app.get '/instagram', (req, res) ->
     instagram.users.info({
