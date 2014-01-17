@@ -35,8 +35,8 @@ app.configure(function() {
   app.use(express.methodOverride());
   app.use(function(req, res, next) {
     var visit;
-    if (_.contains(['/webhooks/github', '/webhooks/instagram', '/webhooks/twitter'], req.path)) {
-      logger("Skipping webhook request");
+    if (req.path.match(/^\/webhooks/)) {
+      logger("Skipping webhook request: " + (req.path.replace('/webhooks/', '')));
       return next();
     } else {
       visit = new Visit;
@@ -52,6 +52,14 @@ app.configure(function() {
     };
     res.locals._ = _;
     res.locals.me = "Pierce";
+    return next();
+  });
+  app.use(function(req, res, next) {
+    logger("Query string params:", req.query);
+    if (_.has(req.query, 'json')) {
+      logger("JSON response requested for URL: " + req.originalUrl);
+      req.json_requested = true;
+    }
     return next();
   });
   return app.use(app.router);

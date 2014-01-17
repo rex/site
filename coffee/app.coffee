@@ -30,8 +30,8 @@ app.configure ->
 
   # Use the Visit Model's middleware
   app.use (req, res, next) ->
-    if _.contains ['/webhooks/github', '/webhooks/instagram', '/webhooks/twitter'], req.path
-      logger "Skipping webhook request"
+    if req.path.match /^\/webhooks/
+      logger "Skipping webhook request: #{req.path.replace '/webhooks/', ''}"
       next()
     else
       visit = new Visit
@@ -46,6 +46,14 @@ app.configure ->
       isPJAX: req.isPJAX
     res.locals._ = _
     res.locals.me = "Pierce"
+    next()
+
+  # Render JSON responses if ?json query string parameter is set
+  app.use (req, res, next) ->
+    logger "Query string params:", req.query
+    if _.has req.query, 'json'
+      logger "JSON response requested for URL: #{req.originalUrl}"
+      req.json_requested = true
     next()
 
   app.use app.router

@@ -29,6 +29,8 @@ module.exports = (app) ->
     res.json
       config: config
       env: process.env
+      vcap_services: if process.env.VCAP_SERVICES? then JSON.parse process.env.VCAP_SERVICES else "Not running on AppFog"
+      vcap_application: if process.env.VCAP_APPLICATION? then JSON.parse process.env.VCAP_APPLICATION else "Not running on AppFog"
 
   app.get '/github', (req, res) ->
     github.repos (err, body) ->
@@ -38,8 +40,11 @@ module.exports = (app) ->
 
   app.get '/', (req, res) ->
     github.events (err, body) ->
-      res.render 'index',
-        uri: req.originalUrl
-        time: new Date().toLocaleString()
-        pretty: true
-        feed: body
+      if req.json_requested
+        res.json body
+      else
+        res.render 'index',
+          uri: req.originalUrl
+          time: new Date().toLocaleString()
+          pretty: true
+          feed: body
