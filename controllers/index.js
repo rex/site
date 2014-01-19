@@ -21,7 +21,7 @@ module.exports = function(app) {
   require('./populate')(app);
   require('./cron')(app);
   app.get('/instagram', function(req, res) {
-    return instagram.users.info({
+    return instagram.users.recent({
       user_id: 11843229,
       complete: function(data, pagination) {
         return res.json({

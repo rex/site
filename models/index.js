@@ -15,7 +15,11 @@ schemas = {
   tag: require('./tag'),
   link: require('./link'),
   activity: require('./activity'),
-  visit: require('./visit')
+  visit: require('./visit'),
+  github: {
+    repo: require('./github/repo'),
+    commit: require('./github/commit')
+  }
 };
 
 exports.initialize = function() {
@@ -28,6 +32,8 @@ exports.initialize = function() {
   mongoose.model('link', schemas.link);
   mongoose.model('activity', schemas.activity, 'activities');
   mongoose.model('visit', schemas.visit);
+  mongoose.model('github_repo', schemas.github.repo);
+  mongoose.model('github_commit', schemas.github.commit);
   conn = mongoose.connection;
   logger("Initializing Mongoose event listeners...");
   conn.on('connecting', function() {

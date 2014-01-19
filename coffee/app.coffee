@@ -6,6 +6,9 @@ express = require 'express'
 http = require 'http'
 app = express()
 
+# Very, VERY important: Initialize our environment variables
+env = require('./env')()
+
 # Here we instantiate our models
 models = require './models'
 models.initialize()

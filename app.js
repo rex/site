@@ -1,4 +1,4 @@
-var Visit, app, express, http, logger, models, mongoose, server, _;
+var Visit, app, env, express, http, logger, models, mongoose, server, _;
 
 logger = require('./lib/logger');
 
@@ -11,6 +11,8 @@ express = require('express');
 http = require('http');
 
 app = express();
+
+env = require('./env')();
 
 models = require('./models');
 

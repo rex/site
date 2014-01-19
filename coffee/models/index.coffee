@@ -11,6 +11,9 @@ schemas =
   link: require './link'
   activity: require './activity'
   visit: require './visit'
+  github:
+    repo: require './github/repo'
+    commit: require './github/commit'
 
 exports.initialize = ->
   # Instantiate our models
@@ -23,6 +26,8 @@ exports.initialize = ->
   mongoose.model 'link', schemas.link
   mongoose.model 'activity', schemas.activity, 'activities'
   mongoose.model 'visit', schemas.visit
+  mongoose.model 'github_repo', schemas.github.repo
+  mongoose.model 'github_commit', schemas.github.commit
 
   # Get connection instance to operate on
   conn = mongoose.connection

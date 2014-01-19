@@ -17,7 +17,7 @@ module.exports = (app) ->
   require('./cron') app
 
   app.get '/instagram', (req, res) ->
-    instagram.users.info({
+    instagram.users.recent({
       user_id: 11843229
       complete: (data, pagination) ->
         res.json

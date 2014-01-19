@@ -8,3 +8,5 @@ public/js/
 public/css/
 public/images/
 public/fonts/
+env.coffee
+env.js
