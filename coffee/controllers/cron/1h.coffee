@@ -17,26 +17,26 @@ module.exports = ->
     github_repos: (done) ->
       logger "Updating local cache of GitHub repositories..."
       github.repos (err, body) ->
-        _.each body, (repo) ->
-          logger "Processing #{repo.name}"
+        async.each body, (repo, complete) ->
           Models.github_repo.find
             repo_id: repo.id
           , (err, local_repo) ->
-            if err then return done err
-            if local_repo
+            if err then return complete err
+            if local_repo and local_repo.length
               logger "Updating existing local repo for #{repo.name}..."
+              local_repo = new Models.github_repo local_repo
               local_repo.fromGithubRepo repo
-              local_repo.save done
+              local_repo.save complete
             else
               logger "Creating new local repo for #{repo.name}"
               local_repo = new Models.github_repo
               local_repo.fromGithubRepo repo
-              local_repo.save done
+              local_repo.save complete
+        , (err) ->
+          done(err)
 
   , (err, results) ->
     if err
-      res.json 500,
-        err: err
+      logger.error err
     else
-      res.json
-        results: results
+      logger "Successfully completed 1h cron"
