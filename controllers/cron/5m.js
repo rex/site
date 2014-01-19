@@ -2,7 +2,7 @@ var Models, async, github, logger, mongoose, _;
 
 github = require('../../lib/github');
 
-logger = '../../lib/logger';
+logger = require('../../lib/logger');
 
 _ = require('../../lib/_');
 
@@ -19,22 +19,21 @@ module.exports = function() {
   return async.parallel({
     github_activity: function(done) {
       logger("Processing recent github activity...");
-      return github.activity(function(err, body) {
+      return github.events(function(err, body) {
         if (err) {
           return done(err);
         }
-        return _.each(body, function(activity) {});
+        _.each(body, function(activity) {
+          return logger("Processing activity #" + activity.id);
+        });
+        return done();
       });
     }
   }, function(err, results) {
     if (err) {
-      return res.json(500, {
-        err: err
-      });
+      return logger.error(err);
     } else {
-      return res.json({
-        results: results
-      });
+      return logger("5m cron complete!", results);
     }
   });
 };

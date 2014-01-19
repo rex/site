@@ -1,5 +1,5 @@
 github = require '../../lib/github'
-logger = '../../lib/logger'
+logger = require '../../lib/logger'
 _ = require '../../lib/_'
 mongoose = require 'mongoose'
 async = require 'async'
@@ -15,15 +15,15 @@ module.exports = ->
     # Retrieve latest github activity
     github_activity: (done) ->
       logger "Processing recent github activity..."
-      github.activity (err, body) ->
+      github.events (err, body) ->
         if err then return done err
         _.each body, (activity) ->
-          #
+          logger "Processing activity ##{activity.id}"
+
+        done()
 
   , (err, results) ->
     if err
-      res.json 500,
-        err: err
+      logger.error err
     else
-      res.json
-        results: results
+      logger "5m cron complete!", results

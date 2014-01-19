@@ -10,9 +10,10 @@ module.exports = function(app) {
     }
     interval = req.body.interval.toString();
     if (interval === '5m' || interval === '15m' || interval === '1h' || interval === '12h' || interval === '24h' || interval === '7d' || interval === '30d') {
-      return require("./cron/" + interval)();
+      require("./cron/" + interval)();
     } else {
-      return logger.error("Invalid cron attempted: " + interval);
+      logger.error("Invalid cron attempted: " + interval);
     }
+    return res.send(200);
   });
 };
