@@ -2,7 +2,7 @@ var Models, async, github, logger, mongoose, _;
 
 github = require('../../lib/github');
 
-logger = '../../logger';
+logger = '../../lib/logger';
 
 _ = require('../../lib/_');
 

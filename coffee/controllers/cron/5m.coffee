@@ -1,5 +1,5 @@
 github = require '../../lib/github'
-logger = '../../logger'
+logger = '../../lib/logger'
 _ = require '../../lib/_'
 mongoose = require 'mongoose'
 async = require 'async'
