@@ -13,7 +13,9 @@ Models = {
   job: mongoose.model('job'),
   link: mongoose.model('link'),
   post: mongoose.model('post'),
-  snippet: mongoose.model('tag')
+  snippet: mongoose.model('tag'),
+  commits: mongoose.model('github_commit'),
+  repos: mongoose.model('github_repo')
 };
 
 module.exports = function(app) {
@@ -42,6 +44,16 @@ module.exports = function(app) {
       snippets: function(complete) {
         return Models.snippet.find({}, function(err, snippets) {
           return complete(err, snippets);
+        });
+      },
+      commits: function(complete) {
+        return Models.commits.find({}, function(err, commits) {
+          return complete(err, commits);
+        });
+      },
+      repos: function(complete) {
+        return Models.repos.find({}, function(err, repos) {
+          return complete(err, repos);
         });
       }
     }, function(err, results) {

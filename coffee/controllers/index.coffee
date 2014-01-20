@@ -5,6 +5,7 @@ mongoose = require 'mongoose'
 
 Services =
   Github: require '../services/github'
+  Instagram: require '../services/instagram'
 
 Models =
   activity: mongoose.model 'activity'
@@ -23,13 +24,11 @@ module.exports = (app) ->
   require('./cron') app
 
   app.get '/instagram', (req, res) ->
-    instagram.users.recent({
-      user_id: 11843229
-      complete: (data, pagination) ->
-        res.json
-          data: data
-          pagination: pagination
-    })
+    Services.Instagram.fetch_recent_activity (err, images) ->
+      if err
+        res.send 500, err
+      else
+        res.json images
 
   app.get '/env', (req, res) ->
     res.json

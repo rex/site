@@ -73,8 +73,7 @@ class Github extends Service
   process_webhook_activity: (body, callback) ->
     async.each body.commits, (commit, next) ->
       new_commit = new Models.github_commit
-      new_commit.fromGithubCommit commit, (err) ->
-        next err
+      new_commit.fromGithubCommit commit, next
     , (err) ->
       callback err
 

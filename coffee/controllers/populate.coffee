@@ -9,6 +9,8 @@ Models =
   link: mongoose.model 'link'
   post: mongoose.model 'post'
   snippet: mongoose.model 'tag'
+  commits: mongoose.model 'github_commit'
+  repos: mongoose.model 'github_repo'
 
 
 module.exports = (app) ->
@@ -29,6 +31,12 @@ module.exports = (app) ->
       snippets: (complete) ->
         Models.snippet.find {}, (err, snippets) ->
           complete err, snippets
+      commits: (complete) ->
+        Models.commits.find {}, (err, commits) ->
+          complete err, commits
+      repos: (complete) ->
+        Models.repos.find {}, (err, repos) ->
+          complete err, repos
     , (err, results) ->
       res.json results
 

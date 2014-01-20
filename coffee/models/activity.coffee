@@ -22,11 +22,4 @@ ActivitySchema = new Schema
     type: Boolean
     default: true
 
-ActivitySchema.methods.fromGithubWebhook = (payload, callback) ->
-  this.set 'service', 'github'
-  this.set 'type', 'post-receive-hook'
-  this.set 'params', payload
-  this.save (err) ->
-    callback err
-
 module.exports = ActivitySchema

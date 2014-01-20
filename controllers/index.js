@@ -9,7 +9,8 @@ config = require('../config');
 mongoose = require('mongoose');
 
 Services = {
-  Github: require('../services/github')
+  Github: require('../services/github'),
+  Instagram: require('../services/instagram')
 };
 
 Models = {
@@ -29,13 +30,11 @@ module.exports = function(app) {
   require('./populate')(app);
   require('./cron')(app);
   app.get('/instagram', function(req, res) {
-    return instagram.users.recent({
-      user_id: 11843229,
-      complete: function(data, pagination) {
-        return res.json({
-          data: data,
-          pagination: pagination
-        });
+    return Services.Instagram.fetch_recent_activity(function(err, images) {
+      if (err) {
+        return res.send(500, err);
+      } else {
+        return res.json(images);
       }
     });
   });

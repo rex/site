@@ -100,9 +100,7 @@ Github = (function(_super) {
     return async.each(body.commits, function(commit, next) {
       var new_commit;
       new_commit = new Models.github_commit;
-      return new_commit.fromGithubCommit(commit, function(err) {
-        return next(err);
-      });
+      return new_commit.fromGithubCommit(commit, next);
     }, function(err) {
       return callback(err);
     });
