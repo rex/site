@@ -5,7 +5,8 @@ logger = require('../../lib/logger');
 async = require('async');
 
 Services = {
-  Github: require('../../services/github')
+  Github: require('../../services/github'),
+  Instagram: require('../../services/instagram')
 };
 
 module.exports = function() {
@@ -13,6 +14,9 @@ module.exports = function() {
   return async.parallel({
     github_repos: function(done) {
       return Services.Github.fetch_repos(done);
+    },
+    instagram_images: function(done) {
+      return Services.Instagram.fetch_recent_activity(done);
     }
   }, function(err, results) {
     if (err) {
