@@ -57,10 +57,12 @@ app.configure(function() {
     return next();
   });
   app.use(function(req, res, next) {
-    logger("Query string params:", req.query);
-    if (_.has(req.query, 'json')) {
-      logger("JSON response requested for URL: " + req.originalUrl);
-      req.json_requested = true;
+    if (req.query.length) {
+      logger("Query string params:", req.query);
+      if (_.has(req.query, 'json')) {
+        logger("JSON response requested for URL: " + req.originalUrl);
+        req.json_requested = true;
+      }
     }
     return next();
   });

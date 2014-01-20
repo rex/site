@@ -1,19 +1,15 @@
-var Activity, logger, mongoose;
+var Github_Service, logger;
 
 logger = require('../../lib/logger');
 
-mongoose = require('mongoose');
-
-Activity = mongoose.model('activity');
+Github_Service = require('../../services/github');
 
 module.exports = function(app) {
   return app.post('/webhooks/github', function(req, res) {
-    var activity, payload;
+    var payload;
     logger("Received github webhook!");
     payload = JSON.parse(decodeURIComponent(req.body.payload));
-    activity = new Activity();
-    logger("Creating activity");
-    return activity.fromGithubWebhook(payload, function(err) {
+    return Github_Service.process_webhook_activity(payload, function(err) {
       if (err) {
         return res.json({
           err: err

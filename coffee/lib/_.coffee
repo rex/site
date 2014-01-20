@@ -1,5 +1,5 @@
 logger = require './logger'
-_ = require 'underscore'
+_ = require 'lodash'
 
 # Here we adhere to the single responsibility principle
 # and separate our mixins into separate files.

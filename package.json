@@ -18,7 +18,7 @@
   "dependencies": {
     "async": "latest",
     "express": "latest",
-    "underscore": "latest",
+    "lodash": "latest",
     "winston": "latest",
     "jade": "latest",
     "marked": "latest",

@@ -1,8 +1,10 @@
 logger = require '../lib/logger'
 instagram = require '../lib/instagram'
-github = require '../lib/github'
 config = require '../config'
 mongoose = require 'mongoose'
+
+Services =
+  Github: require '../services/github'
 
 Models =
   activity: mongoose.model 'activity'
@@ -36,8 +38,15 @@ module.exports = (app) ->
       vcap_services: if process.env.VCAP_SERVICES? then JSON.parse process.env.VCAP_SERVICES else "Not running on AppFog"
       vcap_application: if process.env.VCAP_APPLICATION? then JSON.parse process.env.VCAP_APPLICATION else "Not running on AppFog"
 
-  app.get '/github', (req, res) ->
-    github.repos (err, body) ->
+  app.get '/github/activity', (req, res) ->
+    Services.Github.fetch_recent_activity (err, activity) ->
+      if err
+        res.send 500, err
+      else
+        res.json activity
+
+  app.get '/github/repos', (req, res) ->
+    Services.Github.fetch_repos (err, body) ->
       res.json
         err: err
         body: body

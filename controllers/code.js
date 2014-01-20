@@ -1,10 +1,10 @@
-var github;
+var Github_Service;
 
-github = require('../lib/github');
+Github_Service = require('../services/github');
 
 module.exports = function(app) {
   app.get('/repos*', function(req, res) {
-    return github.repos(function(err, body) {
+    return Github_Service.fetch_repos(function(err, body) {
       return res.render('code/repos', {
         repos: body,
         uri: req.path

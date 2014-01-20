@@ -54,6 +54,8 @@ module.exports = (grunt) ->
         "controllers/**"
         "lib/**"
         "models/**"
+        "services/**"
+        "apis/**"
       ]
     coffee:
       app:

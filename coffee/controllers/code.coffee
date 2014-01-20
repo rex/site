@@ -1,8 +1,8 @@
-github = require '../lib/github'
+Github_Service = require '../services/github'
 
 module.exports = (app) ->
   app.get '/repos*', (req, res) ->
-    github.repos (err, body) ->
+    Github_Service.fetch_repos (err, body) ->
       res.render 'code/repos',
         repos: body
         uri: req.path

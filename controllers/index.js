@@ -1,14 +1,16 @@
-var Models, config, github, instagram, logger, mongoose;
+var Models, Services, config, instagram, logger, mongoose;
 
 logger = require('../lib/logger');
 
 instagram = require('../lib/instagram');
 
-github = require('../lib/github');
-
 config = require('../config');
 
 mongoose = require('mongoose');
+
+Services = {
+  Github: require('../services/github')
+};
 
 Models = {
   activity: mongoose.model('activity')
@@ -45,8 +47,17 @@ module.exports = function(app) {
       vcap_application: process.env.VCAP_APPLICATION != null ? JSON.parse(process.env.VCAP_APPLICATION) : "Not running on AppFog"
     });
   });
-  app.get('/github', function(req, res) {
-    return github.repos(function(err, body) {
+  app.get('/github/activity', function(req, res) {
+    return Services.Github.fetch_recent_activity(function(err, activity) {
+      if (err) {
+        return res.send(500, err);
+      } else {
+        return res.json(activity);
+      }
+    });
+  });
+  app.get('/github/repos', function(req, res) {
+    return Services.Github.fetch_repos(function(err, body) {
       return res.json({
         err: err,
         body: body

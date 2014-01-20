@@ -1,6 +1,5 @@
 logger = require '../../lib/logger'
-mongoose = require 'mongoose'
-Activity = mongoose.model 'activity'
+Github_Service = require '../../services/github'
 
 module.exports = (app) ->
   app.post '/webhooks/github', (req, res) ->
@@ -8,9 +7,7 @@ module.exports = (app) ->
 
     payload = JSON.parse decodeURIComponent req.body.payload
 
-    activity = new Activity()
-    logger "Creating activity"
-    activity.fromGithubWebhook payload, (err) ->
+    Github_Service.process_webhook_activity payload, (err) ->
       if err
         res.json
           err: err
