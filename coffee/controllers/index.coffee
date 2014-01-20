@@ -2,6 +2,10 @@ logger = require '../lib/logger'
 instagram = require '../lib/instagram'
 github = require '../lib/github'
 config = require '../config'
+mongoose = require 'mongoose'
+
+Models =
+  activity: mongoose.model 'activity'
 
 module.exports = (app) ->
   require('./webhooks') app
@@ -39,12 +43,16 @@ module.exports = (app) ->
         body: body
 
   app.get '/', (req, res) ->
-    github.events (err, body) ->
-      if req.json_requested
-        res.json body
-      else
-        res.render 'index',
-          uri: req.originalUrl
-          time: new Date().toLocaleString()
-          pretty: true
-          feed: body
+    Models.activity
+      .find()
+      .sort
+        created_on: 'desc'
+      .exec (err, body) ->
+        if req.json_requested
+          res.json body
+        else
+          res.render 'index',
+            uri: req.originalUrl
+            time: new Date().toLocaleString()
+            pretty: true
+            feed: body

@@ -36,19 +36,19 @@ mixin github_item(item)
       i.circular.github.icon
     .content
       .date
-        | #{_.age(item.created_at)}
+        | #{_.age(item.created_on)}
       if item.type == "WatchEvent"
         .summary
           | #{me} starred a repository:
-          a(href='https://github.com/#{item.repo.name}') #{item.repo.name}
+          a(href='https://github.com/#{item.params.repo.name}') #{item.params.repo.name}
       else if item.type == "CreateEvent"
         .summary
           | #{me} created a repository:
-          a(href='https://github.com/#{item.repo.name}') #{item.repo.name}
+          a(href='https://github.com/#{item.params.repo.name}') #{item.params.repo.name}
       else if item.type == "PushEvent"
         .summary
-          | #{me} pushed #{item.payload.commits.length} commits to GitHub
-        each commit in item.payload.commits
+          | #{me} pushed #{item.params.payload.commits.length} commits to GitHub
+        each commit in item.params.payload.commits
           .extra
             a(href='#{commit.url}') #{_.sha_stub(commit.sha)}
             | - #{commit.message}

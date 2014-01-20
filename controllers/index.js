@@ -1,4 +1,4 @@
-var config, github, instagram, logger;
+var Models, config, github, instagram, logger, mongoose;
 
 logger = require('../lib/logger');
 
@@ -7,6 +7,12 @@ instagram = require('../lib/instagram');
 github = require('../lib/github');
 
 config = require('../config');
+
+mongoose = require('mongoose');
+
+Models = {
+  activity: mongoose.model('activity')
+};
 
 module.exports = function(app) {
   require('./webhooks')(app);
@@ -48,7 +54,9 @@ module.exports = function(app) {
     });
   });
   return app.get('/', function(req, res) {
-    return github.events(function(err, body) {
+    return Models.activity.find().sort({
+      created_on: 'desc'
+    }).exec(function(err, body) {
       if (req.json_requested) {
         return res.json(body);
       } else {

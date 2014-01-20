@@ -1,4 +1,4 @@
-var Models, async, github, logger, mongoose, _;
+var Models, async, github, logger, mongoose, util, _;
 
 logger = require('../../lib/logger');
 
@@ -9,6 +9,8 @@ github = require('../../lib/github');
 async = require('async');
 
 mongoose = require('mongoose');
+
+util = require('util');
 
 Models = {
   github_repo: mongoose.model('github_repo')
@@ -27,14 +29,11 @@ module.exports = function() {
             if (err) {
               return complete(err);
             }
+            local_repo = new Models.github_repo(local_repo);
             if (local_repo && local_repo.length) {
-              logger("Updating existing local repo for " + repo.name + "...");
-              local_repo = new Models.github_repo(local_repo);
               local_repo.fromGithubRepo(repo);
               return local_repo.save(complete);
             } else {
-              logger("Creating new local repo for " + repo.name);
-              local_repo = new Models.github_repo;
               local_repo.fromGithubRepo(repo);
               return local_repo.save(complete);
             }
