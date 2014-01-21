@@ -10,3 +10,5 @@ public/images/
 public/fonts/
 env.coffee
 env.js
+!models/env.js
+!coffee/models/env.coffee
