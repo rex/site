@@ -37,13 +37,17 @@ module.exports = (app) ->
 
         body = JSON.parse body
 
-        Token = new OAuth_Token
-        Token.set
+        OAuth_Token.findOneAndUpdate
           service: 'instagram'
-          access_token: body.access_token
-          meta:
-            user: body.user
-        Token.save (err) ->
+        ,
+          $set:
+            access_token: body.access_token
+            meta:
+              user: body.user
+        ,
+          upsert: true
+        , (err, token) ->
+          console.log "Token created/updated", token
           if err
             logger.error err
             res.send 500, err

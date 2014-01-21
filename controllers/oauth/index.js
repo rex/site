@@ -35,7 +35,6 @@ module.exports = function(app) {
           code: req.query.code
         }
       }, function(err, resp, body) {
-        var Token;
         if (resp.statusCode === 400) {
           logger("Status code 400!", body.error_reason, body.error_message);
           return res.render('oauth/authorize', {
@@ -46,16 +45,20 @@ module.exports = function(app) {
           });
         }
         body = JSON.parse(body);
-        Token = new OAuth_Token;
-        Token.set({
-          service: 'instagram',
-          access_token: body.access_token,
-          meta: {
-            user: body.user
+        return OAuth_Token.findOneAndUpdate({
+          service: 'instagram'
+        }, {
+          $set: {
+            access_token: body.access_token,
+            meta: {
+              user: body.user
+            }
           }
-        });
-        return Token.save(function(err) {
+        }, {
+          upsert: true
+        }, function(err, token) {
           var page_data;
+          console.log("Token created/updated", token);
           if (err) {
             logger.error(err);
             return res.send(500, err);
