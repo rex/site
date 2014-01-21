@@ -27,11 +27,11 @@ module.exports = (app) ->
           grant_type: 'authorization_code'
           code: req.query.code
       , (err, resp, body) ->
-        if err then return res.render 'oauth/authorize',
+        if resp.statusCode is 400 then return res.render 'oauth/authorize',
           service: 'instagram'
-          error_reason: ""
-          error: err
-          error_description: err
+          error_reason: body.error_reason
+          error: body.error_reason
+          error_description: body.error_message
 
         Token = new OAuth_Token
         Token.set

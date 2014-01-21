@@ -36,12 +36,12 @@ module.exports = function(app) {
         }
       }, function(err, resp, body) {
         var Token;
-        if (err) {
+        if (resp.statusCode === 400) {
           return res.render('oauth/authorize', {
             service: 'instagram',
-            error_reason: "",
-            error: err,
-            error_description: err
+            error_reason: body.error_reason,
+            error: body.error_reason,
+            error_description: body.error_message
           });
         }
         Token = new OAuth_Token;
