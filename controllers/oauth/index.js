@@ -28,7 +28,7 @@ module.exports = function(app) {
     } else if (req.query.code) {
       return request.post({
         url: 'https://api.instagram.com/oauth/access_token',
-        oauth: {
+        form: {
           client_id: config.instagram.client_id,
           client_secret: config.instagram.client_secret,
           redirect_uri: config.instagram.oauth_redirect_uri,
