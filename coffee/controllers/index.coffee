@@ -12,6 +12,7 @@ Models =
 
 module.exports = (app) ->
   require('./webhooks') app
+  require('./oauth') app
   require('./admin') app
   require('./blog') app
   require('./bookmarks') app

@@ -23,7 +23,8 @@ if (process.env.VCAP_SERVICES) {
 module.exports = {
   instagram: {
     client_id: process.env.INSTAGRAM_CLIENT,
-    client_secret: process.env.INSTAGRAM_SECRET
+    client_secret: process.env.INSTAGRAM_SECRET,
+    oauth_redirect_uri: process.env.INSTAGRAM_REDIRECT_URI
   },
   github: {
     client_id: process.env.GITHUB_CLIENT_ID,

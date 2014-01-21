@@ -19,6 +19,7 @@ Models = {
 
 module.exports = function(app) {
   require('./webhooks')(app);
+  require('./oauth')(app);
   require('./admin')(app);
   require('./blog')(app);
   require('./bookmarks')(app);

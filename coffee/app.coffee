@@ -53,12 +53,12 @@ app.configure ->
 
   # Render JSON responses if ?json query string parameter is set
   app.use (req, res, next) ->
-    if req.query.length
+    if req.query
       logger "Query string params:", req.query
 
-      if _.has req.query, 'json'
-        logger "JSON response requested for URL: #{req.originalUrl}"
-        req.json_requested = true
+    if _.has req.query, 'json'
+      logger "JSON response requested for URL: #{req.originalUrl}"
+      req.json_requested = true
 
     next()
 

@@ -16,6 +16,7 @@ schemas = {
   link: require('./link'),
   activity: require('./activity'),
   visit: require('./visit'),
+  oauth_token: require('./oauth_token'),
   github: {
     repo: require('./github/repo'),
     commit: require('./github/commit')
@@ -34,6 +35,7 @@ exports.initialize = function() {
   mongoose.model('visit', schemas.visit);
   mongoose.model('github_repo', schemas.github.repo);
   mongoose.model('github_commit', schemas.github.commit);
+  mongoose.model('oauth_token', schemas.oauth_token);
   conn = mongoose.connection;
   logger("Initializing Mongoose event listeners...");
   conn.on('connecting', function() {

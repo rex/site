@@ -16,6 +16,7 @@ module.exports =
   instagram:
     client_id: process.env.INSTAGRAM_CLIENT
     client_secret: process.env.INSTAGRAM_SECRET
+    oauth_redirect_uri: process.env.INSTAGRAM_REDIRECT_URI
   github:
     client_id: process.env.GITHUB_CLIENT_ID
     client_secret: process.env.GITHUB_CLIENT_SECRET

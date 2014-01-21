@@ -11,6 +11,7 @@ schemas =
   link: require './link'
   activity: require './activity'
   visit: require './visit'
+  oauth_token: require './oauth_token'
   github:
     repo: require './github/repo'
     commit: require './github/commit'
@@ -28,6 +29,7 @@ exports.initialize = ->
   mongoose.model 'visit', schemas.visit
   mongoose.model 'github_repo', schemas.github.repo
   mongoose.model 'github_commit', schemas.github.commit
+  mongoose.model 'oauth_token', schemas.oauth_token
 
   # Get connection instance to operate on
   conn = mongoose.connection

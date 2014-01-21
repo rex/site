@@ -1,0 +1,6 @@
+extends ../layout
+block content
+  h3 OAuth Hookup Area
+
+  a(href="https://api.instagram.com/oauth/authorize/?client_id=#{config.instagram.client_id}&response_type=code&redirect_uri=#{config.instagram.oauth_redirect_uri}")
+    i.huge.circular.instagram.inverted.link.icon

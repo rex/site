@@ -11,6 +11,7 @@ Models =
   snippet: mongoose.model 'tag'
   commits: mongoose.model 'github_commit'
   repos: mongoose.model 'github_repo'
+  oauth_token: mongoose.model 'oauth_token'
 
 
 module.exports = (app) ->
@@ -37,6 +38,9 @@ module.exports = (app) ->
       repos: (complete) ->
         Models.repos.find {}, (err, repos) ->
           complete err, repos
+      oauth_tokens: (complete) ->
+        Models.oauth_token.find {}, (err, tokens) ->
+          complete err, tokens
     , (err, results) ->
       res.json results
 

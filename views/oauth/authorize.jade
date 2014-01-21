@@ -1,0 +1,42 @@
+mixin instagram_success(user)
+  .ui.items
+    .item
+      .image
+        img(src=user.profile_picture)
+      .content
+        .name #{user.full_name}
+        p.description #{user.username}
+
+
+extends ../layout
+block content
+  h2 OAuth Authorization
+
+  if error
+    .ui.error.icon.message
+      case service
+        when 'instagram'
+          i.huge.red.inverted.circular.instagram.icon
+        default
+          i.huge.red.inverted.circular.remove.icon
+
+      .content
+        .header OAuth Authorization Failed: #{service}
+
+        p #{error_reason}
+        p #{error_description}
+
+  else if success
+    .ui.success.icon.message
+      case service
+        when 'instagram'
+          i.huge.teal.inverted.circular.instagram.icon
+
+      .content
+        .header OAuth Authorization Succeeded!
+
+        p #{access_token}
+
+    case service
+      when 'instagram'
+        +instagram_success(meta.user)

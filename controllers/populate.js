@@ -15,7 +15,8 @@ Models = {
   post: mongoose.model('post'),
   snippet: mongoose.model('tag'),
   commits: mongoose.model('github_commit'),
-  repos: mongoose.model('github_repo')
+  repos: mongoose.model('github_repo'),
+  oauth_token: mongoose.model('oauth_token')
 };
 
 module.exports = function(app) {
@@ -54,6 +55,11 @@ module.exports = function(app) {
       repos: function(complete) {
         return Models.repos.find({}, function(err, repos) {
           return complete(err, repos);
+        });
+      },
+      oauth_tokens: function(complete) {
+        return Models.oauth_token.find({}, function(err, tokens) {
+          return complete(err, tokens);
         });
       }
     }, function(err, results) {
