@@ -12,7 +12,6 @@ OAuth_Token = mongoose.model('oauth_token');
 
 module.exports = function(app) {
   app.get('/oauth', function(req, res) {
-    logger("config", config);
     return res.render('oauth/index', {
       config: config
     });
@@ -37,7 +36,6 @@ module.exports = function(app) {
         }
       }, function(err, resp, body) {
         var Token;
-        logger("Oauth response (err, body)", err, body);
         if (resp.statusCode === 400) {
           logger("Status code 400!", body.error_reason, body.error_message);
           return res.render('oauth/authorize', {
@@ -58,7 +56,6 @@ module.exports = function(app) {
         });
         return Token.save(function(err) {
           var page_data;
-          logger("Token saved!", Token.toJSON(), body);
           if (err) {
             logger.error(err);
             return res.send(500, err);
@@ -71,7 +68,6 @@ module.exports = function(app) {
                 user: body.user
               }
             };
-            logger("Page Data", page_data);
             return res.render('oauth/authorize', page_data);
           }
         });

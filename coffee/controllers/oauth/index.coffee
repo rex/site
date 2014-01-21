@@ -7,7 +7,6 @@ OAuth_Token = mongoose.model 'oauth_token'
 
 module.exports = (app) ->
   app.get '/oauth', (req, res) ->
-    logger "config", config
     res.render 'oauth/index',
       config: config
 
@@ -28,7 +27,6 @@ module.exports = (app) ->
           grant_type: 'authorization_code'
           code: req.query.code
       , (err, resp, body) ->
-        logger "Oauth response (err, body)", err, body
         if resp.statusCode is 400
           logger "Status code 400!", body.error_reason, body.error_message
           return res.render 'oauth/authorize',
@@ -46,7 +44,6 @@ module.exports = (app) ->
           meta:
             user: body.user
         Token.save (err) ->
-          logger "Token saved!", Token.toJSON(), body
           if err
             logger.error err
             res.send 500, err
@@ -57,7 +54,5 @@ module.exports = (app) ->
               access_token: body.access_token
               meta:
                 user: body.user
-
-            logger "Page Data", page_data
 
             res.render 'oauth/authorize', page_data
