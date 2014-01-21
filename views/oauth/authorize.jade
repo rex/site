@@ -1,13 +1,3 @@
-mixin instagram_success(meta)
-  .ui.items
-    .item
-      .image
-        img(src=meta.user.profile_picture)
-      .content
-        .name #{meta.user.full_name}
-        p.description #{meta.user.username}
-
-
 extends ../layout
 block content
   h2 OAuth Authorization
@@ -39,4 +29,10 @@ block content
 
     case service
       when 'instagram'
-        +instagram_success(meta.user)
+        .ui.items
+          .item
+            .image
+              img(src=meta.user.profile_picture)
+            .content
+              .name #{meta.user.full_name}
+              p.description #{meta.user.username}
