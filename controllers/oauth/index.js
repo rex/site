@@ -38,6 +38,7 @@ module.exports = function(app) {
         var Token;
         Token = new OAuth_Token;
         Token.set({
+          service: 'instagram',
           access_token: body.access_token,
           meta: {
             user: body.user
