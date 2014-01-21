@@ -1,11 +1,11 @@
-mixin instagram_success(user)
+mixin instagram_success(meta)
   .ui.items
     .item
       .image
-        img(src=user.profile_picture)
+        img(src=meta.user.profile_picture)
       .content
-        .name #{user.full_name}
-        p.description #{user.username}
+        .name #{meta.user.full_name}
+        p.description #{meta.user.username}
 
 
 extends ../layout
