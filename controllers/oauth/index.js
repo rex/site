@@ -12,6 +12,7 @@ OAuth_Token = mongoose.model('oauth_token');
 
 module.exports = function(app) {
   app.get('/oauth', function(req, res) {
+    logger("config", config);
     return res.render('oauth/index', {
       config: config
     });
@@ -27,7 +28,7 @@ module.exports = function(app) {
     } else if (req.query.code) {
       return request.post({
         url: 'https://api.instagram.com/oauth/access_token',
-        json: {
+        oauth: {
           client_id: config.instagram.client_id,
           client_secret: config.instagram.client_secret,
           redirect_uri: config.instagram.oauth_redirect_uri,
@@ -36,7 +37,7 @@ module.exports = function(app) {
         }
       }, function(err, resp, body) {
         var Token;
-        logger("Oauth response (err, resp, body)", err, resp, body);
+        logger("Oauth response (err, body)", err, body);
         if (resp.statusCode === 400) {
           logger("Status code 400!", body.error_reason, body.error_message);
           return res.render('oauth/authorize', {

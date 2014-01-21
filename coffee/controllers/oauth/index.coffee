@@ -7,6 +7,7 @@ OAuth_Token = mongoose.model 'oauth_token'
 
 module.exports = (app) ->
   app.get '/oauth', (req, res) ->
+    logger "config", config
     res.render 'oauth/index',
       config: config
 
@@ -20,14 +21,14 @@ module.exports = (app) ->
     else if req.query.code
       request.post
         url: 'https://api.instagram.com/oauth/access_token'
-        json:
+        oauth:
           client_id: config.instagram.client_id
           client_secret: config.instagram.client_secret
           redirect_uri: config.instagram.oauth_redirect_uri
           grant_type: 'authorization_code'
           code: req.query.code
       , (err, resp, body) ->
-        logger "Oauth response (err, resp, body)", err, resp, body
+        logger "Oauth response (err, body)", err, body
         if resp.statusCode is 400
           logger "Status code 400!", body.error_reason, body.error_message
           return res.render 'oauth/authorize',
