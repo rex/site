@@ -1,4 +1,4 @@
-var Visit, app, env, express, http, logger, models, mongoose, server, _;
+var Visit, app, express, http, logger, models, mongoose, redis, server, _;
 
 logger = require('./lib/logger');
 
@@ -12,11 +12,16 @@ http = require('http');
 
 app = express();
 
-env = require('./env')();
+redis = require('./lib/redis');
 
 models = require('./models');
 
-models.initialize();
+models.initialize(function() {
+  var env;
+  return env = require('./env')(function() {
+    return require('./lib/load_env')();
+  });
+});
 
 Visit = mongoose.model('visit');
 

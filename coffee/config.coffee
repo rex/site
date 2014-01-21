@@ -13,6 +13,10 @@ mongo.url = "mongodb://#{mongo.host}:#{mongo.port}/#{mongo.db}"
 if process.env.VCAP_SERVICES then mongo_instance = vcap_services['mongodb2-2.4.8'][0].credentials else mongo_instance = mongo
 
 module.exports =
+  redis:
+    port: 6379
+    host: '127.0.0.1'
+    params: {}
   instagram:
     client_id: process.env.INSTAGRAM_CLIENT
     client_secret: process.env.INSTAGRAM_SECRET

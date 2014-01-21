@@ -4,6 +4,7 @@ logger = require '../lib/logger'
 _ = require '../lib/_'
 
 schemas =
+  env: require './env'
   post: require './post'
   job: require './job'
   snippet: require './snippet'
@@ -16,10 +17,11 @@ schemas =
     repo: require './github/repo'
     commit: require './github/commit'
 
-exports.initialize = ->
+exports.initialize = (after_connected) ->
   # Instantiate our models
   logger "Initializing models..."
 
+  mongoose.model 'env', schemas.env
   mongoose.model 'post', schemas.post
   mongoose.model 'job', schemas.job
   mongoose.model 'snippet', schemas.snippet
@@ -48,6 +50,8 @@ exports.initialize = ->
     logger "Loaded #{mongoose.modelNames().length} models:"
     _.each mongoose.modelNames(), (name) ->
       logger " > #{name}"
+
+    if typeof after_connected is 'function' then after_connected()
 
   conn.on 'disconnecting', ->
     logger.warn 'Mongoose disconnecting...'

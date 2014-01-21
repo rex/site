@@ -9,6 +9,7 @@ logger = require('../lib/logger');
 _ = require('../lib/_');
 
 schemas = {
+  env: require('./env'),
   post: require('./post'),
   job: require('./job'),
   snippet: require('./snippet'),
@@ -23,9 +24,10 @@ schemas = {
   }
 };
 
-exports.initialize = function() {
+exports.initialize = function(after_connected) {
   var conn;
   logger("Initializing models...");
+  mongoose.model('env', schemas.env);
   mongoose.model('post', schemas.post);
   mongoose.model('job', schemas.job);
   mongoose.model('snippet', schemas.snippet);
@@ -47,9 +49,12 @@ exports.initialize = function() {
   conn.once('open', function() {
     logger('Mongoose connection open...');
     logger("Loaded " + (mongoose.modelNames().length) + " models:");
-    return _.each(mongoose.modelNames(), function(name) {
+    _.each(mongoose.modelNames(), function(name) {
       return logger(" > " + name);
     });
+    if (typeof after_connected === 'function') {
+      return after_connected();
+    }
   });
   conn.on('disconnecting', function() {
     return logger.warn('Mongoose disconnecting...');

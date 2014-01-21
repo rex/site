@@ -6,12 +6,17 @@ express = require 'express'
 http = require 'http'
 app = express()
 
-# Very, VERY important: Initialize our environment variables
-env = require('./env')()
+# Let's instantiate our Redis connection
+redis = require './lib/redis'
 
 # Here we instantiate our models
 models = require './models'
-models.initialize()
+models.initialize ->
+  # This fires after Mongoose fully connects, not necessarily in this order.
+  #
+  # Very, VERY important: Initialize our environment variables
+  env = require('./env') ->
+    require('./lib/load_env')()
 
 Visit = mongoose.model 'visit'
 

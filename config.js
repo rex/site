@@ -21,6 +21,11 @@ if (process.env.VCAP_SERVICES) {
 }
 
 module.exports = {
+  redis: {
+    port: 6379,
+    host: '127.0.0.1',
+    params: {}
+  },
   instagram: {
     client_id: process.env.INSTAGRAM_CLIENT,
     client_secret: process.env.INSTAGRAM_SECRET,
