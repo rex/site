@@ -36,6 +36,14 @@ module.exports = function(app) {
         }
       }, function(err, resp, body) {
         var Token;
+        if (err) {
+          return res.render('oauth/authorize', {
+            service: 'instagram',
+            error_reason: "",
+            error: err,
+            error_description: err
+          });
+        }
         Token = new OAuth_Token;
         Token.set({
           service: 'instagram',
