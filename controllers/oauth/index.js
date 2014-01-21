@@ -36,7 +36,9 @@ module.exports = function(app) {
         }
       }, function(err, resp, body) {
         var Token;
+        logger("Oauth response (err, resp, body)", err, resp, body);
         if (resp.statusCode === 400) {
+          logger("Status code 400!", body.error_reason, body.error_message);
           return res.render('oauth/authorize', {
             service: 'instagram',
             error_reason: body.error_reason,
