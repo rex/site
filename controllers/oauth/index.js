@@ -47,6 +47,7 @@ module.exports = function(app) {
             error_description: body.error_message
           });
         }
+        body = JSON.parse(body);
         Token = new OAuth_Token;
         Token.set({
           service: 'instagram',
