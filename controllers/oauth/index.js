@@ -45,18 +45,22 @@ module.exports = function(app) {
           }
         });
         return Token.save(function(err) {
+          var page_data;
+          logger("Token saved!", Token.toJSON(), body);
           if (err) {
             logger.error(err);
             return res.send(500, err);
           } else {
-            return res.render('oauth/authorize', {
+            page_data = {
               service: 'instagram',
               success: true,
               access_token: body.access_token,
               meta: {
                 user: body.user
               }
-            });
+            };
+            logger("Page Data", page_data);
+            return res.render('oauth/authorize', page_data);
           }
         });
       });

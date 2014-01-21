@@ -34,13 +34,18 @@ module.exports = (app) ->
           meta:
             user: body.user
         Token.save (err) ->
+          logger "Token saved!", Token.toJSON(), body
           if err
             logger.error err
             res.send 500, err
           else
-            res.render 'oauth/authorize',
+            page_data =
               service: 'instagram'
               success: true
               access_token: body.access_token
               meta:
                 user: body.user
+
+            logger "Page Data", page_data
+
+            res.render 'oauth/authorize', page_data
