@@ -1,14 +1,14 @@
 logger = require '../lib/logger'
 instagram = require '../lib/instagram'
 config = require '../config'
-mongoose = require 'mongoose'
+mongo = require '../drivers/mongo'
 
 Services =
   Github: require '../services/github'
   Instagram: require '../services/instagram'
 
 Models =
-  activity: mongoose.model 'activity'
+  activity: mongo.model 'activity'
 
 module.exports = (app) ->
   require('./webhooks') app

@@ -1,4 +1,4 @@
-var Models, Services, config, instagram, logger, mongoose;
+var Models, Services, config, instagram, logger, mongo;
 
 logger = require('../lib/logger');
 
@@ -6,7 +6,7 @@ instagram = require('../lib/instagram');
 
 config = require('../config');
 
-mongoose = require('mongoose');
+mongo = require('../drivers/mongo');
 
 Services = {
   Github: require('../services/github'),
@@ -14,7 +14,7 @@ Services = {
 };
 
 Models = {
-  activity: mongoose.model('activity')
+  activity: mongo.model('activity')
 };
 
 module.exports = function(app) {

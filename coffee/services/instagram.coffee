@@ -11,6 +11,17 @@ Models =
 class Instagram extends Service
 
   fetch_recent_activity: (callback) ->
+    async.parallel
+      likes: @fetch_recent_likes
+      images: @fetch_images
+    , callback
+
+  fetch_recent_likes: (callback) ->
+    instagram.users.liked_by_self
+      complete: (data) ->
+        callback null, data
+
+  fetch_images: (callback) ->
     current_pagination = {}
     images = []
 
@@ -25,31 +36,21 @@ class Instagram extends Service
             logger "Processing image #{image.id}"
             images.push image
 
-            Models.activity.findOne
+            Models.activity.findOneAndUpdate
               'service': 'instagram'
               'params.id': image.id
-            , (err, existing_image) ->
-              if err then return next err
-              if existing_image
-                Models.activity.findOneAndUpdate
-                  'service': 'instagram'
-                  'params.id': image.id
-                , { $set: { params: image } }, next
-              else
-                new_image = new Models.activity
-                  created_on: parseInt image.created_time * 1000
-                  service: 'instagram'
-                  type: 'share'
-                  params: image
-                new_image.save next
-          , (err) ->
-            done err
+            ,
+              $set:
+                created_on: parseInt image.created_time * 1000
+                service: 'instagram'
+                type: 'share'
+                params: image
+            , { upsert: true }, next
+          , done
     , ->
       logger "Checking pagination: ", current_pagination
       _.has current_pagination, "next_url"
-    , (err) ->
-      logger "All done!", err, "#{images.length} images processed"
-      callback err, images
+    , callback
 
 
   process_webhook_activity: (body, callback) ->

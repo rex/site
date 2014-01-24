@@ -150,10 +150,12 @@ module.exports = (grunt) ->
         options:
           script: 'app.js'
           node_env: 'development'
+          # output: 'prex\.io running at'
       prod:
         options:
           script: 'app.js'
           node_env: 'production'
+          # output: 'prex\.io running at'
     less:
       development:
         options:

@@ -1,4 +1,5 @@
-mongoose = require 'mongoose'
+# mongoose = require 'mongoose'
+mongo = require '../drivers/mongo'
 config = require '../config'
 logger = require '../lib/logger'
 _ = require '../lib/_'
@@ -17,62 +18,19 @@ schemas =
     repo: require './github/repo'
     commit: require './github/commit'
 
-exports.initialize = (after_connected) ->
+exports.initialize = (after_connected = ->) ->
   # Instantiate our models
-  logger "Initializing models..."
+  mongo.model 'env', schemas.env
+  mongo.model 'post', schemas.post
+  mongo.model 'job', schemas.job
+  mongo.model 'snippet', schemas.snippet
+  mongo.model 'tag', schemas.tag
+  mongo.model 'link', schemas.link
+  mongo.model 'activity', schemas.activity, 'activities'
+  mongo.model 'visit', schemas.visit
+  mongo.model 'github_repo', schemas.github.repo
+  mongo.model 'github_commit', schemas.github.commit
+  mongo.model 'oauth_token', schemas.oauth_token
 
-  mongoose.model 'env', schemas.env
-  mongoose.model 'post', schemas.post
-  mongoose.model 'job', schemas.job
-  mongoose.model 'snippet', schemas.snippet
-  mongoose.model 'tag', schemas.tag
-  mongoose.model 'link', schemas.link
-  mongoose.model 'activity', schemas.activity, 'activities'
-  mongoose.model 'visit', schemas.visit
-  mongoose.model 'github_repo', schemas.github.repo
-  mongoose.model 'github_commit', schemas.github.commit
-  mongoose.model 'oauth_token', schemas.oauth_token
-
-  # Get connection instance to operate on
-  conn = mongoose.connection
-
-  # Set up event listeners to properly handle events
-  logger "Initializing Mongoose event listeners..."
-  conn.on 'connecting', ->
-    logger 'Mongoose connecting...'
-
-  conn.on 'connected', ->
-    logger 'Mongoose connected...'
-
-  conn.once 'open', ->
-    logger 'Mongoose connection open...'
-    # Display loaded models
-    logger "Loaded #{mongoose.modelNames().length} models:"
-    _.each mongoose.modelNames(), (name) ->
-      logger " > #{name}"
-
-    if typeof after_connected is 'function' then after_connected()
-
-  conn.on 'disconnecting', ->
-    logger.warn 'Mongoose disconnecting...'
-
-  conn.on 'disconnected', ->
-    logger.warn 'Mongoose disconnected...'
-
-  conn.on 'close', ->
-    logger.warn 'Closing Mongoose connection...'
-
-  conn.on 'reconnected', ->
-    logger 'Mongoose reconnected...'
-
-  conn.on 'error', ->
-    logger.error 'Mongoose connection error!'
-
-  conn.on 'fullsetup', ->
-    logger 'All replica set nodes set up...'
-
-  # Instantiate the connection
-  logger "Connecting to MongoDB..."
-
-  mongoose.connect config.mongo.url, {}, ->
-    logger "Mongoose connected?", arguments
+  # Connect to Mongo
+  mongo.initialize after_connected

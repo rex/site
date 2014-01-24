@@ -1,4 +1,4 @@
-var mongo, mongo_instance, vcap_application, vcap_services;
+var mongo, vcap_application, vcap_services;
 
 vcap_services = process.env.VCAP_SERVICES != null ? JSON.parse(process.env.VCAP_SERVICES) : {};
 
@@ -14,13 +14,12 @@ mongo = {
 
 mongo.url = "mongodb://" + mongo.host + ":" + mongo.port + "/" + mongo.db;
 
-if (process.env.VCAP_SERVICES) {
-  mongo_instance = vcap_services['mongodb2-2.4.8'][0].credentials;
-} else {
-  mongo_instance = mongo;
-}
-
 module.exports = {
+  debug: false,
+  app: {
+    host: 'localhost',
+    port: 3000
+  },
   redis: {
     port: 6379,
     host: '127.0.0.1',
@@ -55,10 +54,10 @@ module.exports = {
     oauth_secret: process.env.LINKEDIN_OAUTH_SECRET
   },
   mongo: {
-    host: mongo_instance.host,
-    port: mongo_instance.port,
-    user: mongo_instance.username,
-    pass: mongo_instance.password,
-    url: mongo_instance.url
+    host: mongo.host,
+    port: mongo.port,
+    user: mongo.username,
+    pass: mongo.password,
+    url: mongo.url
   }
 };

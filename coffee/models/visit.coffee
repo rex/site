@@ -3,8 +3,6 @@ Schema = mongoose.Schema
 _ = require '../lib/_'
 logger = require '../lib/logger'
 
-logger "Instantiating visit schema"
-
 VisitSchema = new Schema
   created_on:
     type: Date

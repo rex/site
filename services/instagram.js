@@ -27,6 +27,21 @@ Instagram = (function(_super) {
   }
 
   Instagram.prototype.fetch_recent_activity = function(callback) {
+    return async.parallel({
+      likes: this.fetch_recent_likes,
+      images: this.fetch_images
+    }, callback);
+  };
+
+  Instagram.prototype.fetch_recent_likes = function(callback) {
+    return instagram.users.liked_by_self({
+      complete: function(data) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_images = function(callback) {
     var current_pagination, images;
     current_pagination = {};
     images = [];
@@ -40,45 +55,26 @@ Instagram = (function(_super) {
           return async.each(data, function(image, next) {
             logger("Processing image " + image.id);
             images.push(image);
-            return Models.activity.findOne({
+            return Models.activity.findOneAndUpdate({
               'service': 'instagram',
               'params.id': image.id
-            }, function(err, existing_image) {
-              var new_image;
-              if (err) {
-                return next(err);
+            }, {
+              $set: {
+                created_on: parseInt(image.created_time * 1000),
+                service: 'instagram',
+                type: 'share',
+                params: image
               }
-              if (existing_image) {
-                return Models.activity.findOneAndUpdate({
-                  'service': 'instagram',
-                  'params.id': image.id
-                }, {
-                  $set: {
-                    params: image
-                  }
-                }, next);
-              } else {
-                new_image = new Models.activity({
-                  created_on: parseInt(image.created_time * 1000),
-                  service: 'instagram',
-                  type: 'share',
-                  params: image
-                });
-                return new_image.save(next);
-              }
-            });
-          }, function(err) {
-            return done(err);
-          });
+            }, {
+              upsert: true
+            }, next);
+          }, done);
         }
       });
     }, function() {
       logger("Checking pagination: ", current_pagination);
       return _.has(current_pagination, "next_url");
-    }, function(err) {
-      logger("All done!", err, "" + images.length + " images processed");
-      return callback(err, images);
-    });
+    }, callback);
   };
 
   Instagram.prototype.process_webhook_activity = function(body, callback) {};

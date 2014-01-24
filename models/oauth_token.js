@@ -36,6 +36,15 @@ OAuthTokenSchema = new Schema({
     type: Boolean,
     "default": true
   },
+  is_env: {
+    type: Boolean,
+    "default": false,
+    index: true
+  },
+  env_key: {
+    type: String,
+    index: true
+  },
   meta: {
     type: Object
   }

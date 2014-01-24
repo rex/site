@@ -5,6 +5,10 @@ mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
 RepoSchema = new Schema({
+  personal: {
+    type: Boolean,
+    index: true
+  },
   repo_id: {
     type: Number,
     index: true
