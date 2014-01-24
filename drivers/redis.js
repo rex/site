@@ -21,7 +21,7 @@ RedisDriver = (function(_super) {
     }
     this.state = "";
     this.connected = false;
-    this.debug = false;
+    this.debug = config.debug;
     callback();
   }
 

@@ -10,28 +10,37 @@ debug = config.debug
 
 app = express()
 
-# Let's instantiate our Redis connection
-redis = require './drivers/redis'
-mongo = require './drivers/mongo'
-
 # Here begins the organized, structured application boot process
 async.series
   connect_to_redis: (done) ->
-    step.start "Connecting to Redis"
+    step.start "Initializing Redis"
+    redis = require './drivers/redis'
     redis.initialize ->
       step.complete()
       done()
 
   initialize_models: (done) ->
-    # Here we instantiate our models
     step.start "Initializing Mongo"
     models = require './models'
     models.initialize ->
       step.complete()
       done()
 
+  connect_to_queue: (done) ->
+    step.start "Initializing Job Queue"
+    queue = require './drivers/queue'
+    queue.initialize ->
+      step.complete()
+      done()
+
+  initialize_workers: (done) ->
+    step.start "Initializing Job Queue Workers"
+    workers = require './workers'
+    workers.initialize ->
+      step.complete()
+      done()
+
   env: (done) ->
-    # Very, VERY important: Initialize our environment variables
     step.start "Update environment variables in database"
     require('./env') ->
       step.complete()
@@ -65,40 +74,17 @@ async.series
       step.complete()
       done()
 
-
   attach_middleware: (done) ->
     step.start "Attaching application middleware"
-    # Use the Visit Model's middleware
-    Visit = mongo.model 'visit'
-    app.use (req, res, next) ->
-      if req.path.match /^\/webhooks/
-        logger "Skipping webhook request: #{req.path.replace '/webhooks/', ''}"
-        next()
-      else
-        visit = new Visit
-        visit.createFromRequest req, res, next
+
+    # Track all visits that are not to /webhooks/*
+    app.use require './middleware/log_visit'
 
     # Create locals based on request data
-    app.use (req, res, next) ->
-      req.isPJAX = if req.headers['X-PJAX']? then true else false
-      res.locals.req =
-        xhr: req.xhr
-        path: req.originalUrl
-        isPJAX: req.isPJAX
-      res.locals._ = _
-      res.locals.me = "Pierce"
-      next()
+    app.use require './middleware/set_locals'
 
     # Render JSON responses if ?json query string parameter is set
-    app.use (req, res, next) ->
-      if req.query
-        logger "Query string params:", req.query
-
-      if _.has req.query, 'json'
-        logger "JSON response requested for URL: #{req.originalUrl}"
-        req.json_requested = true
-
-      next()
+    app.use require './middleware/detect_json_requests'
 
     app.use app.router
 

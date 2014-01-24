@@ -1,8 +1,6 @@
-var RepoSchema, Schema, mongoose;
+var RepoSchema, Schema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 RepoSchema = new Schema({
   personal: {

@@ -1,6 +1,4 @@
-mongoose = require 'mongoose'
-Schema = mongoose.Schema
-Tag = require './tag'
+Schema = require('mongoose').Schema
 
 SnippetSchema = new Schema
   created_on:

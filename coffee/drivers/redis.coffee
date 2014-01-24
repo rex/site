@@ -9,7 +9,7 @@ class RedisDriver extends BaseDriver
   constructor: (callback = ->) ->
     @state = ""
     @connected = false
-    @debug = false
+    @debug = config.debug
     callback()
 
   initialize: _.once (redis_initialized = ->) ->

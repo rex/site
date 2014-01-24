@@ -1,10 +1,6 @@
-var Schema, VisitSchema, logger, mongoose, _;
+var Schema, VisitSchema, logger;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
-
-_ = require('../lib/_');
+Schema = require('mongoose').Schema;
 
 logger = require('../lib/logger');
 

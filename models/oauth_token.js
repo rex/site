@@ -1,8 +1,6 @@
-var OAuthTokenSchema, Schema, mongoose;
+var OAuthTokenSchema, Schema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 OAuthTokenSchema = new Schema({
   service: {

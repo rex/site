@@ -7,7 +7,7 @@ BaseDriver = require './base'
 class MongoDriver extends BaseDriver
 
   constructor: (callback = ->) ->
-    @debug = true
+    @debug = config.debug
     @instance = mongoose
     @Schema = mongoose.Schema
     @ObjectId = mongoose.Types.ObjectId
@@ -63,7 +63,7 @@ class MongoDriver extends BaseDriver
       self.connected = true
       mongo_connected()
 
-    @instance.connect config.mongo.url, {}
+    @instance.connect config.get_mongo_url(), {}
 
   show_loaded_models: ->
     if @debug

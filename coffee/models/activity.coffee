@@ -1,23 +1,15 @@
-logger = require '../lib/logger'
-mongoose = require 'mongoose'
-Schema = mongoose.Schema
+Schema = require('mongoose').Schema
 
 ActivitySchema = new Schema
   created_on:
     type: Date
-    default: Date.now
+    required: true
     index: true
-  service:
+  redis_key:
     type: String
     required: true
-    lowercase: true
-    index: true
-  type:
-    type: String
-    default: 'update'
-  params:
-    type: Object
-    default: {}
+    index:
+      unique: true
   visible:
     type: Boolean
     default: true

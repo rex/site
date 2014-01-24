@@ -1,8 +1,6 @@
-var JobSchema, Schema, mongoose;
+var JobSchema, Schema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 JobSchema = new Schema({
   created_on: {

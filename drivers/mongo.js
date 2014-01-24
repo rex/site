@@ -19,7 +19,7 @@ MongoDriver = (function(_super) {
     if (callback == null) {
       callback = function() {};
     }
-    this.debug = true;
+    this.debug = config.debug;
     this.instance = mongoose;
     this.Schema = mongoose.Schema;
     this.ObjectId = mongoose.Types.ObjectId;
@@ -80,7 +80,7 @@ MongoDriver = (function(_super) {
       self.connected = true;
       return mongo_connected();
     });
-    return this.instance.connect(config.mongo.url, {});
+    return this.instance.connect(config.get_mongo_url(), {});
   });
 
   MongoDriver.prototype.show_loaded_models = function() {

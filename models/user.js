@@ -1,8 +1,6 @@
-var Schema, UserSchema, mongoose;
+var Schema, UserSchema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 UserSchema = new Schema({
   username: {

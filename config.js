@@ -1,20 +1,6 @@
-var mongo, vcap_application, vcap_services;
+var app_config;
 
-vcap_services = process.env.VCAP_SERVICES != null ? JSON.parse(process.env.VCAP_SERVICES) : {};
-
-vcap_application = process.env.VCAP_APPLICATION ? JSON.parse(process.env.VCAP_APPLICATION) : {};
-
-mongo = {
-  host: 'localhost',
-  port: 27017,
-  username: '',
-  password: '',
-  db: 'db'
-};
-
-mongo.url = "mongodb://" + mongo.host + ":" + mongo.port + "/" + mongo.db;
-
-module.exports = {
+app_config = {
   debug: false,
   app: {
     host: 'localhost',
@@ -53,11 +39,27 @@ module.exports = {
     oauth_token: process.env.LINKEDIN_OAUTH_TOKEN,
     oauth_secret: process.env.LINKEDIN_OAUTH_SECRET
   },
+  twilio: {
+    sid: process.env.TWILIO_SID,
+    token: process.env.TWILIO_TOKEN
+  },
   mongo: {
-    host: mongo.host,
-    port: mongo.port,
-    user: mongo.username,
-    pass: mongo.password,
-    url: mongo.url
+    host: 'localhost',
+    port: 27017,
+    username: '',
+    password: '',
+    db: 'prex-site'
   }
+};
+
+module.exports = app_config;
+
+module.exports.get_mongo_url = function() {
+  var auth_string;
+  if (app_config.mongo.username && app_config.mongo.password) {
+    auth_string = "" + app_config.mongo.username + ":" + app_config.mongo.password + "@";
+  } else {
+    auth_string = "";
+  }
+  return "mongodb://" + auth_string + app_config.mongo.host + ":" + app_config.mongo.port + "/" + app_config.mongo.db;
 };

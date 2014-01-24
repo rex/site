@@ -1,5 +1,4 @@
-mongoose = require 'mongoose'
-Schema = mongoose.Schema
+Schema = require('mongoose').Schema
 
 RepoSchema = new Schema
   personal:

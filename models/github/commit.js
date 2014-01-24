@@ -1,8 +1,6 @@
-var CommitSchema, Schema, mongoose;
+var CommitSchema, Schema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 CommitSchema = new Schema({
   commit_id: {

@@ -1,4 +1,4 @@
-var app, async, config, debug, express, http, logger, mongo, redis, step, _;
+var app, async, config, debug, express, http, logger, step, _;
 
 logger = require('./lib/logger');
 
@@ -18,13 +18,11 @@ debug = config.debug;
 
 app = express();
 
-redis = require('./drivers/redis');
-
-mongo = require('./drivers/mongo');
-
 async.series({
   connect_to_redis: function(done) {
-    step.start("Connecting to Redis");
+    var redis;
+    step.start("Initializing Redis");
+    redis = require('./drivers/redis');
     return redis.initialize(function() {
       step.complete();
       return done();
@@ -35,6 +33,24 @@ async.series({
     step.start("Initializing Mongo");
     models = require('./models');
     return models.initialize(function() {
+      step.complete();
+      return done();
+    });
+  },
+  connect_to_queue: function(done) {
+    var queue;
+    step.start("Initializing Job Queue");
+    queue = require('./drivers/queue');
+    return queue.initialize(function() {
+      step.complete();
+      return done();
+    });
+  },
+  initialize_workers: function(done) {
+    var workers;
+    step.start("Initializing Job Queue Workers");
+    workers = require('./workers');
+    return workers.initialize(function() {
       step.complete();
       return done();
     });
@@ -76,40 +92,10 @@ async.series({
     });
   },
   attach_middleware: function(done) {
-    var Visit;
     step.start("Attaching application middleware");
-    Visit = mongo.model('visit');
-    app.use(function(req, res, next) {
-      var visit;
-      if (req.path.match(/^\/webhooks/)) {
-        logger("Skipping webhook request: " + (req.path.replace('/webhooks/', '')));
-        return next();
-      } else {
-        visit = new Visit;
-        return visit.createFromRequest(req, res, next);
-      }
-    });
-    app.use(function(req, res, next) {
-      req.isPJAX = req.headers['X-PJAX'] != null ? true : false;
-      res.locals.req = {
-        xhr: req.xhr,
-        path: req.originalUrl,
-        isPJAX: req.isPJAX
-      };
-      res.locals._ = _;
-      res.locals.me = "Pierce";
-      return next();
-    });
-    app.use(function(req, res, next) {
-      if (req.query) {
-        logger("Query string params:", req.query);
-      }
-      if (_.has(req.query, 'json')) {
-        logger("JSON response requested for URL: " + req.originalUrl);
-        req.json_requested = true;
-      }
-      return next();
-    });
+    app.use(require('./middleware/log_visit'));
+    app.use(require('./middleware/set_locals'));
+    app.use(require('./middleware/detect_json_requests'));
     app.use(app.router);
     step.complete();
     return done();

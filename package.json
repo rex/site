@@ -17,13 +17,8 @@
   "homepage": "http://prex.io",
   "dependencies": {
     "async": "latest",
-    "express": "latest",
-    "lodash": "latest",
-    "winston": "latest",
-    "jade": "latest",
-    "marked": "latest",
     "coffee-script": "latest",
-    "moment": "latest",
+    "express": "latest",
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-watch": "latest",
@@ -36,12 +31,19 @@
     "grunt-contrib-copy": "latest",
     "grunt-banner": "latest",
     "grunt-bump": "latest",
-    "octonode": "latest",
+    "hiredis": "~0.1.16",
     "instagram-node-lib": "latest",
-    "ntwitter": "latest",
-    "request": "latest",
+    "jade": "latest",
+    "kue": "latest",
+    "lodash": "latest",
+    "marked": "latest",
+    "moment": "latest",
     "mongoose": "latest",
+    "es": "latest",
+    "ntwitter": "latest",
     "redis": "~0.10.0",
-    "hiredis": "~0.1.16"
+    "request": "latest",
+    "winston": "latest",
+    "winston-mongodb": "latest"
   }
 }

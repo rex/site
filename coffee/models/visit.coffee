@@ -1,6 +1,4 @@
-mongoose = require 'mongoose'
-Schema = mongoose.Schema
-_ = require '../lib/_'
+Schema = require('mongoose').Schema
 logger = require '../lib/logger'
 
 VisitSchema = new Schema

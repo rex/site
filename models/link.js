@@ -1,8 +1,6 @@
-var LinkSchema, Schema, mongoose;
+var LinkSchema, Schema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 LinkSchema = new Schema({
   created_on: {

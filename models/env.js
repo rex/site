@@ -1,8 +1,6 @@
-var EnvSchema, Schema, mongoose;
+var EnvSchema, Schema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 EnvSchema = new Schema({
   created_on: {

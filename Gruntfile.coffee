@@ -51,11 +51,14 @@ module.exports = (grunt) ->
         "#{BUILD}/**"
       ]
       app: [
+        "apis/**"
         "controllers/**"
+        "drivers/**"
         "lib/**"
+        "middleware/**"
         "models/**"
         "services/**"
-        "apis/**"
+        "workers/**"
       ]
     coffee:
       app:

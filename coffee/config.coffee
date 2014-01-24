@@ -1,16 +1,4 @@
-vcap_services = if process.env.VCAP_SERVICES? then JSON.parse process.env.VCAP_SERVICES else {}
-vcap_application = if process.env.VCAP_APPLICATION then JSON.parse process.env.VCAP_APPLICATION else {}
-
-mongo =
-  host: 'localhost'
-  port: 27017
-  username: ''
-  password: ''
-  db: 'db'
-
-mongo.url = "mongodb://#{mongo.host}:#{mongo.port}/#{mongo.db}"
-
-module.exports =
+app_config =
   debug: false
   app:
     host: 'localhost'
@@ -41,9 +29,22 @@ module.exports =
     secret_key: process.env.LINKEDIN_SECRET_KEY
     oauth_token: process.env.LINKEDIN_OAUTH_TOKEN
     oauth_secret: process.env.LINKEDIN_OAUTH_SECRET
+  twilio:
+    sid: process.env.TWILIO_SID
+    token: process.env.TWILIO_TOKEN
   mongo:
-    host: mongo.host
-    port: mongo.port
-    user: mongo.username
-    pass: mongo.password
-    url: mongo.url
+    host: 'localhost'
+    port: 27017
+    username: ''
+    password: ''
+    db: 'prex-site'
+
+module.exports = app_config
+
+module.exports.get_mongo_url = ->
+  if app_config.mongo.username and app_config.mongo.password
+    auth_string = "#{app_config.mongo.username}:#{app_config.mongo.password}@"
+  else
+    auth_string = ""
+
+  "mongodb://#{auth_string}#{app_config.mongo.host}:#{app_config.mongo.port}/#{app_config.mongo.db}"

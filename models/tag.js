@@ -1,8 +1,6 @@
-var Schema, TagSchema, mongoose;
+var Schema, TagSchema;
 
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
+Schema = require('mongoose').Schema;
 
 TagSchema = new Schema({
   name: {
