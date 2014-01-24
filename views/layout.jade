@@ -24,25 +24,41 @@ else
       link(rel='stylesheet', href='/css/rex.min.css', type='text/css')
 
       //- script(src='//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js')
-      script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+      //- script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
       //- script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
       //- script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js')
-      script(src='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.11.0/javascript/semantic.min.js')
-      script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js')
-      script(src='/js/rex.min.js')
+      //- script(src='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.11.0/javascript/semantic.min.js')
+      //- script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js')
+      //- script(src='/js/rex.min.js')
 
     body
       .ui.one.column.grid
         .column
           h1(class='centered logo') PIERCE MOORE
 
-      include sidebar
-
       .ui.grid
-        .ui.center.aligned.one.column.grid
-          .column(style='margin: 0;')
-            #main-content
-              block content
+        .four.wide.column
+        .eight.wide.center.aligned.column
 
-            #loader.ui.dimmer
-              .ui.loader
+          p Developer in Dallas, Texas.
+          p Passionate maker of things.
+          p Addicted writer of code.
+
+          .ui.connected.items
+            .row
+              a.item(href='https://github.com/rex', target="_blank")
+                .ui.left.corner.label
+                  i.github.icon
+                .content
+                  .name GitHub
+                  p.description Storehouse of all things code.
+              a.item(href='https://npmjs.org/~piercemoore', target='_blank')
+                .content
+                  .name NPM
+                  p.description All my Node.js modules
+              a.item(href='https://www.linkedin.com/in/piercemoore', target='_blank')
+                .content
+                  .ui.right.blue.corner.label
+                    i.linkedin.icon
+                  .name LinkedIn
+                  p.description My online resume
