@@ -10,5 +10,7 @@ public/images/
 public/fonts/
 env.coffee
 env.js
+env_app.*
+env_services.*
 !models/env.js
 !coffee/models/env.coffee
