@@ -103,10 +103,7 @@ RedisDriver = (function(_super) {
       callback = function() {};
     }
     return this.get(redis_key, function(err, data) {
-      if (data) {
-        data = JSON.parse(data);
-      }
-      return callback(err, data);
+      return callback(err, JSON.parse(data));
     });
   };
 

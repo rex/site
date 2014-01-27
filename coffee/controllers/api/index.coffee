@@ -1,2 +1,2 @@
 module.exports = (app) ->
-  feed = require('./feed') app
+  require('./feed') app

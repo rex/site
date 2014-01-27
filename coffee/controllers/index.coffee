@@ -23,6 +23,7 @@ module.exports = (app) ->
   require('./visits') app
   require('./populate') app
   require('./cron') app
+  require('./api') app
 
   app.get '/instagram', (req, res) ->
     Services.Instagram.fetch_recent_activity (err, images) ->

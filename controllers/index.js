@@ -30,6 +30,7 @@ module.exports = function(app) {
   require('./visits')(app);
   require('./populate')(app);
   require('./cron')(app);
+  require('./api')(app);
   app.get('/instagram', function(req, res) {
     return Services.Instagram.fetch_recent_activity(function(err, images) {
       if (err) {

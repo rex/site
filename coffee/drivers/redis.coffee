@@ -66,8 +66,7 @@ class RedisDriver extends BaseDriver
 
   get_model: (redis_key, callback = ->) ->
     @get redis_key, (err, data) ->
-      if data then data = JSON.parse data
-      callback err, data
+      callback err, JSON.parse data
 
 
 module.exports = new RedisDriver
