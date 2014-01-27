@@ -1,4 +1,4 @@
-Schema = require('mongoose').Schema
+Schema = require('../../drivers/mongo').Schema
 
 CommitSchema = new Schema
   commit_id:

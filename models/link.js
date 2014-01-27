@@ -1,6 +1,6 @@
 var LinkSchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 LinkSchema = new Schema({
   created_on: {

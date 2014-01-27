@@ -44,6 +44,19 @@ class RedisDriver extends BaseDriver
 
     this
 
+  set: (redis_key, value, callback = ->) ->
+    @instance.set redis_key, value, callback
+
+  get: (redis_key, callback = ->) ->
+    @instance.get redis_key, callback
+
+  store_model: (redis_key, item, callback = ->) ->
+    @set redis_key, JSON.stringify(item), callback
+
+  get_model: (redis_key, callback = ->) ->
+    @get redis_key, (err, data) ->
+      if data then data = JSON.parse data
+      callback err, data
 
 
 module.exports = new RedisDriver

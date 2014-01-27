@@ -1,4 +1,4 @@
-Schema = require('mongoose').Schema
+Schema = require('../drivers/mongo').Schema
 logger = require '../lib/logger'
 
 VisitSchema = new Schema

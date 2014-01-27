@@ -1,9 +1,11 @@
-mongoose = require 'mongoose'
-Visit = mongoose.model 'visit'
+mongo = require "#{process.cwd()}/drivers/mongo"
+
+Models =
+  Visit: mongo.model 'visit'
 
 module.exports = (app) ->
   app.get '/visits*', (req, res) ->
-    Visit
+    Models.Visit
       .find()
       .sort
         timestamp: -1

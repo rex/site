@@ -12,6 +12,13 @@ Service = (function() {
     return logger.apply(arguments);
   };
 
+  Service.prototype.initialize = function(initialized) {
+    if (initialized == null) {
+      initialized = function() {};
+    }
+    return initialized();
+  };
+
   Service.prototype.fetch_recent_activity = function(callback) {
     if (typeof callback === "function") {
       return callback();

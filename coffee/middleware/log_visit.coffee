@@ -1,6 +1,8 @@
 mongo = require '../drivers/mongo'
-Visit = mongo.model 'visit'
 logger = require '../lib/logger'
+
+Models =
+  Visit: mongo.model 'visit'
 
 module.exports = (req, res, next) ->
   # if the requested route is a webhook, avoid it. Otherwise, we log the visit
@@ -8,5 +10,5 @@ module.exports = (req, res, next) ->
     logger "Skipping webhook request: #{req.path.replace '/webhooks/', ''}"
     next()
   else
-    visit = new Visit
+    visit = new Models.Visit
     visit.createFromRequest req, res, next

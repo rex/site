@@ -1,45 +1,45 @@
 logger = require '../lib/logger'
 async = require 'async'
-mongoose = require 'mongoose'
+mongo = require "../drivers/mongo"
 _ = require '../lib/_'
 
 Models =
-  activity: mongoose.model 'activity'
-  job: mongoose.model 'job'
-  link: mongoose.model 'link'
-  post: mongoose.model 'post'
-  snippet: mongoose.model 'tag'
-  commits: mongoose.model 'github_commit'
-  repos: mongoose.model 'github_repo'
-  oauth_token: mongoose.model 'oauth_token'
+  Activity: mongo.model 'activity'
+  Job: mongo.model 'job'
+  Link: mongo.model 'link'
+  Post: mongo.model 'post'
+  Snippet: mongo.model 'tag'
+  Github_Commit: mongo.model 'github_commit'
+  Github_Repo: mongo.model 'github_repo'
+  OAuth_Token: mongo.model 'oauth_token'
 
 
 module.exports = (app) ->
   app.get '/dump', (req, res) ->
     async.series
       links: (complete) ->
-        Models.link.find {}, (err, links) ->
+        Models.Link.find {}, (err, links) ->
           complete err, links
       jobs: (complete) ->
-        Models.job.find {}, (err, jobs) ->
+        Models.Job.find {}, (err, jobs) ->
           complete err, jobs
       activity: (complete) ->
-        Models.activity.find {}, (err, activities) ->
+        Models.Activity.find {}, (err, activities) ->
           complete err, activities
       posts: (complete) ->
-        Models.post.find {}, (err, posts) ->
+        Models.Post.find {}, (err, posts) ->
           complete err, posts
       snippets: (complete) ->
-        Models.snippet.find {}, (err, snippets) ->
+        Models.Snippet.find {}, (err, snippets) ->
           complete err, snippets
       commits: (complete) ->
-        Models.commits.find {}, (err, commits) ->
+        Models.Github_Commit.find {}, (err, commits) ->
           complete err, commits
       repos: (complete) ->
-        Models.repos.find {}, (err, repos) ->
+        Models.Github_Repo.find {}, (err, repos) ->
           complete err, repos
       oauth_tokens: (complete) ->
-        Models.oauth_token.find {}, (err, tokens) ->
+        Models.OAuth_Token.find {}, (err, tokens) ->
           complete err, tokens
     , (err, results) ->
       res.json results
@@ -160,15 +160,15 @@ module.exports = (app) ->
 
     async.series [
       (complete) ->
-        Models.link.remove {}, (err) ->
+        Models.Link.remove {}, (err) ->
           complete err, 'Drop Links'
       (complete) ->
-        Models.job.remove {}, (err) ->
+        Models.Job.remove {}, (err) ->
           complete err, 'Drop Jobs'
       (complete) ->
         async.each links, (link, done) ->
           # logger "Creating link: #{link.title}"
-          Link = new Models.link link
+          Link = new Models.Link link
           Link.save (err) ->
             done err
         , (err) ->
@@ -176,7 +176,7 @@ module.exports = (app) ->
       (complete) ->
         async.each jobs, (job, done) ->
           # logger "Creating job: #{job.title}"
-          Job = new Models.job job
+          Job = new Models.Job job
           Job.save (err) ->
             done err
         , (err) ->

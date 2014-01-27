@@ -1,6 +1,6 @@
 var JobSchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 JobSchema = new Schema({
   created_on: {

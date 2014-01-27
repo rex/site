@@ -1,6 +1,6 @@
 var PostSchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 PostSchema = new Schema({
   created_on: {

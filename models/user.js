@@ -1,6 +1,6 @@
 var Schema, UserSchema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 UserSchema = new Schema({
   username: {

@@ -1,12 +1,14 @@
-var Jobs, mongoose;
+var Models, mongo;
 
-mongoose = require('mongoose');
+mongo = require("" + (process.cwd()) + "/drivers/mongo");
 
-Jobs = mongoose.model('job');
+Models = {
+  Job: mongo.model('job')
+};
 
 module.exports = function(app) {
   return app.get('/resume', function(req, res) {
-    return Jobs.find({}, function(err, jobs) {
+    return Models.Job.find({}, function(err, jobs) {
       return res.render('resume/index', {
         jobs: jobs
       });

@@ -8,6 +8,9 @@ class Service
   log: ->
     logger.apply arguments
 
+  initialize: (initialized = ->) ->
+    initialized()
+
   fetch_recent_activity: (callback) ->
     if typeof callback is "function" then callback() else true
 

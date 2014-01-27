@@ -1,9 +1,10 @@
 config = require '../../config'
 logger = require '../../lib/logger'
 request = require 'request'
-mongoose = require 'mongoose'
+mongo = require "../../drivers/mongo"
 
-OAuth_Token = mongoose.model 'oauth_token'
+Models =
+  OAuth_Token: mongo.model 'oauth_token'
 
 module.exports = (app) ->
   app.get '/oauth', (req, res) ->
@@ -37,16 +38,12 @@ module.exports = (app) ->
 
         body = JSON.parse body
 
-        OAuth_Token.findOneAndUpdate
-          service: 'instagram'
-        ,
+        Models.OAuth_Token.findOneAndUpdate service: 'instagram',
           $set:
             access_token: body.access_token
             meta:
               user: body.user
-        ,
-          upsert: true
-        , (err, token) ->
+        , upsert: true , (err, token) ->
           console.log "Token created/updated", token
           if err
             logger.error err

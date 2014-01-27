@@ -1,6 +1,6 @@
 var OAuthTokenSchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 OAuthTokenSchema = new Schema({
   service: {

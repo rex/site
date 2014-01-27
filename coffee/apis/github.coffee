@@ -5,7 +5,7 @@ class Github extends API
   constructor: ->
     @config =
       headers:
-        'User-Agent': 'prex-site'
+        'User-Agent': 'prex.io'
 
     @base_url = 'https://api.github.com'
 
@@ -19,7 +19,7 @@ class Github extends API
   recent_events: (callback) ->
     @fire { url: '/users/rex/events' }, callback
 
-  repos: (callback) ->
+  fetch_repos: (callback) ->
     @fire { url: '/users/rex/repos' }, callback
 
 module.exports = new Github

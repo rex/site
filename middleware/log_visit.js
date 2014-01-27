@@ -1,10 +1,12 @@
-var Visit, logger, mongo;
+var Models, logger, mongo;
 
 mongo = require('../drivers/mongo');
 
-Visit = mongo.model('visit');
-
 logger = require('../lib/logger');
+
+Models = {
+  Visit: mongo.model('visit')
+};
 
 module.exports = function(req, res, next) {
   var visit;
@@ -12,7 +14,7 @@ module.exports = function(req, res, next) {
     logger("Skipping webhook request: " + (req.path.replace('/webhooks/', '')));
     return next();
   } else {
-    visit = new Visit;
+    visit = new Models.Visit;
     return visit.createFromRequest(req, res, next);
   }
 };

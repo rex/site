@@ -1,12 +1,14 @@
-var Visit, mongoose;
+var Models, mongo;
 
-mongoose = require('mongoose');
+mongo = require("" + (process.cwd()) + "/drivers/mongo");
 
-Visit = mongoose.model('visit');
+Models = {
+  Visit: mongo.model('visit')
+};
 
 module.exports = function(app) {
   return app.get('/visits*', function(req, res) {
-    return Visit.find().sort({
+    return Models.Visit.find().sort({
       timestamp: -1
     }).exec(function(err, recent_visits) {
       return res.render('visits/index', {

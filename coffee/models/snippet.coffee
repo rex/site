@@ -1,4 +1,4 @@
-Schema = require('mongoose').Schema
+Schema = require('../drivers/mongo').Schema
 
 SnippetSchema = new Schema
   created_on:

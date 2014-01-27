@@ -37,24 +37,6 @@ async.series({
       return done();
     });
   },
-  connect_to_queue: function(done) {
-    var queue;
-    step.start("Initializing Job Queue");
-    queue = require('./drivers/queue');
-    return queue.initialize(function() {
-      step.complete();
-      return done();
-    });
-  },
-  initialize_workers: function(done) {
-    var workers;
-    step.start("Initializing Job Queue Workers");
-    workers = require('./workers');
-    return workers.initialize(function() {
-      step.complete();
-      return done();
-    });
-  },
   env: function(done) {
     step.start("Update environment variables in database");
     return require('./env')(function() {
@@ -91,11 +73,62 @@ async.series({
       return done();
     });
   },
+  initialize_redis_session: function(done) {
+    var Redis_Instance, Redis_Store, err;
+    step.start("Initializing Redis Session");
+    Redis_Instance = require('./drivers/redis').instance;
+    if (!Redis_Instance) {
+      err = new Error("No Redis instance found");
+      step.fail(err);
+      return done(err, null);
+    }
+    Redis_Store = require('connect-redis')(express);
+    app.use(express.session({
+      store: new Redis_Store({
+        client: Redis_Instance
+      }),
+      secret: 'go rangers'
+    }));
+    step.complete();
+    return done();
+  },
+  connect_to_queue: function(done) {
+    var queue;
+    step.start("Initializing Job Queue");
+    queue = require('./drivers/queue');
+    return queue.initialize(function() {
+      step.complete();
+      return done();
+    });
+  },
+  initialize_workers: function(done) {
+    var workers;
+    step.start("Initializing Job Queue Workers");
+    workers = require('./workers');
+    return workers.initialize(function() {
+      step.complete();
+      return done();
+    });
+  },
+  initialize_services: function(done) {
+    var services;
+    step.start("Initializing Services");
+    services = require('./services');
+    return services.initialize(function(err) {
+      if (err != null) {
+        step.error(err);
+      } else {
+        step.complete();
+      }
+      return done(err);
+    });
+  },
   attach_middleware: function(done) {
     step.start("Attaching application middleware");
     app.use(require('./middleware/log_visit'));
     app.use(require('./middleware/set_locals'));
     app.use(require('./middleware/detect_json_requests'));
+    app.use(require('./middleware/debug_session'));
     app.use(app.router);
     step.complete();
     return done();

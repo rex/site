@@ -1,6 +1,6 @@
 var EnvSchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 EnvSchema = new Schema({
   created_on: {

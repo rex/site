@@ -2,15 +2,15 @@ Service = require './base'
 config = require '../config'
 async = require 'async'
 _ = require '../lib/_'
-mongoose = require 'mongoose'
+mongo = require "../drivers/mongo"
 logger = require '../lib/logger'
 
 Github_API = require '../apis/github'
 
 Models =
-  activity: mongoose.model 'activity'
-  github_repo: mongoose.model 'github_repo'
-  github_commit: mongoose.model 'github_commit'
+  Activity: mongo.model 'activity'
+  Github_Repo: mongo.model 'github_repo'
+  Github_Commit: mongo.model 'github_commit'
 
 class Github extends Service
 
@@ -27,7 +27,7 @@ class Github extends Service
       activity_ids = _.pluck body, "id"
 
       logger "Found #{activity_ids.length} new activities", activity_ids
-      Models.activity.find
+      Models.Activity.find
         service: "github"
         'params.id':
           '$in': activity_ids
@@ -41,7 +41,7 @@ class Github extends Service
           activity = _.findWhere body,
             id: activity_id
 
-          Activity = new Models.activity
+          Activity = new Models.Activity
             service: 'github'
             created_on: activity.created_at
             type: activity.type
@@ -54,13 +54,13 @@ class Github extends Service
   fetch_repos: (callback) ->
     logger "Updating local cache of GitHub repositories..."
 
-    Github_API.repos (err, body) ->
+    Github_API.fetch_repos (err, body) ->
       async.each body, (repo, complete) ->
-        Models.github_repo.find
+        Models.Github_Repo.find
           repo_id: repo.id
         , (err, local_repo) ->
           if err then return complete err
-          local_repo = new Models.github_repo local_repo
+          local_repo = new Models.Github_Repo local_repo
           if local_repo and local_repo.length
             local_repo.fromGithubRepo repo
             local_repo.save complete
@@ -72,7 +72,7 @@ class Github extends Service
 
   process_webhook_activity: (body, callback) ->
     async.each body.commits, (commit, next) ->
-      new_commit = new Models.github_commit
+      new_commit = new Models.Github_Commit
       new_commit.fromGithubCommit commit, next
     , (err) ->
       callback err

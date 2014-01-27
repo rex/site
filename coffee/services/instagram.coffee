@@ -1,12 +1,12 @@
 Service = require './base'
-mongoose = require 'mongoose'
-instagram = require '../lib/instagram'
+mongo = require '../drivers/mongo'
 _ = require '../lib/_'
 async = require 'async'
 logger = require '../lib/logger'
+Instagram_API = require '../apis/instagram'
 
 Models =
-  activity: mongoose.model 'activity'
+  activity: mongo.model 'activity'
 
 class Instagram extends Service
 
@@ -17,7 +17,7 @@ class Instagram extends Service
     , callback
 
   fetch_recent_likes: (callback) ->
-    instagram.users.liked_by_self
+    Instagram_API.users.liked_by_self
       complete: (data) ->
         callback null, data
 
@@ -27,7 +27,7 @@ class Instagram extends Service
 
     async.doWhilst (done) ->
       logger "Fetching Instagram activity", current_pagination
-      instagram.users.recent
+      Instagram_API.users.recent
         user_id: 11843229
         max_id: if current_pagination.next_max_id? then current_pagination.next_max_id else null
         complete: (data, pagination) ->
@@ -37,12 +37,12 @@ class Instagram extends Service
             images.push image
 
             Models.activity.findOneAndUpdate
-              'service': 'instagram'
+              'service': 'Instagram_API'
               'params.id': image.id
             ,
               $set:
                 created_on: parseInt image.created_time * 1000
-                service: 'instagram'
+                service: 'Instagram_API'
                 type: 'share'
                 params: image
             , { upsert: true }, next

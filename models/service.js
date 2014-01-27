@@ -1,6 +1,6 @@
 var Schema, ServiceSchema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 ServiceSchema = new Schema({
   name: {

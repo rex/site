@@ -1,64 +1,64 @@
-var Models, async, logger, mongoose, _;
+var Models, async, logger, mongo, _;
 
 logger = require('../lib/logger');
 
 async = require('async');
 
-mongoose = require('mongoose');
+mongo = require("../drivers/mongo");
 
 _ = require('../lib/_');
 
 Models = {
-  activity: mongoose.model('activity'),
-  job: mongoose.model('job'),
-  link: mongoose.model('link'),
-  post: mongoose.model('post'),
-  snippet: mongoose.model('tag'),
-  commits: mongoose.model('github_commit'),
-  repos: mongoose.model('github_repo'),
-  oauth_token: mongoose.model('oauth_token')
+  Activity: mongo.model('activity'),
+  Job: mongo.model('job'),
+  Link: mongo.model('link'),
+  Post: mongo.model('post'),
+  Snippet: mongo.model('tag'),
+  Github_Commit: mongo.model('github_commit'),
+  Github_Repo: mongo.model('github_repo'),
+  OAuth_Token: mongo.model('oauth_token')
 };
 
 module.exports = function(app) {
   app.get('/dump', function(req, res) {
     return async.series({
       links: function(complete) {
-        return Models.link.find({}, function(err, links) {
+        return Models.Link.find({}, function(err, links) {
           return complete(err, links);
         });
       },
       jobs: function(complete) {
-        return Models.job.find({}, function(err, jobs) {
+        return Models.Job.find({}, function(err, jobs) {
           return complete(err, jobs);
         });
       },
       activity: function(complete) {
-        return Models.activity.find({}, function(err, activities) {
+        return Models.Activity.find({}, function(err, activities) {
           return complete(err, activities);
         });
       },
       posts: function(complete) {
-        return Models.post.find({}, function(err, posts) {
+        return Models.Post.find({}, function(err, posts) {
           return complete(err, posts);
         });
       },
       snippets: function(complete) {
-        return Models.snippet.find({}, function(err, snippets) {
+        return Models.Snippet.find({}, function(err, snippets) {
           return complete(err, snippets);
         });
       },
       commits: function(complete) {
-        return Models.commits.find({}, function(err, commits) {
+        return Models.Github_Commit.find({}, function(err, commits) {
           return complete(err, commits);
         });
       },
       repos: function(complete) {
-        return Models.repos.find({}, function(err, repos) {
+        return Models.Github_Repo.find({}, function(err, repos) {
           return complete(err, repos);
         });
       },
       oauth_tokens: function(complete) {
-        return Models.oauth_token.find({}, function(err, tokens) {
+        return Models.OAuth_Token.find({}, function(err, tokens) {
           return complete(err, tokens);
         });
       }
@@ -151,17 +151,17 @@ module.exports = function(app) {
     ];
     return async.series([
       function(complete) {
-        return Models.link.remove({}, function(err) {
+        return Models.Link.remove({}, function(err) {
           return complete(err, 'Drop Links');
         });
       }, function(complete) {
-        return Models.job.remove({}, function(err) {
+        return Models.Job.remove({}, function(err) {
           return complete(err, 'Drop Jobs');
         });
       }, function(complete) {
         return async.each(links, function(link, done) {
           var Link;
-          Link = new Models.link(link);
+          Link = new Models.Link(link);
           return Link.save(function(err) {
             return done(err);
           });
@@ -171,7 +171,7 @@ module.exports = function(app) {
       }, function(complete) {
         return async.each(jobs, function(job, done) {
           var Job;
-          Job = new Models.job(job);
+          Job = new Models.Job(job);
           return Job.save(function(err) {
             return done(err);
           });

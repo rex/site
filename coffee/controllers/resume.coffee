@@ -1,8 +1,10 @@
-mongoose = require 'mongoose'
-Jobs = mongoose.model 'job'
+mongo = require "#{process.cwd()}/drivers/mongo"
+
+Models =
+  Job: mongo.model 'job'
 
 module.exports = (app) ->
   app.get '/resume', (req, res) ->
-    Jobs.find {}, (err, jobs) ->
+    Models.Job.find {}, (err, jobs) ->
       res.render 'resume/index',
         jobs: jobs

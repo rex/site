@@ -1,4 +1,4 @@
-var Github, Github_API, Models, Service, async, config, logger, mongoose, _,
+var Github, Github_API, Models, Service, async, config, logger, mongo, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -10,16 +10,16 @@ async = require('async');
 
 _ = require('../lib/_');
 
-mongoose = require('mongoose');
+mongo = require("../drivers/mongo");
 
 logger = require('../lib/logger');
 
 Github_API = require('../apis/github');
 
 Models = {
-  activity: mongoose.model('activity'),
-  github_repo: mongoose.model('github_repo'),
-  github_commit: mongoose.model('github_commit')
+  Activity: mongo.model('activity'),
+  Github_Repo: mongo.model('github_repo'),
+  Github_Commit: mongo.model('github_commit')
 };
 
 Github = (function(_super) {
@@ -40,7 +40,7 @@ Github = (function(_super) {
       }
       activity_ids = _.pluck(body, "id");
       logger("Found " + activity_ids.length + " new activities", activity_ids);
-      return Models.activity.find({
+      return Models.Activity.find({
         service: "github",
         'params.id': {
           '$in': activity_ids
@@ -57,7 +57,7 @@ Github = (function(_super) {
           activity = _.findWhere(body, {
             id: activity_id
           });
-          Activity = new Models.activity({
+          Activity = new Models.Activity({
             service: 'github',
             created_on: activity.created_at,
             type: activity.type,
@@ -73,15 +73,15 @@ Github = (function(_super) {
 
   Github.prototype.fetch_repos = function(callback) {
     logger("Updating local cache of GitHub repositories...");
-    return Github_API.repos(function(err, body) {
+    return Github_API.fetch_repos(function(err, body) {
       return async.each(body, function(repo, complete) {
-        return Models.github_repo.find({
+        return Models.Github_Repo.find({
           repo_id: repo.id
         }, function(err, local_repo) {
           if (err) {
             return complete(err);
           }
-          local_repo = new Models.github_repo(local_repo);
+          local_repo = new Models.Github_Repo(local_repo);
           if (local_repo && local_repo.length) {
             local_repo.fromGithubRepo(repo);
             return local_repo.save(complete);
@@ -99,7 +99,7 @@ Github = (function(_super) {
   Github.prototype.process_webhook_activity = function(body, callback) {
     return async.each(body.commits, function(commit, next) {
       var new_commit;
-      new_commit = new Models.github_commit;
+      new_commit = new Models.Github_Commit;
       return new_commit.fromGithubCommit(commit, next);
     }, function(err) {
       return callback(err);

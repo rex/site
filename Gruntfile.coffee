@@ -82,7 +82,11 @@ module.exports = (grunt) ->
           sourceMapDir: "#{JS}/maps/"
           join: true
         files:
-          'build/public/rex.js': ['coffee/public/**/*.coffee']
+          'build/public/rex.js': [
+            'coffee/public/main.coffee'
+            'coffee/public/utils/coffee'
+            'coffee/public/**/*.coffee'
+          ]
     concat:
       options:
         separator: '\n'
@@ -90,6 +94,7 @@ module.exports = (grunt) ->
         process: process
       public:
         src: [
+          "#{PUBLIC}/js/templates.js"
           "#{BUILD}/lib/prism.min.js"
           "#{BUILD}/lib/prism-*.js"
           "#{BUILD}/lib/**/*.js"
@@ -180,6 +185,9 @@ module.exports = (grunt) ->
           "build/css/style.css": "less/rex.less"
     lesslint:
       src: ['less/**/*.less']
+    shell:
+      rex_template:
+        command: 'rex-template -i views/ -o public/js/templates.js'
     uglify:
       options:
         mangle: true
@@ -234,19 +242,25 @@ module.exports = (grunt) ->
           'coffee/public/**/*.coffee'
         ]
         tasks: ['js']
+      views:
+        files: [
+          'views/**/*.hb'
+        ]
+        tasks: ['shell:rex_template', 'concat:public']
 
   grunt.loadNpmTasks 'grunt-banner'
+  grunt.loadNpmTasks 'grunt-bump'
+  grunt.loadNpmTasks 'grunt-contrib-clean'
+  grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-contrib-copy'
+  grunt.loadNpmTasks 'grunt-contrib-cssmin'
+  grunt.loadNpmTasks 'grunt-contrib-less'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.loadNpmTasks 'grunt-contrib-clean'
-  grunt.loadNpmTasks 'grunt-contrib-cssmin'
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-contrib-less'
-  grunt.loadNpmTasks 'grunt-lesslint'
   grunt.loadNpmTasks 'grunt-express-server'
-  grunt.loadNpmTasks 'grunt-contrib-copy'
-  grunt.loadNpmTasks 'grunt-bump'
+  grunt.loadNpmTasks 'grunt-lesslint'
+  grunt.loadNpmTasks 'grunt-shell'
 
   ###
     Release tasks
@@ -259,7 +273,7 @@ module.exports = (grunt) ->
     Actual code/build tasks
   ###
   grunt.registerTask 'css', ['clean:css', 'less:development', 'copy:css', 'cssmin']
-  grunt.registerTask 'js', ['clean:js', 'coffee:public', 'copy:js', 'uglify', 'concat:public']
+  grunt.registerTask 'js', ['clean:js', 'coffee:public', 'copy:js', 'uglify', 'shell:rex_template', 'concat:public']
   grunt.registerTask 'assets', ['copy:fonts', 'copy:images']
   grunt.registerTask 'app', ['coffee:app']
 

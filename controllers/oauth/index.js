@@ -1,4 +1,4 @@
-var OAuth_Token, config, logger, mongoose, request;
+var Models, config, logger, mongo, request;
 
 config = require('../../config');
 
@@ -6,9 +6,11 @@ logger = require('../../lib/logger');
 
 request = require('request');
 
-mongoose = require('mongoose');
+mongo = require("../../drivers/mongo");
 
-OAuth_Token = mongoose.model('oauth_token');
+Models = {
+  OAuth_Token: mongo.model('oauth_token')
+};
 
 module.exports = function(app) {
   app.get('/oauth', function(req, res) {
@@ -45,7 +47,7 @@ module.exports = function(app) {
           });
         }
         body = JSON.parse(body);
-        return OAuth_Token.findOneAndUpdate({
+        return Models.OAuth_Token.findOneAndUpdate({
           service: 'instagram'
         }, {
           $set: {

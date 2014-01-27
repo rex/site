@@ -26,20 +26,6 @@ async.series
       step.complete()
       done()
 
-  connect_to_queue: (done) ->
-    step.start "Initializing Job Queue"
-    queue = require './drivers/queue'
-    queue.initialize ->
-      step.complete()
-      done()
-
-  initialize_workers: (done) ->
-    step.start "Initializing Job Queue Workers"
-    workers = require './workers'
-    workers.initialize ->
-      step.complete()
-      done()
-
   env: (done) ->
     step.start "Update environment variables in database"
     require('./env') ->
@@ -74,6 +60,45 @@ async.series
       step.complete()
       done()
 
+  initialize_redis_session: (done) ->
+    step.start "Initializing Redis Session"
+    Redis_Instance = require('./drivers/redis').instance
+    unless Redis_Instance
+      err = new Error "No Redis instance found"
+      step.fail err
+      return done err, null
+
+    Redis_Store = require('connect-redis') express
+
+    app.use express.session
+      store: new Redis_Store
+        client: Redis_Instance
+      secret: 'go rangers'
+
+    step.complete()
+    done()
+
+  connect_to_queue: (done) ->
+    step.start "Initializing Job Queue"
+    queue = require './drivers/queue'
+    queue.initialize ->
+      step.complete()
+      done()
+
+  initialize_workers: (done) ->
+    step.start "Initializing Job Queue Workers"
+    workers = require './workers'
+    workers.initialize ->
+      step.complete()
+      done()
+
+  initialize_services: (done) ->
+    step.start "Initializing Services"
+    services = require './services'
+    services.initialize (err) ->
+      if err? then step.error err else step.complete()
+      done err
+
   attach_middleware: (done) ->
     step.start "Attaching application middleware"
 
@@ -85,6 +110,9 @@ async.series
 
     # Render JSON responses if ?json query string parameter is set
     app.use require './middleware/detect_json_requests'
+
+    # Display all session information for each request
+    app.use require './middleware/debug_session'
 
     app.use app.router
 

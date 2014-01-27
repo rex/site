@@ -1,5 +1,4 @@
 logger = require '../lib/logger'
-instagram = require '../lib/instagram'
 config = require '../config'
 mongo = require '../drivers/mongo'
 
@@ -35,8 +34,6 @@ module.exports = (app) ->
     res.json
       config: config
       env: process.env
-      vcap_services: if process.env.VCAP_SERVICES? then JSON.parse process.env.VCAP_SERVICES else "Not running on AppFog"
-      vcap_application: if process.env.VCAP_APPLICATION? then JSON.parse process.env.VCAP_APPLICATION else "Not running on AppFog"
 
   app.get '/github/activity', (req, res) ->
     Services.Github.fetch_recent_activity (err, activity) ->
@@ -52,16 +49,4 @@ module.exports = (app) ->
         body: body
 
   app.get '/', (req, res) ->
-    Models.activity
-      .find()
-      .sort
-        created_on: 'desc'
-      .exec (err, body) ->
-        if req.json_requested
-          res.json body
-        else
-          res.render 'index',
-            uri: req.originalUrl
-            time: new Date().toLocaleString()
-            pretty: true
-            feed: body
+    res.sendfile 'views/index.html'

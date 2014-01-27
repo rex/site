@@ -61,6 +61,39 @@ RedisDriver = (function(_super) {
     return this;
   });
 
+  RedisDriver.prototype.set = function(redis_key, value, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.instance.set(redis_key, value, callback);
+  };
+
+  RedisDriver.prototype.get = function(redis_key, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.instance.get(redis_key, callback);
+  };
+
+  RedisDriver.prototype.store_model = function(redis_key, item, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.set(redis_key, JSON.stringify(item), callback);
+  };
+
+  RedisDriver.prototype.get_model = function(redis_key, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.get(redis_key, function(err, data) {
+      if (data) {
+        data = JSON.parse(data);
+      }
+      return callback(err, data);
+    });
+  };
+
   return RedisDriver;
 
 })(BaseDriver);

@@ -1,8 +1,6 @@
-var Models, Services, config, instagram, logger, mongo;
+var Models, Services, config, logger, mongo;
 
 logger = require('../lib/logger');
-
-instagram = require('../lib/instagram');
 
 config = require('../config');
 
@@ -42,9 +40,7 @@ module.exports = function(app) {
   app.get('/env', function(req, res) {
     return res.json({
       config: config,
-      env: process.env,
-      vcap_services: process.env.VCAP_SERVICES != null ? JSON.parse(process.env.VCAP_SERVICES) : "Not running on AppFog",
-      vcap_application: process.env.VCAP_APPLICATION != null ? JSON.parse(process.env.VCAP_APPLICATION) : "Not running on AppFog"
+      env: process.env
     });
   });
   app.get('/github/activity', function(req, res) {
@@ -65,19 +61,6 @@ module.exports = function(app) {
     });
   });
   return app.get('/', function(req, res) {
-    return Models.activity.find().sort({
-      created_on: 'desc'
-    }).exec(function(err, body) {
-      if (req.json_requested) {
-        return res.json(body);
-      } else {
-        return res.render('index', {
-          uri: req.originalUrl,
-          time: new Date().toLocaleString(),
-          pretty: true,
-          feed: body
-        });
-      }
-    });
+    return res.sendfile('views/index.html');
   });
 };

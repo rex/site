@@ -10,7 +10,7 @@ Github = (function(_super) {
   function Github() {
     this.config = {
       headers: {
-        'User-Agent': 'prex-site'
+        'User-Agent': 'prex.io'
       }
     };
     this.base_url = 'https://api.github.com';
@@ -28,7 +28,7 @@ Github = (function(_super) {
     }, callback);
   };
 
-  Github.prototype.repos = function(callback) {
+  Github.prototype.fetch_repos = function(callback) {
     return this.fire({
       url: '/users/rex/repos'
     }, callback);

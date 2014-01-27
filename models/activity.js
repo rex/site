@@ -1,6 +1,6 @@
 var ActivitySchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../drivers/mongo').Schema;
 
 ActivitySchema = new Schema({
   created_on: {

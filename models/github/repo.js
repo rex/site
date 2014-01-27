@@ -1,6 +1,6 @@
 var RepoSchema, Schema;
 
-Schema = require('mongoose').Schema;
+Schema = require('../../drivers/mongo').Schema;
 
 RepoSchema = new Schema({
   personal: {
