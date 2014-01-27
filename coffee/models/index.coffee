@@ -10,13 +10,12 @@ schemas =
   link: require './link'
   oauth_token: require './oauth_token'
   post: require './post'
-  queue_item: require './queue_item'
   services:
     lastfm:
-      play: require './services/lastfm/play'
+      scrobble: require './services/lastfm/scrobble'
     github:
-      repo: require './github/repo'
-      commit: require './github/commit'
+      repo: require './services/github/repo'
+      commit: require './services/github/commit'
   snippet: require './snippet'
   tag: require './tag'
   visit: require './visit'
@@ -25,7 +24,7 @@ exports.initialize = (after_connected = ->) ->
   # Instantiate our models, grouped by service
 
   # LastFM
-  mongo.model 'lastfm_play', schemas.services.lastfm.play
+  mongo.model 'lastfm_scrobble', schemas.services.lastfm.scrobble
 
   # GitHub
   mongo.model 'github_commit', schemas.services.github.commit
@@ -38,7 +37,6 @@ exports.initialize = (after_connected = ->) ->
   mongo.model 'link', schemas.link
   mongo.model 'oauth_token', schemas.oauth_token
   mongo.model 'post', schemas.post
-  mongo.model 'queue_item', schemas.queue_item
   mongo.model 'snippet', schemas.snippet
   mongo.model 'tag', schemas.tag
   mongo.model 'visit', schemas.visit

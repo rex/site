@@ -1,8 +1,9 @@
 Schema = require('../../../drivers/mongo').Schema
 _ = require '../../../lib/_'
 logger = require '../../../lib/logger'
+Redis = require '../../../drivers/redis'
 
-LastFmPlaySchema = new Schema
+LastFmScrobbleSchema = new Schema
   track_id:
     type: String
   track_name:
@@ -24,7 +25,12 @@ LastFmPlaySchema = new Schema
     index: true
     default: Date.now
 
-LastFmPlaySchema.static 'createFromScrobble', (scrobbled_track, callback = ->) ->
+LastFmScrobbleSchema.post 'save', (lastfm_scrobble) ->
+  Redis.store_model "service:lastfm:scrobble:#{lastfm_scrobble._id}", lastfm_scrobble.toJSON()
+
+LastFmScrobbleSchema.static 'createFromScrobble', (scrobbled_track, callback = ->) ->
+  new_scrobble = new this()
+
   track_image_object = _.find scrobbled_track.image, size: 'extralarge'
   track_image = track_image_object['#text']
 
@@ -33,7 +39,7 @@ LastFmPlaySchema.static 'createFromScrobble', (scrobbled_track, callback = ->) -
   else
     track_date = Date.now()
 
-  this.create
+  new_scrobble.set
     track_id: scrobbled_track.mbid or undefined
     track_name: scrobbled_track.name
     album_id: scrobbled_track.album.mbid or undefined
@@ -44,12 +50,13 @@ LastFmPlaySchema.static 'createFromScrobble', (scrobbled_track, callback = ->) -
     url: scrobbled_track.url or undefined
     image: track_image or undefined
     created_on: track_date
-  , (err, lastfm_play) ->
+
+  new_scrobble.save (err, lastfm_scrobble) ->
     if err
-      logger.error "Error creating LastFM play", err
+      logger.error "Error creating LastFM scrobble", err
     else
-      logger "Created LastFM play ##{lastfm_play._id}"
+      logger "Created LastFM scrobble ##{lastfm_scrobble._id}"
 
-    callback err, lastfm_play
+    callback err, lastfm_scrobble
 
-module.exports = LastFmPlaySchema
+module.exports = LastFmScrobbleSchema

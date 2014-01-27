@@ -12,6 +12,18 @@ app = express()
 
 # Here begins the organized, structured application boot process
 async.series
+  load_app_env: (done) ->
+    step.start "Loading app config into environment"
+    env_app = require('./env_app') ->
+      step.complete()
+      done()
+
+  load_app_into_config: (done) ->
+    step.start "Reloading app config"
+    config.load_app_config ->
+      step.complete()
+      done()
+
   connect_to_redis: (done) ->
     step.start "Initializing Redis"
     redis = require './drivers/redis'
@@ -26,15 +38,21 @@ async.series
       step.complete()
       done()
 
-  env: (done) ->
-    step.start "Update environment variables in database"
-    require('./env') ->
+  env_services: (done) ->
+    step.start "Update service credentials in database"
+    require('./env_services') ->
       step.complete()
       done()
 
   load_env: (done) ->
-    step.start "Loading environment variables"
+    step.start "Loading service credentials into environment"
     require('./lib/load_env') ->
+      step.complete()
+      done()
+
+  load_credentials_into_config: (done) ->
+    step.start "Load service credentials into config"
+    config.load_services ->
       step.complete()
       done()
 

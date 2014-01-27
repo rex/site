@@ -1,10 +1,12 @@
-var Models, Services, config, logger, mongo;
+var Models, Redis, Services, config, logger, mongo;
 
 logger = require('../lib/logger');
 
 config = require('../config');
 
 mongo = require('../drivers/mongo');
+
+Redis = require('../drivers/redis');
 
 Services = {
   Github: require('../services/github'),
@@ -35,6 +37,12 @@ module.exports = function(app) {
       } else {
         return res.json(images);
       }
+    });
+  });
+  app.get('/redis', function(req, res) {
+    logger("Fetching all keys");
+    return Redis.list_keys(function(err, keys) {
+      return console.error(err(err ? void 0 : res.json(keys)));
     });
   });
   app.get('/env', function(req, res) {

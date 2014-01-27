@@ -1,23 +1,16 @@
-var LastFM, LastFM_API, Models, Service, async, logger, mongo, _, _ref,
+var LastFM, LastFM_API, Queue, Service, logger, _, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 Service = require('./base');
 
-mongo = require('../drivers/mongo');
-
 _ = require('../lib/_');
-
-async = require('async');
 
 logger = require('../lib/logger');
 
 LastFM_API = require('../apis/lastfm');
 
-Models = {
-  Activity: mongo.model('activity'),
-  LastFM_Play: mongo.model('lastfm_play')
-};
+Queue = require('../drivers/queue');
 
 LastFM = (function(_super) {
   __extends(LastFM, _super);
@@ -43,7 +36,11 @@ LastFM = (function(_super) {
     this.track_stream.on('lastPlayed', function(track) {});
     this.track_stream.on('nowPlaying', function(track) {});
     this.track_stream.on('scrobbled', function(track) {
-      return Models.LastFM_Play.createFromScrobble(track);
+      return Queue.add_job({
+        queue_name: 'service:lastfm',
+        job_name: 'track_scrobbled',
+        job_data: track
+      });
     });
     this.track_stream.on('stoppedPlaying', function(track) {});
     this.track_stream.on('error', function(err) {
@@ -106,6 +103,12 @@ LastFM = (function(_super) {
   };
 
   LastFM.prototype.fetch_friends = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+  };
+
+  LastFM.prototype.fetch_user = function(callback) {
     if (callback == null) {
       callback = function() {};
     }

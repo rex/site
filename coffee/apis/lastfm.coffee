@@ -6,7 +6,7 @@ API = require './base'
 
 Models =
   Activity: mongo.model 'activity'
-  LastFM_Play: mongo.model 'lastfm_play'
+  LastFM_Scrobble: mongo.model 'lastfm_scrobble'
 
 class LastFM extends API
 

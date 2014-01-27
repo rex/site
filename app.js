@@ -19,6 +19,21 @@ debug = config.debug;
 app = express();
 
 async.series({
+  load_app_env: function(done) {
+    var env_app;
+    step.start("Loading app config into environment");
+    return env_app = require('./env_app')(function() {
+      step.complete();
+      return done();
+    });
+  },
+  load_app_into_config: function(done) {
+    step.start("Reloading app config");
+    return config.load_app_config(function() {
+      step.complete();
+      return done();
+    });
+  },
   connect_to_redis: function(done) {
     var redis;
     step.start("Initializing Redis");
@@ -37,16 +52,23 @@ async.series({
       return done();
     });
   },
-  env: function(done) {
-    step.start("Update environment variables in database");
-    return require('./env')(function() {
+  env_services: function(done) {
+    step.start("Update service credentials in database");
+    return require('./env_services')(function() {
       step.complete();
       return done();
     });
   },
   load_env: function(done) {
-    step.start("Loading environment variables");
+    step.start("Loading service credentials into environment");
     return require('./lib/load_env')(function() {
+      step.complete();
+      return done();
+    });
+  },
+  load_credentials_into_config: function(done) {
+    step.start("Load service credentials into config");
+    return config.load_services(function() {
       step.complete();
       return done();
     });

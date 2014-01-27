@@ -17,7 +17,9 @@
   "homepage": "http://prex.io",
   "dependencies": {
     "async": "latest",
+    "bcrypt": "~0.7.7",
     "coffee-script": "latest",
+    "connect-redis": "~1.4.6",
     "express": "latest",
     "grunt-banner": "latest",
     "grunt-bump": "latest",
@@ -36,6 +38,7 @@
     "instagram-node-lib": "latest",
     "jade": "latest",
     "kue": "latest",
+    "lastfm": "~0.9.0",
     "lodash": "latest",
     "marked": "latest",
     "moment": "latest",
@@ -46,7 +49,8 @@
     "request": "latest",
     "winston": "latest",
     "winston-mongodb": "latest",
-    "connect-redis": "~1.4.6",
-    "lastfm": "~0.9.0"
+    "evernote": "~1.25.2",
+    "twit": "~1.1.12",
+    "xml2js": "~0.4.1"
   }
 }

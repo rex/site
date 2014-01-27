@@ -32,6 +32,7 @@ RedisDriver = (function(_super) {
     }
     self = this;
     this.instance = redis.createClient(config.redis.port, config.redis.host, config.redis.params);
+    this.instance.debug_mode = true;
     this.instance.on('error', function() {
       self.debug && logger.error('Redis connection failure');
       self.state = 'error';
@@ -60,6 +61,21 @@ RedisDriver = (function(_super) {
     });
     return this;
   });
+
+  RedisDriver.prototype.list_keys = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    logger("Listing all keys");
+    return this.instance.keys('*', function(err, keys) {
+      if (err) {
+        console.error("Error fetching keys", err);
+      } else {
+        console.log("Keys found", keys);
+      }
+      return callback(err, keys);
+    });
+  };
 
   RedisDriver.prototype.set = function(redis_key, value, callback) {
     if (callback == null) {

@@ -7,6 +7,6 @@ module.exports = function(req, res, next) {
     return res.json(req.session);
   } else if (_.has(req.query, 'debug_session')) {
     console.log("Loaded session:", req.session);
-    return next();
   }
+  return next();
 };

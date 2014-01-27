@@ -18,7 +18,7 @@ class Github extends Service
     super
       access_token: process.env.GITHUB_ACCESS_TOKEN
 
-  fetch_recent_activity: (callback) ->
+  fetch_recent_activity: (callback = ->) ->
     logger "Fetching recent github activity..."
 
     Github_API.recent_events (err, body) ->
@@ -69,6 +69,8 @@ class Github extends Service
             local_repo.save complete
       , (err) ->
         callback err, body
+
+  fetch_user: (callback = ->) ->
 
   process_webhook_activity: (body, callback) ->
     async.each body.commits, (commit, next) ->

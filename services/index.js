@@ -5,12 +5,12 @@ async = require('async');
 logger = require('../lib/logger');
 
 Services = {
+  Evernote: require('./evernote'),
   GitHub: require('./github'),
   Instagram: require('./instagram'),
   LastFM: require('./lastfm'),
   LinkedIn: require('./linkedin'),
-  SoundCloud: require('./soundcloud'),
-  Evernote: require('./evernote')
+  SoundCloud: require('./soundcloud')
 };
 
 exports.initialize = function(services_initialized) {
@@ -18,6 +18,9 @@ exports.initialize = function(services_initialized) {
     services_initialized = function() {};
   }
   return async.series({
+    Evernote: function(done) {
+      return Services.Evernote.initialize(done);
+    },
     GitHub: function(done) {
       return Services.GitHub.initialize(done);
     },
@@ -26,6 +29,12 @@ exports.initialize = function(services_initialized) {
     },
     LastFM: function(done) {
       return Services.LastFM.initialize(done);
+    },
+    LinkedIn: function(done) {
+      return Services.LinkedIn.initialize(done);
+    },
+    SoundCloud: function(done) {
+      return Services.SoundCloud.initialize(done);
     }
   }, function(err, results) {
     return services_initialized(err);

@@ -1,13 +1,8 @@
 Service = require './base'
-mongo = require '../drivers/mongo'
 _ = require '../lib/_'
-async = require 'async'
 logger = require '../lib/logger'
 LastFM_API = require '../apis/lastfm'
-
-Models =
-  Activity: mongo.model 'activity'
-  LastFM_Play: mongo.model 'lastfm_play'
+Queue = require '../drivers/queue'
 
 class LastFM extends Service
 
@@ -23,7 +18,10 @@ class LastFM extends Service
     @track_stream.on 'nowPlaying', (track) ->
 
     @track_stream.on 'scrobbled', (track) ->
-      Models.LastFM_Play.createFromScrobble track
+      Queue.add_job
+        queue_name: 'service:lastfm'
+        job_name: 'track_scrobbled'
+        job_data: track
 
     @track_stream.on 'stoppedPlaying', (track) ->
 
@@ -54,6 +52,8 @@ class LastFM extends Service
   fetch_top_tags: (callback = ->) ->
 
   fetch_friends: (callback = ->) ->
+
+  fetch_user: (callback = ->) ->
 
 
 module.exports = new LastFM

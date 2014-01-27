@@ -32,6 +32,9 @@ Github = (function(_super) {
   }
 
   Github.prototype.fetch_recent_activity = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
     logger("Fetching recent github activity...");
     return Github_API.recent_events(function(err, body) {
       var activity_ids;
@@ -94,6 +97,12 @@ Github = (function(_super) {
         return callback(err, body);
       });
     });
+  };
+
+  Github.prototype.fetch_user = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
   };
 
   Github.prototype.process_webhook_activity = function(body, callback) {

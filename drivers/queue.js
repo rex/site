@@ -1,4 +1,4 @@
-var BaseDriver, QueueDriver, config, kue, logger, mongo, queue_item, redis,
+var BaseDriver, Mongo, QueueDriver, config, kue, logger, redis, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -10,11 +10,11 @@ config = require('../config');
 
 logger = require('../lib/logger');
 
+_ = require('../lib/_');
+
 BaseDriver = require('./base');
 
-mongo = require('./mongo');
-
-queue_item = mongo.model('queue_item');
+Mongo = require('./mongo');
 
 QueueDriver = (function(_super) {
   __extends(QueueDriver, _super);
@@ -38,9 +38,6 @@ QueueDriver = (function(_super) {
     if (queue_initialized == null) {
       queue_initialized = function() {};
     }
-    this.instance.redis.createClient = function() {
-      return redis.createClient(config.redis.port, config.redis.host);
-    };
     return queue_initialized();
   };
 
@@ -48,77 +45,60 @@ QueueDriver = (function(_super) {
     if (!queue_name) {
       return logger.error("Queue name required to create new queue");
     }
-    return this.queues[queue_name] = kue.createQueue();
+    this.queues[queue_name] = kue.createQueue();
+    return this.handlers[queue_name] = {};
   };
 
   QueueDriver.prototype.add_handler = function(params) {
-    var concurrency, job_name, queue_name;
+    var concurrency, handler, job_name, queue_name;
     if (!(params.queue_name && params.job_name)) {
       return logger.error("Queue name and Job name required when creating a queue handler");
     }
-    queue_name = params.queue;
+    queue_name = params.queue_name;
     job_name = params.job_name;
     concurrency = params.concurrency || 1;
-    return this.queues[queue_name].process(job_name, concurrency, function(job, done) {
-      if (done == null) {
-        done = function() {};
-      }
-      return queue_item.start(job, function() {
-        return handler(job, done);
-      });
-    });
+    handler = params.handler || function() {};
+    this.queues[queue_name].process(job_name, concurrency, handler);
+    return this.handlers[queue_name][job_name] = handler;
   };
 
   QueueDriver.prototype.add_job = function(params, job_created) {
-    var allowed_attempts, job, job_data, job_name, job_priority, on_complete, on_error, on_progress, queue_name, self, stored_job;
+    var allowed_attempts, job, job_data, job_name, job_priority, on_complete, on_error, on_progress, on_saved, queue_name, self;
     if (job_created == null) {
       job_created = function() {};
     }
     self = this;
-    if (!(params.queue_name && params.job_name && params.data)) {
+    if (!(params.queue_name && params.job_name && params.job_data)) {
       return logger.error("Queue name, job name, and data required to create a new job");
     }
     queue_name = params.queue_name;
     job_name = params.job_name;
-    job_data = params.data || {};
+    job_data = params.job_data || {};
     job_priority = params.priority || 0;
     allowed_attempts = params.attempts || 1;
+    on_saved = params.saved || function() {};
     on_complete = params.complete || function() {};
     on_error = params.error || function() {};
     on_progress = params.progress || function() {};
     if (!_.has(this.queues, queue_name)) {
       return logger.error("Invalid queue name specified: " + queue_name);
     }
-    job = this.queues[queue_name].create(job_name, job_data.priority(job_priority.attempts(allowed_attempts.save())));
-    stored_job = new queue_item({
-      job_id: job.id,
-      queue_name: queue_name,
-      job_name: job.type,
-      job_data: job.data,
-      priority: job.priority,
-      state: job.state,
-      attempts: job.attempts,
-      created_at: job.created_at,
-      updated_at: job.updated_at
-    });
-    stored_job.save(function(err) {
-      return logger.error("Unable to save new queue item", err, job);
-    });
+    job = this.queues[queue_name].create(job_name, job_data).save();
     job.on('complete', function() {
+      this.debug && logger("Job complete: " + job.id);
       self.active_jobs--;
       self.completed_jobs++;
-      queue_item.complete(job);
       return on_complete(job);
     }).on('failed', function() {
+      this.debug && logger.error("Job failed: " + job.id);
       self.active_jobs--;
       self.failed_jobs++;
-      queue_item.failed(job);
       return on_error(job);
     }).on('progress', function() {
-      queue_item.progress(job);
+      this.debug && logger("Job progress: " + job.id + " - " + job.progress + "%");
       return on_progress(job);
     });
-    return job_created(job);
+    return job_created(null, job);
   };
 
   return QueueDriver;

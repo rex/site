@@ -1,4 +1,5 @@
-Schema = require('../../drivers/mongo').Schema
+Schema = require('../../../drivers/mongo').Schema
+Redis = require '../../../drivers/redis'
 
 CommitSchema = new Schema
   commit_id:
@@ -21,6 +22,9 @@ CommitSchema = new Schema
   modified: [{
     type: String
   }]
+
+CommitSchema.post 'save', (commit) ->
+  Redis.store_model "github_commit_#{commit._id}", commit.toJSON()
 
 CommitSchema.methods.fromGithubCommit = (commit, callback) ->
   # First set all standard properties at once

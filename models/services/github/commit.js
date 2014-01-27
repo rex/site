@@ -1,6 +1,8 @@
-var CommitSchema, Schema;
+var CommitSchema, Redis, Schema;
 
-Schema = require('../../drivers/mongo').Schema;
+Schema = require('../../../drivers/mongo').Schema;
+
+Redis = require('../../../drivers/redis');
 
 CommitSchema = new Schema({
   commit_id: {
@@ -31,6 +33,10 @@ CommitSchema = new Schema({
       type: String
     }
   ]
+});
+
+CommitSchema.post('save', function(commit) {
+  return Redis.store_model("github_commit_" + commit._id, commit.toJSON());
 });
 
 CommitSchema.methods.fromGithubCommit = function(commit, callback) {

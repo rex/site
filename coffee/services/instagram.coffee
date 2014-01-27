@@ -52,6 +52,7 @@ class Instagram extends Service
       _.has current_pagination, "next_url"
     , callback
 
+  fetch_user: (callback = ->) ->
 
   process_webhook_activity: (body, callback) ->
 

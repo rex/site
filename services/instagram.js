@@ -77,6 +77,12 @@ Instagram = (function(_super) {
     }, callback);
   };
 
+  Instagram.prototype.fetch_user = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+  };
+
   Instagram.prototype.process_webhook_activity = function(body, callback) {};
 
   return Instagram;

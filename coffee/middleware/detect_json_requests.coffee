@@ -2,7 +2,7 @@ _ = require '../lib/_'
 logger = require '../lib/logger'
 
 module.exports = (req, res, next) ->
-  if req.query
+  if req.query.length
     logger "Query string params:", req.query
 
   if _.has req.query, 'json'

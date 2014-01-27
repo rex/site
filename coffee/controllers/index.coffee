@@ -1,6 +1,7 @@
 logger = require '../lib/logger'
 config = require '../config'
 mongo = require '../drivers/mongo'
+Redis = require '../drivers/redis'
 
 Services =
   Github: require '../services/github'
@@ -29,6 +30,12 @@ module.exports = (app) ->
         res.send 500, err
       else
         res.json images
+
+  app.get '/redis', (req, res) ->
+    logger "Fetching all keys"
+    Redis.list_keys (err, keys) ->
+      console.error err if err
+      else res.json keys
 
   app.get '/env', (req, res) ->
     res.json

@@ -16,6 +16,8 @@ class RedisDriver extends BaseDriver
     self = this
     @instance = redis.createClient config.redis.port, config.redis.host, config.redis.params
 
+    @instance.debug_mode = true
+
     @instance.on 'error', ->
       self.debug and logger.error 'Redis connection failure'
       self.state = 'error'
@@ -43,6 +45,15 @@ class RedisDriver extends BaseDriver
       redis_initialized()
 
     this
+
+  list_keys: (callback = ->) ->
+    logger "Listing all keys"
+    @instance.keys '*', (err, keys) ->
+      if err
+        console.error "Error fetching keys", err
+      else
+        console.log "Keys found", keys
+      callback err, keys
 
   set: (redis_key, value, callback = ->) ->
     @instance.set redis_key, value, callback

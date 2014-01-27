@@ -1,4 +1,5 @@
-Schema = require('../../drivers/mongo').Schema
+Schema = require('../../../drivers/mongo').Schema
+Redis = require '../../../drivers/redis'
 
 RepoSchema = new Schema
   personal:
@@ -34,6 +35,9 @@ RepoSchema = new Schema
   watchers: Number
   default_branch: String
   master_branch: String
+
+RepoSchema.post 'save', (repo) ->
+  Redis.store_model "github_repo_#{repo._id}", repo.toJSON()
 
 RepoSchema.methods.fromGithubRepo = (repo) ->
   # Set all standard properties at once
