@@ -4,10 +4,7 @@ bower_components/
 *.log
 .sass-cache/
 build/
-public/js/
-public/css/
-public/images/
-public/fonts/
+public/**/*
 env.coffee
 env.js
 env_app.*
