@@ -13,20 +13,20 @@ RepoSchema = new Schema
   repo_id:
     type: Number
     index: true
-  owner_id: Number
+  owner:
+    type: Schema.Types.ObjectId
+    ref: 'github_user'
+    index: true
+  owner_id:
+    type: Number
+    index: true
   owner_username: String
   name: String
   full_name: String
   private: Boolean
+  fork: Boolean
   html_url: String
   description: String
-  fork: Boolean
-  created_on:
-    type: Date
-    index: true
-  updated_on:
-    type: Date
-    index: true
   homepage: String
   size: Number
   stargazers_count: Number
@@ -38,21 +38,28 @@ RepoSchema = new Schema
   forks_count: Number
   open_issues_count: Number
   watchers: Number
-  default_branch: String
-  master_branch: String
+  created_on:
+    type: Date
+    index: true
+  updated_on:
+    type: Date
+    index: true
 
 RepoSchema.plugin Plugins.config, model_config
 RepoSchema.plugin Plugins.redis, model_config
 
-RepoSchema.static 'fromGithubRepo', (repo) ->
-  # Set all standard properties at once
-  this.set repo
+RepoSchema.static 'createFromGithubRepo', (repo, callback = ->) ->
+  new_repo = new this()
 
-  # Then all specific/custom properties
-  this.set
+  new_repo.set repo
+
+  new_repo.set
     repo_id: repo.id
     owner_id: repo.owner.id
     owner_username: repo.owner.login
+
+  new_repo.save (err) ->
+    callback err, new_repo
 
 module.exports =
   schema: RepoSchema

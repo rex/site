@@ -18,8 +18,10 @@ Github_API = require('../apis/github');
 
 Models = {
   Activity: mongo.model('activity'),
+  Github_Push: mongo.model('github_push'),
   Github_Repo: mongo.model('github_repo'),
-  Github_Commit: mongo.model('github_commit')
+  Github_Commit: mongo.model('github_commit'),
+  Github_User: mongo.model('github_user')
 };
 
 Github = (function(_super) {
@@ -99,10 +101,36 @@ Github = (function(_super) {
     });
   };
 
-  Github.prototype.fetch_user = function(callback) {
+  Github.prototype.fetch_user = function(login, callback) {
     if (callback == null) {
       callback = function() {};
     }
+    logger("Fetching user " + login);
+    return Github_API.fetch_user(login, callback);
+  };
+
+  Github.prototype.fetch_repo = function(repo_full_name, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    logger("Fetching repo " + repo_full_name);
+    return Github_API.fetch_repo(repo_full_name, callback);
+  };
+
+  Github.prototype.fetch_commit = function(repo_full_name, commit_sha, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    logger("Fetching commit " + repo_full_name + "#" + commit_sha);
+    return Github_API.fetch_commit(repo_full_name, commit_sha, callback);
+  };
+
+  Github.prototype.fetch_commits = function(repo_full_name, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    logger("Fetching commits for " + repo_full_name);
+    return Github_API.fetch_commits(repo_full_name, callback);
   };
 
   Github.prototype.process_webhook_activity = function(body, callback) {

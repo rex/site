@@ -34,6 +34,9 @@ CommitSchema = new Schema
   modified: [{
     type: String
   }]
+  renamed: [{
+    type: String
+  }]
 
 CommitSchema.plugin Plugins.config, model_config
 CommitSchema.plugin Plugins.redis, model_config

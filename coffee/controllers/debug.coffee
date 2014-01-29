@@ -40,5 +40,32 @@ module.exports = (app) ->
         err: err
         body: body
 
+  app.get '/github/user/:login', (req, res) ->
+    Services.Github.fetch_user req.params.login, (err, body) ->
+      res.json
+        err: err
+        body: body
+
+  app.get '/github/repo/:login/:name', (req, res) ->
+    repo_full_name = "#{req.params.login}/#{req.params.name}"
+    Services.Github.fetch_repo repo_full_name, (err, body) ->
+      res.json
+        err: err
+        body: body
+
+  app.get '/github/commits/:login/:name/:sha', (req, res) ->
+    repo_full_name = "#{req.params.login}/#{req.params.name}"
+    Services.Github.fetch_commit repo_full_name, req.params.sha, (err, body) ->
+      res.json
+        err: err
+        body: body
+
+  app.get '/github/commits/:login/:name', (req, res) ->
+    repo_full_name = "#{req.params.login}/#{req.params.name}"
+    Services.Github.fetch_commits repo_full_name, (err, body) ->
+      res.json
+        err: err
+        body: body
+
   app.get '/', (req, res) ->
     res.sendfile 'views/index.html'

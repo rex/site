@@ -59,7 +59,8 @@ module.exports.load_services = function(credentials_loaded) {
   app_config.github = {
     client_id: process.env.GITHUB_CLIENT_ID,
     client_secret: process.env.GITHUB_CLIENT_SECRET,
-    access_token: process.env.GITHUB_ACCESS_TOKEN
+    access_token: process.env.GITHUB_ACCESS_TOKEN,
+    username: process.env.GITHUB_USERNAME
   };
   app_config.evernote = {
     key: process.env.EVERNOTE_KEY,

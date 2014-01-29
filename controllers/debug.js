@@ -54,6 +54,44 @@ module.exports = function(app) {
       });
     });
   });
+  app.get('/github/user/:login', function(req, res) {
+    return Services.Github.fetch_user(req.params.login, function(err, body) {
+      return res.json({
+        err: err,
+        body: body
+      });
+    });
+  });
+  app.get('/github/repo/:login/:name', function(req, res) {
+    var repo_full_name;
+    repo_full_name = "" + req.params.login + "/" + req.params.name;
+    return Services.Github.fetch_repo(repo_full_name, function(err, body) {
+      return res.json({
+        err: err,
+        body: body
+      });
+    });
+  });
+  app.get('/github/commits/:login/:name/:sha', function(req, res) {
+    var repo_full_name;
+    repo_full_name = "" + req.params.login + "/" + req.params.name;
+    return Services.Github.fetch_commit(repo_full_name, req.params.sha, function(err, body) {
+      return res.json({
+        err: err,
+        body: body
+      });
+    });
+  });
+  app.get('/github/commits/:login/:name', function(req, res) {
+    var repo_full_name;
+    repo_full_name = "" + req.params.login + "/" + req.params.name;
+    return Services.Github.fetch_commits(repo_full_name, function(err, body) {
+      return res.json({
+        err: err,
+        body: body
+      });
+    });
+  });
   return app.get('/', function(req, res) {
     return res.sendfile('views/index.html');
   });

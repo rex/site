@@ -46,6 +46,11 @@ CommitSchema = new Schema({
     {
       type: String
     }
+  ],
+  renamed: [
+    {
+      type: String
+    }
   ]
 });
 

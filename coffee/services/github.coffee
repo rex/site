@@ -9,8 +9,10 @@ Github_API = require '../apis/github'
 
 Models =
   Activity: mongo.model 'activity'
+  Github_Push: mongo.model 'github_push'
   Github_Repo: mongo.model 'github_repo'
   Github_Commit: mongo.model 'github_commit'
+  Github_User: mongo.model 'github_user'
 
 class Github extends Service
 
@@ -70,7 +72,21 @@ class Github extends Service
       , (err) ->
         callback err, body
 
-  fetch_user: (callback = ->) ->
+  fetch_user: (login, callback = ->) ->
+    logger "Fetching user #{login}"
+    Github_API.fetch_user login, callback
+
+  fetch_repo: (repo_full_name, callback = ->) ->
+    logger "Fetching repo #{repo_full_name}"
+    Github_API.fetch_repo repo_full_name, callback
+
+  fetch_commit: (repo_full_name, commit_sha, callback = ->) ->
+    logger "Fetching commit #{repo_full_name}##{commit_sha}"
+    Github_API.fetch_commit repo_full_name, commit_sha, callback
+
+  fetch_commits: (repo_full_name, callback = ->) ->
+    logger "Fetching commits for #{repo_full_name}"
+    Github_API.fetch_commits repo_full_name, callback
 
   process_webhook_activity: (body, callback) ->
     async.each body.commits, (commit, next) ->
