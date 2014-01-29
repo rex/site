@@ -1,60 +1,31 @@
 logger = require '../lib/logger'
+_ = require '../lib/_'
+Step = require '../lib/step'
 config = require '../config'
-mongo = require '../drivers/mongo'
-Redis = require '../drivers/redis'
+glob = require 'glob'
+path = require 'path'
 
-Services =
-  Github: require '../services/github'
-  Instagram: require '../services/instagram'
+exports.initialize = (app, initialized = ->) ->
+  Step.group "Load Controllers"
 
-Models =
-  activity: mongo.model 'activity'
+  glob './controllers/**/*.js', (err, files) ->
+    if err then return console.error "Glob error", err
 
-module.exports = (app) ->
-  require('./webhooks') app
-  require('./oauth') app
-  require('./admin') app
-  require('./blog') app
-  require('./bookmarks') app
-  require('./code') app
-  require('./portfolio') app
-  require('./resume') app
-  require('./tools') app
-  require('./visits') app
-  require('./populate') app
-  require('./cron') app
-  require('./api') app
+    cronfiles = /\/cron\//
+    controllers = /\.\/controllers\//
 
-  app.get '/instagram', (req, res) ->
-    Services.Instagram.fetch_recent_activity (err, images) ->
-      if err
-        res.send 500, err
-      else
-        res.json images
+    _.each files, (file) ->
+      if file.match cronfiles
+        config.debug and logger "Skipping: #{file}"
+        return
 
-  app.get '/redis', (req, res) ->
-    logger "Fetching all keys"
-    Redis.list_keys (err, keys) ->
-      console.error err if err
-      else res.json keys
+      controller = require path.resolve file
+      unless _.isFunction controller then return
 
-  app.get '/env', (req, res) ->
-    res.json
-      config: config
-      env: process.env
+      Step.start "Loading controller #{file.replace controllers, ''}"
+      controller app
+      Step.complete()
 
-  app.get '/github/activity', (req, res) ->
-    Services.Github.fetch_recent_activity (err, activity) ->
-      if err
-        res.send 500, err
-      else
-        res.json activity
+    Step.groupEnd()
 
-  app.get '/github/repos', (req, res) ->
-    Services.Github.fetch_repos (err, body) ->
-      res.json
-        err: err
-        body: body
-
-  app.get '/', (req, res) ->
-    res.sendfile 'views/index.html'
+    initialized()

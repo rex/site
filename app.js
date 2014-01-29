@@ -167,10 +167,13 @@ async.series({
     return done();
   },
   init_controllers: function(done) {
+    var controllers;
     step.start_major("Initializing controllers");
-    require('./controllers')(app);
-    step.complete_major();
-    return done();
+    controllers = require('./controllers');
+    return controllers.initialize(app, function() {
+      step.complete_major();
+      return done();
+    });
   },
   display_routes: function(done) {
     if (!config.debug) {

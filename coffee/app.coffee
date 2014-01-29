@@ -150,10 +150,11 @@ async.series
 
   init_controllers: (done) ->
     step.start_major "Initializing controllers"
-    require('./controllers') app
+    controllers = require('./controllers')
+    controllers.initialize app, ->
 
-    step.complete_major()
-    done()
+      step.complete_major()
+      done()
 
   display_routes: (done) ->
     unless config.debug then return done()

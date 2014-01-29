@@ -51,6 +51,7 @@
     "winston-mongodb": "latest",
     "evernote": "~1.25.2",
     "twit": "~1.1.12",
-    "xml2js": "~0.4.1"
+    "xml2js": "~0.4.1",
+    "glob": "~3.2.8"
   }
 }

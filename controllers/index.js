@@ -1,75 +1,44 @@
-var Models, Redis, Services, config, logger, mongo;
+var Step, config, glob, logger, path, _;
 
 logger = require('../lib/logger');
 
+_ = require('../lib/_');
+
+Step = require('../lib/step');
+
 config = require('../config');
 
-mongo = require('../drivers/mongo');
+glob = require('glob');
 
-Redis = require('../drivers/redis');
+path = require('path');
 
-Services = {
-  Github: require('../services/github'),
-  Instagram: require('../services/instagram')
-};
-
-Models = {
-  activity: mongo.model('activity')
-};
-
-module.exports = function(app) {
-  require('./webhooks')(app);
-  require('./oauth')(app);
-  require('./admin')(app);
-  require('./blog')(app);
-  require('./bookmarks')(app);
-  require('./code')(app);
-  require('./portfolio')(app);
-  require('./resume')(app);
-  require('./tools')(app);
-  require('./visits')(app);
-  require('./populate')(app);
-  require('./cron')(app);
-  require('./api')(app);
-  app.get('/instagram', function(req, res) {
-    return Services.Instagram.fetch_recent_activity(function(err, images) {
-      if (err) {
-        return res.send(500, err);
-      } else {
-        return res.json(images);
+exports.initialize = function(app, initialized) {
+  if (initialized == null) {
+    initialized = function() {};
+  }
+  Step.group("Load Controllers");
+  return glob('./controllers/**/*.js', function(err, files) {
+    var controllers, cronfiles;
+    if (err) {
+      return console.error("Glob error", err);
+    }
+    cronfiles = /\/cron\//;
+    controllers = /\.\/controllers\//;
+    _.each(files, function(file) {
+      var controller;
+      if (file.match(cronfiles)) {
+        config.debug && logger("Skipping: " + file);
+        return;
       }
-    });
-  });
-  app.get('/redis', function(req, res) {
-    logger("Fetching all keys");
-    return Redis.list_keys(function(err, keys) {
-      return console.error(err(err ? void 0 : res.json(keys)));
-    });
-  });
-  app.get('/env', function(req, res) {
-    return res.json({
-      config: config,
-      env: process.env
-    });
-  });
-  app.get('/github/activity', function(req, res) {
-    return Services.Github.fetch_recent_activity(function(err, activity) {
-      if (err) {
-        return res.send(500, err);
-      } else {
-        return res.json(activity);
+      controller = require(path.resolve(file));
+      if (!_.isFunction(controller)) {
+        return;
       }
+      Step.start("Loading controller " + (file.replace(controllers, '')));
+      controller(app);
+      return Step.complete();
     });
-  });
-  app.get('/github/repos', function(req, res) {
-    return Services.Github.fetch_repos(function(err, body) {
-      return res.json({
-        err: err,
-        body: body
-      });
-    });
-  });
-  return app.get('/', function(req, res) {
-    return res.sendfile('views/index.html');
+    Step.groupEnd();
+    return initialized();
   });
 };

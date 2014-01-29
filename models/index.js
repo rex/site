@@ -1,4 +1,4 @@
-var Step, config, logger, mongo, schemas, _;
+var Step, config, glob, logger, mongo, path, _;
 
 mongo = require('../drivers/mongo');
 
@@ -10,44 +10,41 @@ _ = require('../lib/_');
 
 Step = require('../lib/step');
 
-Step.group("Load Models");
+glob = require('glob');
 
-schemas = {
-  activity: require('./activity'),
-  env: require('./env'),
-  job: require('./job'),
-  link: require('./link'),
-  oauth_token: require('./oauth_token'),
-  post: require('./post'),
-  lastfm_scrobble: require('./services/lastfm/scrobble'),
-  github_repo: require('./services/github/repo'),
-  github_commit: require('./services/github/commit'),
-  github_push: require('./services/github/push'),
-  snippet: require('./snippet'),
-  tag: require('./tag'),
-  visit: require('./visit')
-};
+path = require('path');
 
 exports.initialize = function(after_connected) {
   if (after_connected == null) {
     after_connected = function() {};
   }
-  _.each(schemas, function(model) {
-    var doc, loaded_model;
-    Step.start("Loading model: " + model.model_name);
-    if (model.db_name) {
-      mongo.model(model.model_name, model.schema, model.db_name);
-    } else {
-      mongo.model(model.model_name, model.schema);
+  Step.group("Load Models");
+  glob("./models/**/*.js", function(err, files) {
+    if (err) {
+      console.error("Glob error", err);
     }
-    loaded_model = mongo.model(model.model_name);
-    doc = new loaded_model();
-    if (doc.model_name === model.model_name) {
-      return Step.complete();
-    } else {
-      return Step.fail("Model name not loaded: " + model.model_name);
-    }
+    console.debug && console.log("Glob files", files);
+    _.each(files, function(file) {
+      var doc, loaded_model, model;
+      model = require(path.resolve(file));
+      if (!model.model_name) {
+        return;
+      }
+      Step.start("Loading model: " + model.model_name);
+      if (model.db_name) {
+        mongo.model(model.model_name, model.schema, model.db_name);
+      } else {
+        mongo.model(model.model_name, model.schema);
+      }
+      loaded_model = mongo.model(model.model_name);
+      doc = new loaded_model();
+      if (doc.model_name === model.model_name) {
+        return Step.complete();
+      } else {
+        return Step.fail("Model name not loaded: " + model.model_name);
+      }
+    });
+    return Step.groupEnd();
   });
-  Step.groupEnd();
   return mongo.initialize(after_connected);
 };

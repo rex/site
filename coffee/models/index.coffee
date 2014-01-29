@@ -3,37 +3,32 @@ config = require '../config'
 logger = require '../lib/logger'
 _ = require '../lib/_'
 Step = require '../lib/step'
-
-Step.group "Load Models"
-
-schemas =
-  activity: require './activity'
-  env: require './env'
-  job: require './job'
-  link: require './link'
-  oauth_token: require './oauth_token'
-  post: require './post'
-  lastfm_scrobble: require './services/lastfm/scrobble'
-  github_repo: require './services/github/repo'
-  github_commit: require './services/github/commit'
-  github_push: require './services/github/push'
-  snippet: require './snippet'
-  tag: require './tag'
-  visit: require './visit'
+glob = require 'glob'
+path = require 'path'
 
 exports.initialize = (after_connected = ->) ->
-  _.each schemas, (model) ->
-    Step.start "Loading model: #{model.model_name}"
-    if model.db_name
-      mongo.model model.model_name, model.schema, model.db_name
-    else
-      mongo.model model.model_name, model.schema
+  Step.group "Load Models"
 
-    loaded_model = mongo.model model.model_name
-    doc = new loaded_model()
-    if doc.model_name is model.model_name then Step.complete() else Step.fail "Model name not loaded: #{model.model_name}"
+  glob "./models/**/*.js", (err, files) ->
+    if err then console.error "Glob error", err
 
-  Step.groupEnd()
+    console.debug and console.log "Glob files", files
+
+    _.each files, (file) ->
+      model = require path.resolve file
+      unless model.model_name then return
+
+      Step.start "Loading model: #{model.model_name}"
+      if model.db_name
+        mongo.model model.model_name, model.schema, model.db_name
+      else
+        mongo.model model.model_name, model.schema
+
+      loaded_model = mongo.model model.model_name
+      doc = new loaded_model()
+      if doc.model_name is model.model_name then Step.complete() else Step.fail "Model name not loaded: #{model.model_name}"
+
+    Step.groupEnd()
 
   # Connect to Mongo
   mongo.initialize after_connected
