@@ -15,6 +15,10 @@ exports.initialize = (after_connected = ->) ->
     console.debug and console.log "Glob files", files
 
     _.each files, (file) ->
+      if file.match /\/plugins\//
+        config.debug and logger "Skipping: #{file}"
+        return
+
       model = require path.resolve file
       unless model.model_name then return
 

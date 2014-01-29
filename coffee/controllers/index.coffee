@@ -11,18 +11,17 @@ exports.initialize = (app, initialized = ->) ->
   glob './controllers/**/*.js', (err, files) ->
     if err then return console.error "Glob error", err
 
-    cronfiles = /\/cron\//
     controllers = /\.\/controllers\//
 
     _.each files, (file) ->
-      if file.match cronfiles
+      if file.match /\/cron\//
         config.debug and logger "Skipping: #{file}"
         return
 
+      Step.start "Loading controller #{file.replace controllers, ''}"
       controller = require path.resolve file
       unless _.isFunction controller then return
 
-      Step.start "Loading controller #{file.replace controllers, ''}"
       controller app
       Step.complete()
 

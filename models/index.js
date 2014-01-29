@@ -26,6 +26,10 @@ exports.initialize = function(after_connected) {
     console.debug && console.log("Glob files", files);
     _.each(files, function(file) {
       var doc, loaded_model, model;
+      if (file.match(/\/plugins\//)) {
+        config.debug && logger("Skipping: " + file);
+        return;
+      }
       model = require(path.resolve(file));
       if (!model.model_name) {
         return;

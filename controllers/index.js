@@ -18,23 +18,22 @@ exports.initialize = function(app, initialized) {
   }
   Step.group("Load Controllers");
   return glob('./controllers/**/*.js', function(err, files) {
-    var controllers, cronfiles;
+    var controllers;
     if (err) {
       return console.error("Glob error", err);
     }
-    cronfiles = /\/cron\//;
     controllers = /\.\/controllers\//;
     _.each(files, function(file) {
       var controller;
-      if (file.match(cronfiles)) {
+      if (file.match(/\/cron\//)) {
         config.debug && logger("Skipping: " + file);
         return;
       }
+      Step.start("Loading controller " + (file.replace(controllers, '')));
       controller = require(path.resolve(file));
       if (!_.isFunction(controller)) {
         return;
       }
-      Step.start("Loading controller " + (file.replace(controllers, '')));
       controller(app);
       return Step.complete();
     });
