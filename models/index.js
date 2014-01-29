@@ -48,7 +48,6 @@ exports.initialize = function(after_connected) {
       return Step.fail("Model name not loaded: " + model.model_name);
     }
   });
-  console.log("Models loaded", mongo.loaded_models);
   Step.groupEnd();
   return mongo.initialize(after_connected);
 };

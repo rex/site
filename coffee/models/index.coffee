@@ -5,6 +5,7 @@ _ = require '../lib/_'
 Step = require '../lib/step'
 
 Step.group "Load Models"
+
 schemas =
   activity: require './activity'
   env: require './env'
@@ -21,7 +22,6 @@ schemas =
   visit: require './visit'
 
 exports.initialize = (after_connected = ->) ->
-  # console.log "#{schemas.length} schemas to load", schemas
   _.each schemas, (model) ->
     Step.start "Loading model: #{model.model_name}"
     if model.db_name
@@ -32,8 +32,6 @@ exports.initialize = (after_connected = ->) ->
     loaded_model = mongo.model model.model_name
     doc = new loaded_model()
     if doc.model_name is model.model_name then Step.complete() else Step.fail "Model name not loaded: #{model.model_name}"
-
-  console.log "Models loaded", mongo.loaded_models
 
   Step.groupEnd()
 

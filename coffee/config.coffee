@@ -1,5 +1,5 @@
 app_config =
-  debug: true
+  debug: false
   colors:
     white: `'\033[0;m'`
     gold: `'\033[1;m'`

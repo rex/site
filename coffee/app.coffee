@@ -156,6 +156,8 @@ async.series
     done()
 
   display_routes: (done) ->
+    unless config.debug then return done()
+
     step.group "Loaded Routes"
 
     _.each app.routes, (methods, verb) ->

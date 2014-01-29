@@ -33,5 +33,6 @@ class Step
 
   write: (text, force) ->
     (force or config.debug) and util.print text
+    true
 
 module.exports = new Step

@@ -173,6 +173,9 @@ async.series({
     return done();
   },
   display_routes: function(done) {
+    if (!config.debug) {
+      return done();
+    }
     step.group("Loaded Routes");
     _.each(app.routes, function(methods, verb) {
       return _.each(_.pluck(methods, 'path'), function(path) {
