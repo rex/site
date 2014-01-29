@@ -38,22 +38,23 @@ module.exports = (app) ->
 
         body = JSON.parse body
 
-        Models.OAuth_Token.findOneAndUpdate service: 'instagram',
-          $set:
-            access_token: body.access_token
-            meta:
-              user: body.user
-        , upsert: true , (err, token) ->
-          console.log "Token created/updated", token
-          if err
-            logger.error err
-            res.send 500, err
-          else
-            page_data =
-              service: 'instagram'
-              success: true
-              access_token: body.access_token
-              meta:
-                user: body.user
+        # Models.OAuth_Token.findOneAndUpdate service: 'instagram',
+        #   $set:
+        #     access_token: body.access_token
+        #     meta:
+        #       user: body.user
+        # , upsert: true , (err, token) ->
+        #   console.log "Token created/updated", token
+        #   if err
+        #     logger.error err
+        #     res.send 500, err
+        #   else
+        page_data =
+          service: 'instagram'
+          success: true
+          access_token: body.access_token
+          code: req.query.code
+          meta:
+            user: body.user
 
-            res.render 'oauth/authorize', page_data
+        res.render 'oauth/authorize', page_data

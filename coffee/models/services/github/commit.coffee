@@ -1,4 +1,5 @@
 Schema = require('../../../drivers/mongo').Schema
+_ = require '../../../lib/_'
 
 Plugins = require '../../plugins'
 
@@ -7,24 +8,39 @@ model_config =
   model_name: 'github_commit'
 
 CommitSchema = new Schema
-  commit_id:
+  sha:
     type: String
-    index: true
   repo:
     type: Schema.Types.ObjectId
     ref: 'github_repo'
-    index: true
+  repo_id:
+    type: Number
   push:
     type: Schema.Types.ObjectId
     ref: 'github_push'
-    index: true
-  message: String
+  message:
+    type: String
   created_on:
     type: Date
-    index: true
-  url: String
-  author: {}
-  committer: {}
+  url:
+    type: String
+  author:
+    type: Schema.Types.ObjectId
+    ref: 'github_user'
+  author_id:
+    type: Number
+  committer:
+    type: Schema.Types.ObjectId
+    ref: 'github_user'
+  committer_id:
+    type: Number
+  stats:
+    total:
+      type: Number
+    additions:
+      type: Number
+    deletions:
+      type: Number
   added: [{
     type: String
   }]
@@ -43,12 +59,23 @@ CommitSchema.plugin Plugins.redis, model_config
 
 CommitSchema.static 'createFromGithubCommit', (commit, callback = ->) ->
   new_commit = new this()
-  # First set all standard properties at once
-  new_commit.set commit
+
+  files = _.groupBy commit.files, (file) ->
+    file.status
 
   # Then set all specific/custom properties
   new_commit.set
+    sha: commit.sha
+    message: commit.commit.message
+    url: commit.url
+    stats: commit.stats
     commit_id: commit.id
+    author_id: commit.author.id
+    committer_id: commit.committer.id
+    added: files.added
+    removed: files.removed
+    modified: files.modified
+    renamed: files.renamed
 
   new_commit.save (err) ->
     callback err, new_commit

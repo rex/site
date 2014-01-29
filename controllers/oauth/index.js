@@ -37,6 +37,7 @@ module.exports = function(app) {
           code: req.query.code
         }
       }, function(err, resp, body) {
+        var page_data;
         if (resp.statusCode === 400) {
           logger("Status code 400!", body.error_reason, body.error_message);
           return res.render('oauth/authorize', {
@@ -47,35 +48,16 @@ module.exports = function(app) {
           });
         }
         body = JSON.parse(body);
-        return Models.OAuth_Token.findOneAndUpdate({
-          service: 'instagram'
-        }, {
-          $set: {
-            access_token: body.access_token,
-            meta: {
-              user: body.user
-            }
+        page_data = {
+          service: 'instagram',
+          success: true,
+          access_token: body.access_token,
+          code: req.query.code,
+          meta: {
+            user: body.user
           }
-        }, {
-          upsert: true
-        }, function(err, token) {
-          var page_data;
-          console.log("Token created/updated", token);
-          if (err) {
-            logger.error(err);
-            return res.send(500, err);
-          } else {
-            page_data = {
-              service: 'instagram',
-              success: true,
-              access_token: body.access_token,
-              meta: {
-                user: body.user
-              }
-            };
-            return res.render('oauth/authorize', page_data);
-          }
-        });
+        };
+        return res.render('oauth/authorize', page_data);
       });
     }
   });

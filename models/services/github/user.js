@@ -66,6 +66,18 @@ UserSchema.plugin(Plugins.config, model_config);
 
 UserSchema.plugin(Plugins.redis, model_config);
 
+UserSchema["static"]('createFromGithubUser', function(user, callback) {
+  var new_user;
+  if (callback == null) {
+    callback = function() {};
+  }
+  new_user = new this();
+  new_user.set(user);
+  return new_user.save(function(err) {
+    return callback(err, new_user);
+  });
+});
+
 module.exports = {
   schema: UserSchema,
   redis_prefix: model_config.redis_prefix,

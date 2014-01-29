@@ -9,11 +9,13 @@ model_config =
 PushSchema = new Schema
   push_id:
     type: Number
-    index: true
   repo:
     type: Schema.Types.ObjectId
     ref: 'github_repo'
-    index: true
+  repo_id:
+    type: Number
+  repo_name:
+    type: String
   public:
     type: Boolean
   commits: [
@@ -32,6 +34,12 @@ PushSchema.static 'createFromGithubPush', (push, callback = ->) ->
 
   new_push.set
     push_id: push.payload.push_id
+    created_on: push.created_at
+    repo_id: push.repo.id
+    repo_name: push.repo.name
+
+  new_push.save (err) ->
+    callback err, new_push
 
 module.exports =
   schema: PushSchema

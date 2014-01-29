@@ -20,38 +20,71 @@ RepoSchema = new Schema({
   },
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'github_user',
-    index: true
+    ref: 'github_user'
   },
   owner_id: {
     type: Number,
     index: true
   },
-  owner_username: String,
-  name: String,
-  full_name: String,
-  "private": Boolean,
-  fork: Boolean,
-  html_url: String,
-  description: String,
-  homepage: String,
-  size: Number,
-  stargazers_count: Number,
-  watchers_count: Number,
-  language: String,
-  has_issues: Boolean,
-  has_downloads: Boolean,
-  has_wiki: Boolean,
-  forks_count: Number,
-  open_issues_count: Number,
-  watchers: Number,
+  owner_login: {
+    type: String
+  },
+  name: {
+    type: String
+  },
+  full_name: {
+    type: String
+  },
+  "private": {
+    type: Boolean
+  },
+  fork: {
+    type: Boolean
+  },
+  html_url: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  homepage: {
+    type: String
+  },
+  size: {
+    type: Number
+  },
+  stargazers_count: {
+    type: Number
+  },
+  watchers_count: {
+    type: Number
+  },
+  language: {
+    type: String
+  },
+  has_issues: {
+    type: Boolean
+  },
+  has_downloads: {
+    type: Boolean
+  },
+  has_wiki: {
+    type: Boolean
+  },
+  forks_count: {
+    type: Number
+  },
+  open_issues_count: {
+    type: Number
+  },
+  watchers: {
+    type: Number
+  },
   created_on: {
-    type: Date,
-    index: true
+    type: Date
   },
   updated_on: {
-    type: Date,
-    index: true
+    type: Date
   }
 });
 
@@ -69,7 +102,7 @@ RepoSchema["static"]('createFromGithubRepo', function(repo, callback) {
   new_repo.set({
     repo_id: repo.id,
     owner_id: repo.owner.id,
-    owner_username: repo.owner.login
+    owner_login: repo.owner.login
   });
   return new_repo.save(function(err) {
     return callback(err, new_repo);

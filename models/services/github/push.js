@@ -11,13 +11,17 @@ model_config = {
 
 PushSchema = new Schema({
   push_id: {
-    type: Number,
-    index: true
+    type: Number
   },
   repo: {
     type: Schema.Types.ObjectId,
-    ref: 'github_repo',
-    index: true
+    ref: 'github_repo'
+  },
+  repo_id: {
+    type: Number
+  },
+  repo_name: {
+    type: String
   },
   "public": {
     type: Boolean
@@ -44,8 +48,14 @@ PushSchema["static"]('createFromGithubPush', function(push, callback) {
     callback = function() {};
   }
   new_push = new this();
-  return new_push.set({
-    push_id: push.payload.push_id
+  new_push.set({
+    push_id: push.payload.push_id,
+    created_on: push.created_at,
+    repo_id: push.repo.id,
+    repo_name: push.repo.name
+  });
+  return new_push.save(function(err) {
+    return callback(err, new_push);
   });
 });
 

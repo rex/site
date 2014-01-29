@@ -1,38 +1,51 @@
-extends ../layout
-block content
-  h2 OAuth Authorization
+h2 OAuth Authorization
 
-  if error
-    .ui.error.icon.message
-      case service
-        when 'instagram'
-          i.huge.red.inverted.circular.instagram.icon
-        default
-          i.huge.red.inverted.circular.remove.icon
+  h4 access_token
+  | #{access_token}
 
-      .content
-        .header OAuth Authorization Failed: #{service}
+  h4 auth_code
+  | #{code}
 
-        p #{error_reason}
-        p #{error_description}
+  h4 error_reason
+  | #{error_reason}
 
-  else if success
-    .ui.success.icon.message
-      case service
-        when 'instagram'
-          i.huge.teal.inverted.circular.instagram.icon
+  h4 error_description
+  | #{error_description}
 
-      .content
-        .header OAuth Authorization Succeeded!
+  h4 error
+  | #{error}
 
-        p #{access_token}
+  //- if error
+  //-   .ui.error.icon.message
+  //-     case service
+  //-       when 'instagram'
+  //-         i.huge.red.inverted.circular.instagram.icon
+  //-       default
+  //-         i.huge.red.inverted.circular.remove.icon
 
-    case service
-      when 'instagram'
-        .ui.items
-          .item
-            .image
-              img(src=meta.user.profile_picture)
-            .content
-              .name #{meta.user.full_name}
-              p.description #{meta.user.username}
+  //-     .content
+  //-       .header OAuth Authorization Failed: #{service}
+
+  //-       p #{error_reason}
+  //-       p #{error_description}
+
+  //- else if success
+  //-   .ui.success.icon.message
+  //-     case service
+  //-       when 'instagram'
+  //-         i.huge.teal.inverted.circular.instagram.icon
+
+  //-     .content
+  //-       .header OAuth Authorization Succeeded!
+
+  //-       p #{access_token}
+
+  //-   case service
+  //-     when 'instagram'
+  //-       .ui.items
+  //-         .item
+  //-           .image
+  //-             img(src=meta.user.profile_picture)
+  //-           .content
+  //-             .name #{meta.user.full_name}
+  //-             p.description #{meta.user.username}
