@@ -1,4 +1,4 @@
-var LastFM, LastFM_API, Queue, Service, logger, _, _ref,
+var LastFM, LastFmNode, Queue, Service, logger, _, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -8,7 +8,7 @@ _ = require('../lib/_');
 
 logger = require('../lib/logger');
 
-LastFM_API = require('../apis/lastfm');
+LastFmNode = require('lastfm').LastFmNode;
 
 Queue = require('../drivers/queue');
 
@@ -24,6 +24,16 @@ LastFM = (function(_super) {
     if (initialized == null) {
       initialized = function() {};
     }
+    this.config = {
+      api_key: process.env.LASTFM_API_KEY,
+      api_secret: process.env.LASTFM_API_SECRET,
+      username: process.env.LASTFM_USERNAME
+    };
+    this.client = new LastFmNode({
+      api_key: this.config.api_key,
+      api_secret: this.config.api_secret,
+      useragent: 'prex.io'
+    });
     this.start_track_stream();
     return initialized();
   };
@@ -32,7 +42,7 @@ LastFM = (function(_super) {
     if (track_stream_initialized == null) {
       track_stream_initialized = function() {};
     }
-    this.track_stream = LastFM_API.client.stream(LastFM_API.config.username);
+    this.track_stream = this.client.stream(this.config.username);
     this.track_stream.on('lastPlayed', function(track) {});
     this.track_stream.on('nowPlaying', function(track) {});
     this.track_stream.on('scrobbled', function(track) {

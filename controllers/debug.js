@@ -39,11 +39,10 @@ module.exports = function(app) {
   });
   app.get('/github/activity', function(req, res) {
     return Services.Github.fetch_recent_activity(function(err, activity) {
-      if (err) {
-        return res.send(500, err);
-      } else {
-        return res.json(activity);
-      }
+      return res.json({
+        err: err,
+        activity: activity
+      });
     });
   });
   app.get('/github/repos', function(req, res) {

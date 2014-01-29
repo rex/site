@@ -3,12 +3,23 @@ mongo = require '../drivers/mongo'
 _ = require '../lib/_'
 async = require 'async'
 logger = require '../lib/logger'
-Instagram_API = require '../apis/instagram'
+Instagram_API = require 'instagram-node-lib'
 
 Models =
   activity: mongo.model 'activity'
 
 class Instagram extends Service
+
+  constructor: ->
+    @api_config =
+      client_id: process.env.INSTAGRAM_CLIENT_ID
+      client_secret: process.env.INSTAGRAM_CLIENT_SECRET
+      access_token: process.env.INSTAGRAM_ACCESS_TOKEN
+      user_id: process.env.INSTAGRAM_USER_ID
+
+    Instagram_API.set 'client_id', @api_config.client_id
+    Instagram_API.set 'client_secret', @api_config.client_secret
+    Instagram_API.set 'access_token', @api_config.access_token
 
   fetch_recent_activity: (callback) ->
     async.parallel

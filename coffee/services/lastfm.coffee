@@ -1,17 +1,27 @@
 Service = require './base'
 _ = require '../lib/_'
 logger = require '../lib/logger'
-LastFM_API = require '../apis/lastfm'
+LastFmNode = require('lastfm').LastFmNode
 Queue = require '../drivers/queue'
 
 class LastFM extends Service
 
   initialize: (initialized = ->) ->
+    @config =
+      api_key: process.env.LASTFM_API_KEY
+      api_secret: process.env.LASTFM_API_SECRET
+      username: process.env.LASTFM_USERNAME
+
+    @client = new LastFmNode
+      api_key: @config.api_key
+      api_secret: @config.api_secret
+      useragent: 'prex.io'
+
     @start_track_stream()
     initialized()
 
   initialize_track_stream: (track_stream_initialized = ->) ->
-    @track_stream = LastFM_API.client.stream LastFM_API.config.username
+    @track_stream = @client.stream @config.username
 
     @track_stream.on 'lastPlayed', (track) ->
 

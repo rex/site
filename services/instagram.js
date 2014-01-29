@@ -1,4 +1,4 @@
-var Instagram, Instagram_API, Models, Service, async, logger, mongo, _, _ref,
+var Instagram, Instagram_API, Models, Service, async, logger, mongo, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -12,7 +12,7 @@ async = require('async');
 
 logger = require('../lib/logger');
 
-Instagram_API = require('../apis/instagram');
+Instagram_API = require('instagram-node-lib');
 
 Models = {
   activity: mongo.model('activity')
@@ -22,8 +22,15 @@ Instagram = (function(_super) {
   __extends(Instagram, _super);
 
   function Instagram() {
-    _ref = Instagram.__super__.constructor.apply(this, arguments);
-    return _ref;
+    this.api_config = {
+      client_id: process.env.INSTAGRAM_CLIENT_ID,
+      client_secret: process.env.INSTAGRAM_CLIENT_SECRET,
+      access_token: process.env.INSTAGRAM_ACCESS_TOKEN,
+      user_id: process.env.INSTAGRAM_USER_ID
+    };
+    Instagram_API.set('client_id', this.api_config.client_id);
+    Instagram_API.set('client_secret', this.api_config.client_secret);
+    Instagram_API.set('access_token', this.api_config.access_token);
   }
 
   Instagram.prototype.fetch_recent_activity = function(callback) {

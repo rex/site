@@ -1,9 +1,13 @@
 logger = require '../lib/logger'
+request = require 'request'
+_ = require '../lib/_'
 
 class Service
-  constructor: ->
+  constructor: (@config = {}, @api_config = {}) ->
     @name = 'generic service'
-    @config = {}
+    @tokens = {}
+    @api_is_json = true
+    @api_base_url = ""
 
   log: ->
     logger.apply arguments
@@ -11,10 +15,23 @@ class Service
   initialize: (initialized = ->) ->
     initialized()
 
-  fetch_recent_activity: (callback) ->
-    if typeof callback is "function" then callback() else true
+  prepare_api_call: (params = {}) ->
+    params.url = "#{@api_base_url}#{params.url}"
+    config = _.merge @api_config, params
+    return config
 
-  process_webhook_activity: (params, callback) ->
-    if typeof callback is "function" then callback() else true
+  api_call: (params, callback) ->
+    self = this
+    config = @prepare_api_call params
+
+    console.log "Config", config
+
+    request config, (err, resp, body) ->
+      if err then callback err, null
+      else callback err, if self.api_is_json is true then JSON.parse body else body
+
+  fetch_recent_activity: (callback = ->) ->
+
+  process_webhook_activity: (params, callback = ->) ->
 
 module.exports = Service

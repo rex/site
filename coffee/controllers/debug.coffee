@@ -29,10 +29,9 @@ module.exports = (app) ->
 
   app.get '/github/activity', (req, res) ->
     Services.Github.fetch_recent_activity (err, activity) ->
-      if err
-        res.send 500, err
-      else
-        res.json activity
+      res.json
+        err: err
+        activity: activity
 
   app.get '/github/repos', (req, res) ->
     Services.Github.fetch_repos (err, body) ->
