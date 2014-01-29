@@ -1,6 +1,13 @@
-var PostSchema, Schema;
+var Plugins, PostSchema, Schema, model_config;
 
 Schema = require('../drivers/mongo').Schema;
+
+Plugins = require('./plugins');
+
+model_config = {
+  redis_prefix: 'app:post',
+  model_name: 'post'
+};
 
 PostSchema = new Schema({
   created_on: {
@@ -42,4 +49,12 @@ PostSchema = new Schema({
   ]
 });
 
-module.exports = PostSchema;
+PostSchema.plugin(Plugins.config, model_config);
+
+PostSchema.plugin(Plugins.redis, model_config);
+
+module.exports = {
+  schema: PostSchema,
+  redis_prefix: model_config.redis_prefix,
+  model_name: model_config.model_name
+};

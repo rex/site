@@ -62,6 +62,21 @@ QueueDriver = (function(_super) {
     return this.handlers[queue_name][job_name] = handler;
   };
 
+  QueueDriver.prototype.add_handlers = function(queue_name, handlers) {
+    var self;
+    if (handlers == null) {
+      handlers = {};
+    }
+    self = this;
+    return _.each(handlers, function(handler, job_name) {
+      return self.add_handler({
+        queue_name: queue_name,
+        job_name: job_name,
+        handler: handler
+      });
+    });
+  };
+
   QueueDriver.prototype.add_job = function(params, job_created) {
     var allowed_attempts, job, job_data, job_name, job_priority, on_complete, on_error, on_progress, on_saved, queue_name, self;
     if (job_created == null) {

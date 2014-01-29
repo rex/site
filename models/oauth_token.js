@@ -1,6 +1,13 @@
-var OAuthTokenSchema, Schema;
+var OAuthTokenSchema, Plugins, Schema, model_config;
 
 Schema = require('../drivers/mongo').Schema;
+
+Plugins = require('./plugins');
+
+model_config = {
+  redis_prefix: 'app:oauth_token',
+  model_name: 'oauth_token'
+};
 
 OAuthTokenSchema = new Schema({
   service: {
@@ -48,4 +55,12 @@ OAuthTokenSchema = new Schema({
   }
 });
 
-module.exports = OAuthTokenSchema;
+OAuthTokenSchema.plugin(Plugins.config, model_config);
+
+OAuthTokenSchema.plugin(Plugins.redis, model_config);
+
+module.exports = {
+  schema: OAuthTokenSchema,
+  redis_prefix: model_config.redis_prefix,
+  model_name: model_config.model_name
+};

@@ -1,4 +1,4 @@
-var app, async, config, debug, express, http, logger, step, _;
+var app, async, colors, config, debug, express, http, logger, step, _;
 
 logger = require('./lib/logger');
 
@@ -14,6 +14,8 @@ step = require('./lib/step');
 
 config = require('./config');
 
+colors = config.colors;
+
 debug = config.debug;
 
 app = express();
@@ -21,60 +23,60 @@ app = express();
 async.series({
   load_app_env: function(done) {
     var env_app;
-    step.start("Loading app config into environment");
+    step.start_major("Loading app config into environment");
     return env_app = require('./env_app')(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   load_app_into_config: function(done) {
-    step.start("Reloading app config");
+    step.start_major("Reloading app config");
     return config.load_app_config(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   connect_to_redis: function(done) {
     var redis;
-    step.start("Initializing Redis");
+    step.start_major("Initializing Redis");
     redis = require('./drivers/redis');
     return redis.initialize(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   initialize_models: function(done) {
     var models;
-    step.start("Initializing Mongo");
+    step.start_major("Initializing Mongo");
     models = require('./models');
     return models.initialize(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   env_services: function(done) {
-    step.start("Update service credentials in database");
+    step.start_major("Update service credentials in database");
     return require('./env_services')(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   load_env: function(done) {
-    step.start("Loading service credentials into environment");
+    step.start_major("Loading service credentials into environment");
     return require('./lib/load_env')(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   load_credentials_into_config: function(done) {
-    step.start("Load service credentials into config");
+    step.start_major("Load service credentials into config");
     return config.load_services(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   configure_app: function(done) {
-    step.start("Configuring application");
+    step.start_major("Configuring application");
     return app.configure(function() {
       app.set('port', config.app.port || 3000);
       app.set('host', config.app.host || 'localhost');
@@ -91,13 +93,13 @@ async.series({
       app.use(express.json());
       app.use(express.urlencoded());
       app.use(express.methodOverride());
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   initialize_redis_session: function(done) {
     var Redis_Instance, Redis_Store, err;
-    step.start("Initializing Redis Session");
+    step.start_major("Initializing Redis Session");
     Redis_Instance = require('./drivers/redis').instance;
     if (!Redis_Instance) {
       err = new Error("No Redis instance found");
@@ -111,75 +113,87 @@ async.series({
       }),
       secret: 'go rangers'
     }));
-    step.complete();
+    step.complete_major();
     return done();
   },
   connect_to_queue: function(done) {
     var queue;
-    step.start("Initializing Job Queue");
+    step.start_major("Initializing Job Queue");
     queue = require('./drivers/queue');
     return queue.initialize(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   initialize_workers: function(done) {
     var workers;
-    step.start("Initializing Job Queue Workers");
+    step.start_major("Initializing Job Queue Workers");
     workers = require('./workers');
     return workers.initialize(function() {
-      step.complete();
+      step.complete_major();
       return done();
     });
   },
   initialize_services: function(done) {
     var services;
-    step.start("Initializing Services");
+    step.start_major("Initializing Services");
     services = require('./services');
     return services.initialize(function(err) {
       if (err != null) {
         step.error(err);
       } else {
-        step.complete();
+        step.complete_major();
       }
       return done(err);
     });
   },
   attach_middleware: function(done) {
-    step.start("Attaching application middleware");
+    step.start_major("Attaching application middleware");
     app.use(require('./middleware/log_visit'));
     app.use(require('./middleware/set_locals'));
     app.use(require('./middleware/detect_json_requests'));
     app.use(require('./middleware/debug_session'));
     app.use(app.router);
-    step.complete();
+    step.complete_major();
     return done();
   },
   post_middleware: function(done) {
-    step.start("Running post-middleware hook");
+    step.start_major("Running post-middleware hook");
     app.configure('development', function() {
       return app.use(express.errorHandler());
     });
     app.configure('production', function() {});
-    step.complete();
+    step.complete_major();
     return done();
   },
   init_controllers: function(done) {
-    step.start("Initializing controllers");
+    step.start_major("Initializing controllers");
     require('./controllers')(app);
-    step.complete();
+    step.complete_major();
     return done();
   },
   display_routes: function(done) {
-    if (debug) {
-      logger("Loaded Routes:");
-      _.each(app.routes, function(methods, verb) {
-        logger("" + verb + " methods: (" + methods.length + ")");
-        return _.each(_.pluck(methods, 'path'), function(path) {
-          return logger(" > " + path);
-        });
+    step.group("Loaded Routes");
+    _.each(app.routes, function(methods, verb) {
+      return _.each(_.pluck(methods, 'path'), function(path) {
+        var color;
+        switch (verb) {
+          case 'get':
+            color = colors.blue;
+            break;
+          case 'put':
+            color = colors.teal;
+            break;
+          case 'post':
+            color = colors.green;
+            break;
+          case 'delete':
+            color = colors.red;
+        }
+        return logger(" > " + color + (verb.toUpperCase()) + colors.reset + " " + path);
       });
-    }
+    });
+    step.groupEnd();
     return done();
   }
 }, function(err, results) {
@@ -187,9 +201,9 @@ async.series({
   if (err) {
     return logger.error(err);
   } else {
-    step.start("Booting application");
+    step.start_major("Booting application");
     return server = http.createServer(app).listen(app.get('port'), app.get('host'), function() {
-      step.complete();
+      step.complete_major();
       return logger("prex.io running at " + (app.get('host')) + " on port " + (app.get('port')));
     });
   }

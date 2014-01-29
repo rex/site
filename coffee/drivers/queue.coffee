@@ -40,6 +40,15 @@ class QueueDriver extends BaseDriver
 
     @handlers[queue_name][job_name] = handler
 
+  # Shortcut method to add stacks at once
+  add_handlers: (queue_name, handlers = {}) ->
+    self = this
+    _.each handlers, (handler, job_name) ->
+      self.add_handler
+        queue_name: queue_name
+        job_name: job_name
+        handler: handler
+
   add_job: (params, job_created = ->) ->
     self = this
 

@@ -1,8 +1,15 @@
-var Schema, VisitSchema, logger;
+var Plugins, Schema, VisitSchema, logger, model_config;
 
 Schema = require('../drivers/mongo').Schema;
 
 logger = require('../lib/logger');
+
+Plugins = require('./plugins');
+
+model_config = {
+  redis_prefix: 'app:visit',
+  model_name: 'visit'
+};
 
 VisitSchema = new Schema({
   created_on: {
@@ -64,6 +71,8 @@ VisitSchema = new Schema({
   }
 });
 
+VisitSchema.plugin(Plugins.config, model_config);
+
 VisitSchema.methods.createFromRequest = function(req, res, done) {
   var self;
   self = this;
@@ -92,4 +101,8 @@ VisitSchema.methods.createFromRequest = function(req, res, done) {
   });
 };
 
-module.exports = VisitSchema;
+module.exports = {
+  schema: VisitSchema,
+  redis_prefix: model_config.redis_prefix,
+  model_name: model_config.model_name
+};

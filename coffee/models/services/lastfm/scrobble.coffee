@@ -1,7 +1,12 @@
 Schema = require('../../../drivers/mongo').Schema
 _ = require '../../../lib/_'
 logger = require '../../../lib/logger'
-Redis = require '../../../drivers/redis'
+
+Plugins = require '../../plugins'
+
+model_config =
+  redis_prefix: 'service:lastfm:scrobble'
+  model_name: 'lastfm_scrobble'
 
 LastFmScrobbleSchema = new Schema
   track_id:
@@ -25,8 +30,8 @@ LastFmScrobbleSchema = new Schema
     index: true
     default: Date.now
 
-LastFmScrobbleSchema.post 'save', (lastfm_scrobble) ->
-  Redis.store_model "service:lastfm:scrobble:#{lastfm_scrobble._id}", lastfm_scrobble.toJSON()
+LastFmScrobbleSchema.plugin Plugins.config, model_config
+LastFmScrobbleSchema.plugin Plugins.redis, model_config
 
 LastFmScrobbleSchema.static 'createFromScrobble', (scrobbled_track, callback = ->) ->
   new_scrobble = new this()
@@ -59,4 +64,7 @@ LastFmScrobbleSchema.static 'createFromScrobble', (scrobbled_track, callback = -
 
     callback err, lastfm_scrobble
 
-module.exports = LastFmScrobbleSchema
+module.exports =
+  schema: LastFmScrobbleSchema
+  redis_prefix: model_config.redis_prefix
+  model_name: model_config.model_name

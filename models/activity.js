@@ -1,6 +1,14 @@
-var ActivitySchema, Schema;
+var ActivitySchema, Plugins, Schema, model_config;
 
 Schema = require('../drivers/mongo').Schema;
+
+Plugins = require('./plugins');
+
+model_config = {
+  redis_prefix: "app:activity",
+  model_name: 'activity',
+  db_name: 'activities'
+};
 
 ActivitySchema = new Schema({
   created_on: {
@@ -21,4 +29,10 @@ ActivitySchema = new Schema({
   }
 });
 
-module.exports = ActivitySchema;
+ActivitySchema.plugin(Plugins.config, model_config);
+
+module.exports = {
+  schema: ActivitySchema,
+  redis_prefix: model_config.model_name,
+  model_name: model_config.model_name
+};

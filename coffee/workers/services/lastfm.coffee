@@ -17,36 +17,12 @@ class LastFM extends BaseWorker
     Queue.add_queue @queue_name
 
     # Add our handlers
-
-    # Srobbles
-    Queue.add_handler
-      queue_name: @queue_name
-      job_name: 'track_scrobbled'
-      handler: @handle_scrobble
-
-    # Loved tracks
-    Queue.add_handler
-      queue_name: @queue_name
-      job_name: 'track_loved'
-      handler: @handle_loved_track
-
-    # Banned tracks
-    Queue.add_handler
-      queue_name: @queue_name
-      job_name: 'track_banned'
-      handler: @handle_banned_track
-
-    # New friends
-    Queue.add_handler
-      queue_name: @queue_name
-      job_name: 'friend_added'
-      handler: @handle_new_friend
-
-    # Shouts
-    Queue.add_handler
-      queue_name: @queue_name
-      job_name: 'shout_received'
-      handler: @handle_shout
+    Queue.add_handlers @queue_name,
+      track_scrobbled: @handle_scrobble
+      track_loved: @handle_loved_track
+      track_banned: @handle_banned_track
+      friend_added: @handle_new_friend
+      shout_received: @handle_shout
 
     initialized()
 
@@ -57,7 +33,7 @@ class LastFM extends BaseWorker
       (lastfm_scrobble, done) ->
         Models.Activity.create
           created_on: lastfm_scrobble.created_on
-          redis_key: "service:lastfm:scrobble:#{lastfm_scrobble._id}"
+          redis_key: lastfm_scrobble.redis_id
         , done
     ], callback
 

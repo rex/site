@@ -1,5 +1,11 @@
 Schema = require('../drivers/mongo').Schema
 
+Plugins = require './plugins'
+
+model_config =
+  redis_prefix: 'app:link'
+  model_name: 'link'
+
 LinkSchema = new Schema
   created_on:
     type: Date
@@ -16,4 +22,10 @@ LinkSchema = new Schema
     type: Boolean
     default: true
 
-module.exports = LinkSchema
+LinkSchema.plugin Plugins.config, model_config
+LinkSchema.plugin Plugins.redis, model_config
+
+module.exports =
+  schema: LinkSchema
+  redis_prefix: model_config.redis_prefix
+  model_name: model_config.model_name

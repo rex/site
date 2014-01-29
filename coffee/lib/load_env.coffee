@@ -3,6 +3,7 @@ mongo = require '../drivers/mongo'
 _ = require './_'
 logger = require './logger'
 debug = require('../config').debug
+step = require './step'
 
 Models =
   Env: mongo.model 'env'
@@ -14,14 +15,18 @@ module.exports = (next = ->) ->
       if env_err then return next env_err
       if token_err then return next token_err
 
-      debug and logger "Loaded #{env_vars.length} env vars:"
-      _.each env_vars, (env_var) ->
-        debug and logger " > #{env_var.key}"
-        process.env[env_var.key] = env_var.val
+      if env_vars.length
+        step.group "Loaded #{env_vars.length} env vars:"
+        _.each env_vars, (env_var) ->
+          debug and console.log " > #{env_var.key}"
+          process.env[env_var.key] = env_var.val
+        step.groupEnd()
 
-      debug and logger "Loaded #{env_tokens.length} env tokens:"
-      _.each env_tokens, (env_token) ->
-        debug and logger " > #{env_token.env_key}"
-        process.env[env_token.env_key] = env_token.access_token
+      if env_tokens.length
+        step.group "Loaded #{env_tokens.length} env tokens:"
+        _.each env_tokens, (env_token) ->
+          debug and console.log " > #{env_token.env_key}"
+          process.env[env_token.env_key] = env_token.access_token
+        step.groupEnd()
 
       next()

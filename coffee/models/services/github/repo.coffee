@@ -1,5 +1,10 @@
 Schema = require('../../../drivers/mongo').Schema
-Redis = require '../../../drivers/redis'
+
+Plugins = require '../../plugins'
+
+model_config =
+  redis_prefix: 'service:github:repo'
+  model_name: 'github_repo'
 
 RepoSchema = new Schema
   personal:
@@ -36,10 +41,10 @@ RepoSchema = new Schema
   default_branch: String
   master_branch: String
 
-RepoSchema.post 'save', (repo) ->
-  Redis.store_model "github_repo_#{repo._id}", repo.toJSON()
+RepoSchema.plugin Plugins.config, model_config
+RepoSchema.plugin Plugins.redis, model_config
 
-RepoSchema.methods.fromGithubRepo = (repo) ->
+RepoSchema.static 'fromGithubRepo', (repo) ->
   # Set all standard properties at once
   this.set repo
 
@@ -49,4 +54,7 @@ RepoSchema.methods.fromGithubRepo = (repo) ->
     owner_id: repo.owner.id
     owner_username: repo.owner.login
 
-module.exports = RepoSchema
+module.exports =
+  schema: RepoSchema
+  redis_prefix: model_config.redis_prefix
+  model_name: model_config.model_name

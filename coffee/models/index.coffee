@@ -2,7 +2,9 @@ mongo = require '../drivers/mongo'
 config = require '../config'
 logger = require '../lib/logger'
 _ = require '../lib/_'
+Step = require '../lib/step'
 
+Step.group "Load Models"
 schemas =
   activity: require './activity'
   env: require './env'
@@ -10,36 +12,30 @@ schemas =
   link: require './link'
   oauth_token: require './oauth_token'
   post: require './post'
-  services:
-    lastfm:
-      scrobble: require './services/lastfm/scrobble'
-    github:
-      repo: require './services/github/repo'
-      commit: require './services/github/commit'
+  lastfm_scrobble: require './services/lastfm/scrobble'
+  github_repo: require './services/github/repo'
+  github_commit: require './services/github/commit'
+  github_push: require './services/github/push'
   snippet: require './snippet'
   tag: require './tag'
   visit: require './visit'
 
 exports.initialize = (after_connected = ->) ->
-  # Instantiate our models, grouped by service
+  # console.log "#{schemas.length} schemas to load", schemas
+  _.each schemas, (model) ->
+    Step.start "Loading model: #{model.model_name}"
+    if model.db_name
+      mongo.model model.model_name, model.schema, model.db_name
+    else
+      mongo.model model.model_name, model.schema
 
-  # LastFM
-  mongo.model 'lastfm_scrobble', schemas.services.lastfm.scrobble
+    loaded_model = mongo.model model.model_name
+    doc = new loaded_model()
+    if doc.model_name is model.model_name then Step.complete() else Step.fail "Model name not loaded: #{model.model_name}"
 
-  # GitHub
-  mongo.model 'github_commit', schemas.services.github.commit
-  mongo.model 'github_repo', schemas.services.github.repo
+  console.log "Models loaded", mongo.loaded_models
 
-  # Application
-  mongo.model 'activity', schemas.activity, 'activities'
-  mongo.model 'env', schemas.env, 'env_vars'
-  mongo.model 'job', schemas.job
-  mongo.model 'link', schemas.link
-  mongo.model 'oauth_token', schemas.oauth_token
-  mongo.model 'post', schemas.post
-  mongo.model 'snippet', schemas.snippet
-  mongo.model 'tag', schemas.tag
-  mongo.model 'visit', schemas.visit
+  Step.groupEnd()
 
   # Connect to Mongo
   mongo.initialize after_connected

@@ -31,30 +31,12 @@ LastFM = (function(_super) {
     }
     this.queue_name = "service:lastfm";
     Queue.add_queue(this.queue_name);
-    Queue.add_handler({
-      queue_name: this.queue_name,
-      job_name: 'track_scrobbled',
-      handler: this.handle_scrobble
-    });
-    Queue.add_handler({
-      queue_name: this.queue_name,
-      job_name: 'track_loved',
-      handler: this.handle_loved_track
-    });
-    Queue.add_handler({
-      queue_name: this.queue_name,
-      job_name: 'track_banned',
-      handler: this.handle_banned_track
-    });
-    Queue.add_handler({
-      queue_name: this.queue_name,
-      job_name: 'friend_added',
-      handler: this.handle_new_friend
-    });
-    Queue.add_handler({
-      queue_name: this.queue_name,
-      job_name: 'shout_received',
-      handler: this.handle_shout
+    Queue.add_handlers(this.queue_name, {
+      track_scrobbled: this.handle_scrobble,
+      track_loved: this.handle_loved_track,
+      track_banned: this.handle_banned_track,
+      friend_added: this.handle_new_friend,
+      shout_received: this.handle_shout
     });
     return initialized();
   };
@@ -69,7 +51,7 @@ LastFM = (function(_super) {
       }, function(lastfm_scrobble, done) {
         return Models.Activity.create({
           created_on: lastfm_scrobble.created_on,
-          redis_key: "service:lastfm:scrobble:" + lastfm_scrobble._id
+          redis_key: lastfm_scrobble.redis_id
         }, done);
       }
     ], callback);

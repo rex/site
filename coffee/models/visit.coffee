@@ -1,6 +1,12 @@
 Schema = require('../drivers/mongo').Schema
 logger = require '../lib/logger'
 
+Plugins = require './plugins'
+
+model_config =
+  redis_prefix: 'app:visit'
+  model_name: 'visit'
+
 VisitSchema = new Schema
   created_on:
     type: Date
@@ -44,6 +50,9 @@ VisitSchema = new Schema
   browser_info:
     type: Object
 
+VisitSchema.plugin Plugins.config, model_config
+# Not loading into Redis
+
 VisitSchema.methods.createFromRequest = (req, res, done) ->
   self = this
 
@@ -71,4 +80,7 @@ VisitSchema.methods.createFromRequest = (req, res, done) ->
 
     done()
 
-module.exports = VisitSchema
+module.exports =
+  schema: VisitSchema
+  redis_prefix: model_config.redis_prefix
+  model_name: model_config.model_name

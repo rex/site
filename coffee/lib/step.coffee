@@ -1,20 +1,37 @@
 util = require 'util'
+config = require '../config'
+colors = config.colors
 
 class Step
   constructor: ->
     @prefix = " > "
-    @red = `'\033[0;31m'`
-    @green = `'\033[0;32m'`
-    @reset = `'\033[0m'`
+    @red = colors.red
+    @green = colors.green
+    @reset = colors.reset
 
-  start: (message) ->
-    util.print "#{@prefix}#{message}..."
+  start_major: (message) ->
+    @start message, true
 
-  complete: ->
-    util.print "#{@green}OK#{@reset}\n"
+  complete_major: ->
+    @complete true
+
+  start: (message, force = false) ->
+    @write "#{@prefix}#{message}...", force
+
+  group: (name, force = false) ->
+    @write "\n\n [ #{name} ] \n\n", force
+
+  groupEnd: (force = false) ->
+    @write "\n [ /group ] \n\n", force
+
+  complete: (force = false)->
+    @write "#{@green}OK#{@reset}\n", force
 
   error: (err) ->
-    util.print "#{@red}ERROR#{@reset}\n"
+    @write "#{@red}ERROR#{@reset}\n"
     console.error err
+
+  write: (text, force) ->
+    (force or config.debug) and util.print text
 
 module.exports = new Step

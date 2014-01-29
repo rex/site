@@ -34,7 +34,7 @@ RedisDriver = (function(_super) {
     this.instance = redis.createClient(config.redis.port, config.redis.host, config.redis.params);
     this.instance.debug_mode = true;
     this.instance.on('error', function() {
-      self.debug && logger.error('Redis connection failure');
+      logger.error('Redis connection failure');
       self.state = 'error';
       return self.connected = false;
     });
@@ -43,11 +43,8 @@ RedisDriver = (function(_super) {
       self.state = 'connection_closed';
       return self.connected = false;
     });
-    this.instance.on('drain', function() {
-      return self.debug && logger('Redis command queue drained');
-    });
+    this.instance.on('drain', function() {});
     this.instance.on('idle', function() {
-      self.debug && logger('Redis connection idle');
       return self.state = 'idle';
     });
     this.instance.on('connect', function() {

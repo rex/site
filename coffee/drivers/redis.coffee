@@ -19,7 +19,7 @@ class RedisDriver extends BaseDriver
     @instance.debug_mode = true
 
     @instance.on 'error', ->
-      self.debug and logger.error 'Redis connection failure'
+      logger.error 'Redis connection failure'
       self.state = 'error'
       self.connected = false
 
@@ -29,10 +29,10 @@ class RedisDriver extends BaseDriver
       self.connected = false
 
     @instance.on 'drain', ->
-      self.debug and logger 'Redis command queue drained'
+      # self.debug and logger 'Redis command queue drained'
 
     @instance.on 'idle', ->
-      self.debug and logger 'Redis connection idle'
+      # self.debug and logger 'Redis connection idle'
       self.state = 'idle'
 
     @instance.on 'connect', ->
