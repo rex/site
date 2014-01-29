@@ -133,6 +133,8 @@ async.series
     # Display all session information for each request
     app.use require './middleware/debug_session'
 
+    app.use require './middleware/generic_callback'
+
     app.use app.router
 
     step.complete_major()

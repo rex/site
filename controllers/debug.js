@@ -1,4 +1,4 @@
-var Redis, Services, config, logger, mongo, _;
+var Redis, Services, config, generic_callback, logger, mongo, _;
 
 logger = require('../lib/logger');
 
@@ -12,7 +12,15 @@ Redis = require('../drivers/redis');
 
 Services = {
   Github: require('../services/github'),
-  Instagram: require('../services/instagram')
+  Instagram: require('../services/instagram'),
+  Twitter: require('../services/twitter')
+};
+
+generic_callback = function(err, body) {
+  return res.json({
+    err: err,
+    body: body
+  });
 };
 
 module.exports = function(app) {
@@ -38,58 +46,31 @@ module.exports = function(app) {
     });
   });
   app.get('/github/activity', function(req, res) {
-    return Services.Github.fetch_recent_activity(function(err, activity) {
-      return res.json({
-        err: err,
-        activity: activity
-      });
-    });
+    return Services.Github.fetch_recent_activity(res.generic_callback);
   });
   app.get('/github/repos', function(req, res) {
-    return Services.Github.fetch_repos(function(err, body) {
-      return res.json({
-        err: err,
-        body: body
-      });
-    });
+    return Services.Github.fetch_repos(res.generic_callback);
   });
   app.get('/github/user/:login', function(req, res) {
-    return Services.Github.fetch_user(req.params.login, function(err, body) {
-      return res.json({
-        err: err,
-        body: body
-      });
-    });
+    return Services.Github.fetch_user(req.params.login, res.generic_callback);
   });
   app.get('/github/repo/:login/:name', function(req, res) {
     var repo_full_name;
     repo_full_name = "" + req.params.login + "/" + req.params.name;
-    return Services.Github.fetch_repo(repo_full_name, function(err, body) {
-      return res.json({
-        err: err,
-        body: body
-      });
-    });
+    return Services.Github.fetch_repo(repo_full_name, res.generic_callback);
   });
   app.get('/github/commits/:login/:name/:sha', function(req, res) {
     var repo_full_name;
     repo_full_name = "" + req.params.login + "/" + req.params.name;
-    return Services.Github.fetch_commit(repo_full_name, req.params.sha, function(err, body) {
-      return res.json({
-        err: err,
-        body: body
-      });
-    });
+    return Services.Github.fetch_commit(repo_full_name, req.params.sha, res.generic_callback);
   });
   app.get('/github/commits/:login/:name', function(req, res) {
     var repo_full_name;
     repo_full_name = "" + req.params.login + "/" + req.params.name;
-    return Services.Github.fetch_commits(repo_full_name, function(err, body) {
-      return res.json({
-        err: err,
-        body: body
-      });
-    });
+    return Services.Github.fetch_commits(repo_full_name, res.generic_callback);
+  });
+  app.get('/twitter/timeline', function(req, res) {
+    return Services.Twitter.fetch_timeline(res.generic_callback);
   });
   return app.get('/', function(req, res) {
     return res.sendfile('views/index.html');

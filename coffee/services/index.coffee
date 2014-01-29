@@ -8,6 +8,7 @@ Services =
   LastFM: require './lastfm'
   LinkedIn: require './linkedin'
   SoundCloud: require './soundcloud'
+  Twitter: require './twitter'
 
 exports.initialize = (services_initialized = ->) ->
   async.series
@@ -23,6 +24,9 @@ exports.initialize = (services_initialized = ->) ->
       Services.LinkedIn.initialize done
     SoundCloud: (done) ->
       Services.SoundCloud.initialize done
+    Twitter: (done) ->
+      Services.Twitter.initialize done
+      done()
 
   , (err, results) ->
     services_initialized err

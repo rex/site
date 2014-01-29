@@ -54,7 +54,8 @@ module.exports.load_services = function(credentials_loaded) {
   app_config.instagram = {
     client_id: process.env.INSTAGRAM_CLIENT,
     client_secret: process.env.INSTAGRAM_SECRET,
-    oauth_redirect_uri: process.env.INSTAGRAM_REDIRECT_URI
+    oauth_redirect_uri: process.env.INSTAGRAM_REDIRECT_URI,
+    user_id: process.env.INSTAGRAM_USER_ID
   };
   app_config.github = {
     client_id: process.env.GITHUB_CLIENT_ID,
@@ -69,7 +70,9 @@ module.exports.load_services = function(credentials_loaded) {
   app_config.soundcloud = {
     client_id: process.env.SOUNDCLOUD_CLIENT_ID,
     client_secret: process.env.SOUNDCLOUD_CLIENT_SECRET,
-    redirect_uri: process.env.SOUNDCLOUD_REDIRECT_URI
+    redirect_uri: process.env.SOUNDCLOUD_REDIRECT_URI,
+    access_token: process.env.SOUNDCLOUD_ACCESS_TOKEN,
+    auth_code: process.env.SOUNDCLOUD_AUTH_CODE
   };
   app_config.lastfm = {
     api_key: process.env.LASTFM_API_KEY,
@@ -81,9 +84,26 @@ module.exports.load_services = function(credentials_loaded) {
     oauth_token: process.env.LINKEDIN_OAUTH_TOKEN,
     oauth_secret: process.env.LINKEDIN_OAUTH_SECRET
   };
+  app_config.facebook = {
+    app_id: process.env.FACEBOOK_APP_ID,
+    app_secret: process.env.FACEBOOK_APP_SECRET,
+    client_token: process.env.FACEBOOK_CLIENT_TOKEN,
+    access_token: process.env.FACEBOOK_ACCESS_TOKEN
+  };
   app_config.twilio = {
     sid: process.env.TWILIO_SID,
     token: process.env.TWILIO_TOKEN
+  };
+  app_config.reddit = {
+    id: process.env.REDDIT_ID,
+    secret: process.env.REDDIT_SECRET,
+    redirect_uri: process.env.REDDIT_REDIRECT_URI
+  };
+  app_config.twitter = {
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token: process.env.TWITTER_ACCESS_TOKEN,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   };
   return credentials_loaded();
 };

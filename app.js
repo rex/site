@@ -153,6 +153,7 @@ async.series({
     app.use(require('./middleware/set_locals'));
     app.use(require('./middleware/detect_json_requests'));
     app.use(require('./middleware/debug_session'));
+    app.use(require('./middleware/generic_callback'));
     app.use(app.router);
     step.complete_major();
     return done();

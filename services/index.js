@@ -10,7 +10,8 @@ Services = {
   Instagram: require('./instagram'),
   LastFM: require('./lastfm'),
   LinkedIn: require('./linkedin'),
-  SoundCloud: require('./soundcloud')
+  SoundCloud: require('./soundcloud'),
+  Twitter: require('./twitter')
 };
 
 exports.initialize = function(services_initialized) {
@@ -35,6 +36,10 @@ exports.initialize = function(services_initialized) {
     },
     SoundCloud: function(done) {
       return Services.SoundCloud.initialize(done);
+    },
+    Twitter: function(done) {
+      Services.Twitter.initialize(done);
+      return done();
     }
   }, function(err, results) {
     return services_initialized(err);
