@@ -18,6 +18,32 @@ module.exports = function(app) {
       config: config
     });
   });
+  app.get('/oauth/redirect/soundcloud', function(req, res) {
+    if (req.query.code) {
+      return request.post({
+        url: 'https://api.soundcloud.com/oauth2/token',
+        form: {
+          client_id: config.soundcloud.client_id,
+          client_secret: config.soundcloud.client_secret,
+          redirect_uri: config.soundcloud.redirect_uri,
+          grant_type: 'authorization_code',
+          code: req.query.code
+        }
+      }, function(err, resp, body) {
+        var page_data;
+        body = JSON.parse(body);
+        page_data = {
+          access_token: body.access_token,
+          code: req.query.code
+        };
+        return res.render('oauth/authorize', page_data);
+      });
+    } else {
+      return res.render('oauth/authorize', {
+        error: "whoops"
+      });
+    }
+  });
   return app.get('/oauth/redirect/instagram', function(req, res) {
     if (req.query.error) {
       return res.render('oauth/authorize', {

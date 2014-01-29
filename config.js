@@ -68,7 +68,8 @@ module.exports.load_services = function(credentials_loaded) {
   };
   app_config.soundcloud = {
     client_id: process.env.SOUNDCLOUD_CLIENT_ID,
-    client_secret: process.env.SOUNDCLOUD_CLIENT_SECRET
+    client_secret: process.env.SOUNDCLOUD_CLIENT_SECRET,
+    redirect_uri: process.env.SOUNDCLOUD_REDIRECT_URI
   };
   app_config.lastfm = {
     api_key: process.env.LASTFM_API_KEY,

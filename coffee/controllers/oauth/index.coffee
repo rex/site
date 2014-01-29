@@ -11,6 +11,27 @@ module.exports = (app) ->
     res.render 'oauth/index',
       config: config
 
+  app.get '/oauth/redirect/soundcloud', (req, res) ->
+    if req.query.code
+      request.post
+        url: 'https://api.soundcloud.com/oauth2/token'
+        form:
+          client_id: config.soundcloud.client_id
+          client_secret: config.soundcloud.client_secret
+          redirect_uri: config.soundcloud.redirect_uri
+          grant_type: 'authorization_code'
+          code: req.query.code
+      , (err, resp, body) ->
+        body = JSON.parse body
+
+        page_data =
+          access_token: body.access_token
+          code: req.query.code
+
+        res.render 'oauth/authorize', page_data
+    else
+      res.render 'oauth/authorize', error: "whoops"
+
   app.get '/oauth/redirect/instagram', (req, res) ->
     if req.query.error
       res.render 'oauth/authorize',
