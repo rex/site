@@ -14,4 +14,4 @@ module.exports = ->
     if err
       logger.error err
     else
-      logger "5m cron complete!", results
+      logger "5m cron complete!" #, results

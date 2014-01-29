@@ -18,7 +18,7 @@ module.exports = function() {
     if (err) {
       return logger.error(err);
     } else {
-      return logger("5m cron complete!", results);
+      return logger("5m cron complete!");
     }
   });
 };
