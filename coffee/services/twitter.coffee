@@ -12,5 +12,8 @@ class Twitter extends Service
   fetch_timeline: (callback = ->) ->
     @client.get 'statuses/user_timeline', {}, callback
 
+  fetch_followers: (callback = ->) ->
+    @client.get 'followers', {}, callback
+
 
 module.exports = new Twitter

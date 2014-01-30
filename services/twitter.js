@@ -33,6 +33,13 @@ Twitter = (function(_super) {
     return this.client.get('statuses/user_timeline', {}, callback);
   };
 
+  Twitter.prototype.fetch_followers = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.get('followers', {}, callback);
+  };
+
   return Twitter;
 
 })(Service);
