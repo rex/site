@@ -11,18 +11,33 @@ model_config = {
   model_name: 'twitter_follow'
 };
 
-NewSchema = new Schema;
+NewSchema = new Schema({
+  user_id: {
+    type: Number
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'twitter_user'
+  },
+  created_on: {
+    type: Date
+  }
+});
 
 NewSchema.plugin(Plugins.config, model_config);
 
 NewSchema.plugin(Plugins.redis, model_config);
 
-NewSchema["static"]('createFrom', function(model, callback) {
+NewSchema["static"]('createFromTwitterFollow', function(model, callback) {
   var new_item;
   if (callback == null) {
     callback = function() {};
   }
   new_item = new this();
+  new_item.set({
+    user_id: model.id,
+    created_on: Date.now()
+  });
   return new_item.save(function(err) {
     return callback(err, new_item);
   });

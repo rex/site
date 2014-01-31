@@ -69,8 +69,36 @@ module.exports = function(app) {
     repo_full_name = "" + req.params.login + "/" + req.params.name;
     return Services.Github.fetch_commits(repo_full_name, res.generic_callback);
   });
-  app.get('/twitter/timeline', function(req, res) {
-    return Services.Twitter.fetch_timeline(res.generic_callback);
+  app.get('/twitter', function(req, res) {
+    var T, entity;
+    entity = req.query.entity;
+    T = Services.Twitter;
+    switch (entity) {
+      case "timeline":
+        return T.fetch_timeline(res.generic_callback);
+      case "following":
+        return T.fetch_following(res.generic_callback);
+      case "followers":
+        return T.fetch_followers(res.generic_callback);
+      case "mentions":
+        return T.fetch_mentions(res.generic_callback);
+      case "retweets":
+        return T.fetch_retweets(res.generic_callback);
+      case "blocks":
+        return T.fetch_blocks(res.generic_callback);
+      case "settings":
+        return T.fetch_settings(res.generic_callback);
+      case "favorites":
+        return T.fetch_favorites(res.generic_callback);
+      case "lists":
+        return T.fetch_lists(res.generic_callback);
+      case "list_memberships":
+        return T.fetch_list_memberships(res.generic_callback);
+      case "media":
+        return T.fetch_media(res.generic_callback);
+      default:
+        return res.send(500, "No valid entity specified");
+    }
   });
   return app.get('/', function(req, res) {
     return res.sendfile('views/index.html');
