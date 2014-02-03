@@ -71,21 +71,27 @@ module.exports = function(app) {
     return Services.Github.fetch_commits(repo_full_name, res.generic_callback);
   });
   app.get('/services/instagram', function(req, res) {
-    var T, entity;
+    var I, entity;
     entity = req.query.entity;
-    return T = Services.Instagram;
+    I = Services.Instagram;
+    switch (entity) {
+      case "user":
+        return I.fetch_user(req.query.user_id, res.generic_callback);
+      default:
+        return res.send(500, "No valid entity specified");
+    }
   });
   app.get('/services/itunes', function(req, res) {
-    var T, entity;
+    var I, entity;
     entity = req.query.entity;
-    T = Services.iTunes;
+    I = Services.iTunes;
     switch (entity) {
       case "artist":
-        return T.fetch_artist(req.query.artist_id, res.generic_callback);
+        return I.fetch_artist(req.query.artist_id, res.generic_callback);
       case "artist_albums":
-        return T.fetch_albums_by_artist(req.query.artist_id, res.generic_callback);
+        return I.fetch_albums_by_artist(req.query.artist_id, res.generic_callback);
       case "album_tracks":
-        return T.fetch_tracks_by_album(req.query.album_upc, res.generic_callback);
+        return I.fetch_tracks_by_album(req.query.album_upc, res.generic_callback);
       default:
         return res.send(500, "No valid entity specified");
     }

@@ -21,17 +21,9 @@ debug = config.debug;
 app = express();
 
 async.series({
-  load_app_env: function(done) {
-    var env_app;
-    step.start_major("Loading app config into environment");
-    return env_app = require('./env_app')(function() {
-      step.complete_major();
-      return done();
-    });
-  },
-  load_app_into_config: function(done) {
-    step.start_major("Reloading app config");
-    return config.load_app_config(function() {
+  load_env: function(done) {
+    step.start_major("Loading env config");
+    return require('./lib/load_env')(function() {
       step.complete_major();
       return done();
     });
@@ -50,27 +42,6 @@ async.series({
     step.start_major("Initializing Mongo");
     models = require('./models');
     return models.initialize(function() {
-      step.complete_major();
-      return done();
-    });
-  },
-  env_services: function(done) {
-    step.start_major("Update service credentials in database");
-    return require('./env_services')(function() {
-      step.complete_major();
-      return done();
-    });
-  },
-  load_env: function(done) {
-    step.start_major("Loading service credentials into environment");
-    return require('./lib/load_env')(function() {
-      step.complete_major();
-      return done();
-    });
-  },
-  load_credentials_into_config: function(done) {
-    step.start_major("Load service credentials into config");
-    return config.load_services(function() {
       step.complete_major();
       return done();
     });

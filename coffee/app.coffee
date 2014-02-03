@@ -13,15 +13,9 @@ app = express()
 
 # Here begins the organized, structured application boot process
 async.series
-  load_app_env: (done) ->
-    step.start_major "Loading app config into environment"
-    env_app = require('./env_app') ->
-      step.complete_major()
-      done()
-
-  load_app_into_config: (done) ->
-    step.start_major "Reloading app config"
-    config.load_app_config ->
+  load_env: (done) ->
+    step.start_major "Loading env config"
+    require('./lib/load_env') ->
       step.complete_major()
       done()
 
@@ -36,24 +30,6 @@ async.series
     step.start_major "Initializing Mongo"
     models = require './models'
     models.initialize ->
-      step.complete_major()
-      done()
-
-  env_services: (done) ->
-    step.start_major "Update service credentials in database"
-    require('./env_services') ->
-      step.complete_major()
-      done()
-
-  load_env: (done) ->
-    step.start_major "Loading service credentials into environment"
-    require('./lib/load_env') ->
-      step.complete_major()
-      done()
-
-  load_credentials_into_config: (done) ->
-    step.start_major "Load service credentials into config"
-    config.load_services ->
       step.complete_major()
       done()
 

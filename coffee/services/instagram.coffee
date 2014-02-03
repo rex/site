@@ -3,7 +3,10 @@ mongo = require '../drivers/mongo'
 _ = require '../lib/_'
 async = require 'async'
 logger = require '../lib/logger'
-Instagram_API = require 'instagram-node-lib'
+config = require '../config'
+
+# Shortcuts, because lazy
+UID = config.instagram.user_id
 
 Models =
   activity: mongo.model 'activity'
@@ -17,9 +20,11 @@ class Instagram extends Service
       access_token: process.env.INSTAGRAM_ACCESS_TOKEN
       user_id: process.env.INSTAGRAM_USER_ID
 
-    Instagram_API.set 'client_id', @api_config.client_id
-    Instagram_API.set 'client_secret', @api_config.client_secret
-    Instagram_API.set 'access_token', @api_config.access_token
+    @client = require 'instagram-node-lib'
+
+    @client.set 'client_id', @api_config.client_id
+    @client.set 'client_secret', @api_config.client_secret
+    @client.set 'access_token', @api_config.access_token
 
   fetch_recent_activity: (callback) ->
     async.parallel
@@ -28,7 +33,7 @@ class Instagram extends Service
     , callback
 
   fetch_recent_likes: (callback) ->
-    Instagram_API.users.liked_by_self
+    @client.users.liked_by_self
       complete: (data) ->
         callback null, data
 
@@ -38,8 +43,8 @@ class Instagram extends Service
 
     async.doWhilst (done) ->
       logger "Fetching Instagram activity", current_pagination
-      Instagram_API.users.recent
-        user_id: 11843229
+      @client.users.recent
+        user_id: UID
         max_id: if current_pagination.next_max_id? then current_pagination.next_max_id else null
         complete: (data, pagination) ->
           current_pagination = pagination
@@ -63,7 +68,62 @@ class Instagram extends Service
       _.has current_pagination, "next_url"
     , callback
 
-  fetch_user: (callback = ->) ->
+  fetch_user: (user_id = UID, callback = ->) ->
+    @client.users.info
+      user_id: user_id
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_user_feed: (callback = ->) ->
+    @client.something
+
+  fetch_media_by_user: (user_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_likes_by_user: (user_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_follows_by_user: (user_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_followers_by_user: (user_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_follow_requests_by_user: (user_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_media: (media_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_comments_by_media: (media_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_likes_by_media: (media_id, callback = ->) ->
+    @client.something
+      user_id: UID
+      complete: (data, pagination) ->
+        callback null, data
 
   process_webhook_activity: (body, callback) ->
 

@@ -1,4 +1,4 @@
-var Instagram, Instagram_API, Models, Service, async, logger, mongo, _,
+var Instagram, Models, Service, UID, async, config, logger, mongo, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -12,7 +12,9 @@ async = require('async');
 
 logger = require('../lib/logger');
 
-Instagram_API = require('instagram-node-lib');
+config = require('../config');
+
+UID = config.instagram.user_id;
 
 Models = {
   activity: mongo.model('activity')
@@ -28,9 +30,10 @@ Instagram = (function(_super) {
       access_token: process.env.INSTAGRAM_ACCESS_TOKEN,
       user_id: process.env.INSTAGRAM_USER_ID
     };
-    Instagram_API.set('client_id', this.api_config.client_id);
-    Instagram_API.set('client_secret', this.api_config.client_secret);
-    Instagram_API.set('access_token', this.api_config.access_token);
+    this.client = require('instagram-node-lib');
+    this.client.set('client_id', this.api_config.client_id);
+    this.client.set('client_secret', this.api_config.client_secret);
+    this.client.set('access_token', this.api_config.access_token);
   }
 
   Instagram.prototype.fetch_recent_activity = function(callback) {
@@ -41,7 +44,7 @@ Instagram = (function(_super) {
   };
 
   Instagram.prototype.fetch_recent_likes = function(callback) {
-    return Instagram_API.users.liked_by_self({
+    return this.client.users.liked_by_self({
       complete: function(data) {
         return callback(null, data);
       }
@@ -54,8 +57,8 @@ Instagram = (function(_super) {
     images = [];
     return async.doWhilst(function(done) {
       logger("Fetching Instagram activity", current_pagination);
-      return Instagram_API.users.recent({
-        user_id: 11843229,
+      return this.client.users.recent({
+        user_id: UID,
         max_id: current_pagination.next_max_id != null ? current_pagination.next_max_id : null,
         complete: function(data, pagination) {
           current_pagination = pagination;
@@ -84,10 +87,122 @@ Instagram = (function(_super) {
     }, callback);
   };
 
-  Instagram.prototype.fetch_user = function(callback) {
+  Instagram.prototype.fetch_user = function(user_id, callback) {
+    if (user_id == null) {
+      user_id = UID;
+    }
     if (callback == null) {
       callback = function() {};
     }
+    return this.client.users.info({
+      user_id: user_id,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_user_feed = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something;
+  };
+
+  Instagram.prototype.fetch_media_by_user = function(user_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_likes_by_user = function(user_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_follows_by_user = function(user_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_followers_by_user = function(user_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_follow_requests_by_user = function(user_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_media = function(media_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_comments_by_media = function(media_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_likes_by_media = function(media_id, callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.something({
+      user_id: UID,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
   };
 
   Instagram.prototype.process_webhook_activity = function(body, callback) {};

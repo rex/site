@@ -44,16 +44,10 @@ module.exports.load_app_config = function(app_config_loaded) {
     password: process.env.PREX_MONGO_PASSWORD,
     db: process.env.PREX_MONGO_DB
   };
-  return app_config_loaded();
-};
-
-module.exports.load_services = function(credentials_loaded) {
-  if (credentials_loaded == null) {
-    credentials_loaded = function() {};
-  }
   app_config.instagram = {
     client_id: process.env.INSTAGRAM_CLIENT,
     client_secret: process.env.INSTAGRAM_SECRET,
+    access_token: process.env.INSTAGRAM_ACCESS_TOKEN,
     oauth_redirect_uri: process.env.INSTAGRAM_REDIRECT_URI,
     user_id: process.env.INSTAGRAM_USER_ID
   };
@@ -105,7 +99,7 @@ module.exports.load_services = function(credentials_loaded) {
     access_token: process.env.TWITTER_ACCESS_TOKEN,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   };
-  return credentials_loaded();
+  return app_config_loaded();
 };
 
 module.exports.get_mongo_url = function() {

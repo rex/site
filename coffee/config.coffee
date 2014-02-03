@@ -37,12 +37,10 @@ module.exports.load_app_config = (app_config_loaded = ->) ->
     password: process.env.PREX_MONGO_PASSWORD
     db: process.env.PREX_MONGO_DB
 
-  app_config_loaded()
-
-module.exports.load_services = (credentials_loaded = ->) ->
   app_config.instagram =
     client_id: process.env.INSTAGRAM_CLIENT
     client_secret: process.env.INSTAGRAM_SECRET
+    access_token: process.env.INSTAGRAM_ACCESS_TOKEN
     oauth_redirect_uri: process.env.INSTAGRAM_REDIRECT_URI
     user_id: process.env.INSTAGRAM_USER_ID
 
@@ -94,8 +92,7 @@ module.exports.load_services = (credentials_loaded = ->) ->
     access_token: process.env.TWITTER_ACCESS_TOKEN
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 
-  credentials_loaded()
-
+  app_config_loaded()
 
 module.exports.get_mongo_url = ->
   if app_config.mongo.username and app_config.mongo.password

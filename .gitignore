@@ -5,9 +5,4 @@ bower_components/
 .sass-cache/
 build/
 public/**/*
-env.coffee
-env.js
-env_app.*
-env_services.*
-!models/env.js
-!coffee/models/env.coffee
+.env
