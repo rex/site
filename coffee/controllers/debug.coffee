@@ -61,6 +61,15 @@ module.exports = (app) ->
 
     switch entity
       when "user" then I.fetch_user req.query.user_id, res.generic_callback
+      when "feed" then I.fetch_user_feed res.generic_callback
+      when "user_media" then I.fetch_media_by_user req.query.user_id, res.generic_callback
+      when "user_likes" then I.fetch_likes_by_user res.generic_callback
+      when "user_follows" then I.fetch_follows_by_user req.query.user_id, res.generic_callback
+      when "user_followers" then I.fetch_followers_by_user req.query.user_id, res.generic_callback
+      when "user_follower_requests" then I.fetch_follow_requests_by_user req.query.user_id, res.generic_callback
+      when "media" then I.fetch_media req.query.media_id, res.generic_callback
+      when "media_comments" then I.fetch_comments_by_media req.query.media_id, res.generic_callback
+      when "media_likes" then I.fetch_likes_by_media req.query.media_id, res.generic_callback
       else res.send 500, "No valid entity specified"
 
   app.get '/services/itunes', (req, res) ->

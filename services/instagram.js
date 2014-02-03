@@ -106,27 +106,33 @@ Instagram = (function(_super) {
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something;
-  };
-
-  Instagram.prototype.fetch_media_by_user = function(user_id, callback) {
-    if (callback == null) {
-      callback = function() {};
-    }
-    return this.client.something({
-      user_id: UID,
+    return this.client.users.self({
       complete: function(data, pagination) {
         return callback(null, data);
       }
     });
   };
 
-  Instagram.prototype.fetch_likes_by_user = function(user_id, callback) {
+  Instagram.prototype.fetch_media_by_user = function(user_id, callback) {
+    if (user_id == null) {
+      user_id = UID;
+    }
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    return this.client.users.recent({
+      user_id: user_id,
+      complete: function(data, pagination) {
+        return callback(null, data);
+      }
+    });
+  };
+
+  Instagram.prototype.fetch_likes_by_user = function(callback) {
+    if (callback == null) {
+      callback = function() {};
+    }
+    return this.client.users.liked_by_self({
       complete: function(data, pagination) {
         return callback(null, data);
       }
@@ -134,11 +140,14 @@ Instagram = (function(_super) {
   };
 
   Instagram.prototype.fetch_follows_by_user = function(user_id, callback) {
+    if (user_id == null) {
+      user_id = UID;
+    }
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    return this.client.users.follows({
+      user_id: user_id,
       complete: function(data, pagination) {
         return callback(null, data);
       }
@@ -146,11 +155,14 @@ Instagram = (function(_super) {
   };
 
   Instagram.prototype.fetch_followers_by_user = function(user_id, callback) {
+    if (user_id == null) {
+      user_id = UID;
+    }
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    return this.client.users.followed_by({
+      user_id: user_id,
       complete: function(data, pagination) {
         return callback(null, data);
       }
@@ -158,11 +170,14 @@ Instagram = (function(_super) {
   };
 
   Instagram.prototype.fetch_follow_requests_by_user = function(user_id, callback) {
+    if (user_id == null) {
+      user_id = UID;
+    }
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    return this.client.users.requested_by({
+      user_id: user_id,
       complete: function(data, pagination) {
         return callback(null, data);
       }
@@ -173,8 +188,11 @@ Instagram = (function(_super) {
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    if (!media_id) {
+      return callback("media_id required!");
+    }
+    return this.client.media.info({
+      media_id: media_id,
       complete: function(data, pagination) {
         return callback(null, data);
       }
@@ -185,8 +203,11 @@ Instagram = (function(_super) {
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    if (!media_id) {
+      return callback("media_id required!");
+    }
+    return this.client.media.comments({
+      media_id: media_id,
       complete: function(data, pagination) {
         return callback(null, data);
       }
@@ -197,8 +218,11 @@ Instagram = (function(_super) {
     if (callback == null) {
       callback = function() {};
     }
-    return this.client.something({
-      user_id: UID,
+    if (!media_id) {
+      return callback("media_id required!");
+    }
+    return this.client.media.likes({
+      media_id: media_id,
       complete: function(data, pagination) {
         return callback(null, data);
       }

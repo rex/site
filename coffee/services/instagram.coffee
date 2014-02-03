@@ -75,53 +75,57 @@ class Instagram extends Service
         callback null, data
 
   fetch_user_feed: (callback = ->) ->
-    @client.something
-
-  fetch_media_by_user: (user_id, callback = ->) ->
-    @client.something
-      user_id: UID
+    @client.users.self
       complete: (data, pagination) ->
         callback null, data
 
-  fetch_likes_by_user: (user_id, callback = ->) ->
-    @client.something
-      user_id: UID
+  fetch_media_by_user: (user_id = UID, callback = ->) ->
+    @client.users.recent
+      user_id: user_id
       complete: (data, pagination) ->
         callback null, data
 
-  fetch_follows_by_user: (user_id, callback = ->) ->
-    @client.something
-      user_id: UID
+  fetch_likes_by_user: (callback = ->) ->
+    @client.users.liked_by_self
       complete: (data, pagination) ->
         callback null, data
 
-  fetch_followers_by_user: (user_id, callback = ->) ->
-    @client.something
-      user_id: UID
+  fetch_follows_by_user: (user_id = UID, callback = ->) ->
+    @client.users.follows
+      user_id: user_id
       complete: (data, pagination) ->
         callback null, data
 
-  fetch_follow_requests_by_user: (user_id, callback = ->) ->
-    @client.something
-      user_id: UID
+  fetch_followers_by_user: (user_id = UID, callback = ->) ->
+    @client.users.followed_by
+      user_id: user_id
+      complete: (data, pagination) ->
+        callback null, data
+
+  fetch_follow_requests_by_user: (user_id = UID, callback = ->) ->
+    @client.users.requested_by
+      user_id: user_id
       complete: (data, pagination) ->
         callback null, data
 
   fetch_media: (media_id, callback = ->) ->
-    @client.something
-      user_id: UID
+    unless media_id then return callback "media_id required!"
+    @client.media.info
+      media_id: media_id
       complete: (data, pagination) ->
         callback null, data
 
   fetch_comments_by_media: (media_id, callback = ->) ->
-    @client.something
-      user_id: UID
+    unless media_id then return callback "media_id required!"
+    @client.media.comments
+      media_id: media_id
       complete: (data, pagination) ->
         callback null, data
 
   fetch_likes_by_media: (media_id, callback = ->) ->
-    @client.something
-      user_id: UID
+    unless media_id then return callback "media_id required!"
+    @client.media.likes
+      media_id: media_id
       complete: (data, pagination) ->
         callback null, data
 

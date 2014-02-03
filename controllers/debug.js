@@ -77,6 +77,24 @@ module.exports = function(app) {
     switch (entity) {
       case "user":
         return I.fetch_user(req.query.user_id, res.generic_callback);
+      case "feed":
+        return I.fetch_user_feed(res.generic_callback);
+      case "user_media":
+        return I.fetch_media_by_user(req.query.user_id, res.generic_callback);
+      case "user_likes":
+        return I.fetch_likes_by_user(res.generic_callback);
+      case "user_follows":
+        return I.fetch_follows_by_user(req.query.user_id, res.generic_callback);
+      case "user_followers":
+        return I.fetch_followers_by_user(req.query.user_id, res.generic_callback);
+      case "user_follower_requests":
+        return I.fetch_follow_requests_by_user(req.query.user_id, res.generic_callback);
+      case "media":
+        return I.fetch_media(req.query.media_id, res.generic_callback);
+      case "media_comments":
+        return I.fetch_comments_by_media(req.query.media_id, res.generic_callback);
+      case "media_likes":
+        return I.fetch_likes_by_media(req.query.media_id, res.generic_callback);
       default:
         return res.send(500, "No valid entity specified");
     }
