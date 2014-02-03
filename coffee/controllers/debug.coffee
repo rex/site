@@ -8,6 +8,7 @@ Services =
   Github: require '../services/github'
   Instagram: require '../services/instagram'
   Twitter: require '../services/twitter'
+  iTunes: require '../services/itunes'
 
 generic_callback = (err, body) ->
   res.json
@@ -54,7 +55,21 @@ module.exports = (app) ->
     repo_full_name = "#{req.params.login}/#{req.params.name}"
     Services.Github.fetch_commits repo_full_name, res.generic_callback
 
-  app.get '/twitter', (req, res) ->
+  app.get '/services/instagram', (req, res) ->
+    entity = req.query.entity
+    T = Services.Instagram
+
+  app.get '/services/itunes', (req, res) ->
+    entity = req.query.entity
+    T = Services.iTunes
+
+    switch entity
+      when "artist" then T.fetch_artist req.query.artist_id, res.generic_callback
+      when "artist_albums" then T.fetch_albums_by_artist req.query.artist_id, res.generic_callback
+      when "album_tracks" then T.fetch_tracks_by_album req.query.album_upc, res.generic_callback
+      else res.send 500, "No valid entity specified"
+
+  app.get '/services/twitter', (req, res) ->
     entity = req.query.entity
     T = Services.Twitter
 

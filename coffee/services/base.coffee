@@ -16,6 +16,7 @@ class Service
     initialized()
 
   prepare_api_call: (params = {}) ->
+    unless @api_config then @api_config = {}
     params.url = "#{@api_base_url}#{params.url}"
     config = _.merge @api_config, params
     return config

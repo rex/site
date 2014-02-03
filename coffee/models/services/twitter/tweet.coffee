@@ -92,7 +92,6 @@ NewSchema.static 'createFromTwitterTweet', (model, callback = ->) ->
     favorite_count: model.favorite_count
     created_on: model.created_at
 
-
   new_item.save (err) ->
     callback err, new_item
 

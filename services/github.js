@@ -158,6 +158,7 @@ Github = (function(_super) {
 
 })(Service);
 
+
 /*
   fetch_repo: (repo_full_name, callback = ->) ->
     @fire { url: "/repos/#{repo_full_name}" }, callback
@@ -179,7 +180,6 @@ Github = (function(_super) {
 
   fetch_commits: (repo_full_name, callback = ->) ->
     @fire { url: "/repos/#{repo_full_name}/commits" }, callback
-*/
-
+ */
 
 module.exports = new Github;

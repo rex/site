@@ -32,9 +32,9 @@ UserSchema = new Schema
     type: Number
   public_gists:
     type: Number
-  followers:
+  followers_count:
     type: Number
-  following:
+  following_count:
     type: Number
   created_on:
     type: Date
@@ -48,6 +48,13 @@ UserSchema.static 'createFromGithubUser', (user, callback = ->) ->
   new_user = new this()
 
   new_user.set user
+
+  new_user.set
+    user_id: user.id
+    followers_count: user.followers
+    following_count: user.following
+    created_on: user.created_at
+    updated_on: user.updated_at
 
   new_user.save (err) ->
     callback err, new_user

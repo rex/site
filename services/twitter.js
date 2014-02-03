@@ -1,4 +1,4 @@
-var Service, Twitter, config, twit, _ref,
+var Service, Twitter, config, twit,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -12,8 +12,7 @@ Twitter = (function(_super) {
   __extends(Twitter, _super);
 
   function Twitter() {
-    _ref = Twitter.__super__.constructor.apply(this, arguments);
-    return _ref;
+    return Twitter.__super__.constructor.apply(this, arguments);
   }
 
   Twitter.prototype.initialize = function(done) {

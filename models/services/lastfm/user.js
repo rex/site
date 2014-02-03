@@ -1,7 +1,7 @@
+
 /*
   REMEMBER: Include banned_tracks and loved_tracks into this schema!
-*/
-
+ */
 var NewSchema, Plugins, Schema, model_config, _;
 
 Schema = require('../../../drivers/mongo').Schema;

@@ -32,6 +32,9 @@ Service = (function() {
     if (params == null) {
       params = {};
     }
+    if (!this.api_config) {
+      this.api_config = {};
+    }
     params.url = "" + this.api_base_url + params.url;
     config = _.merge(this.api_config, params);
     return config;

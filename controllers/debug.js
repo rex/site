@@ -13,7 +13,8 @@ Redis = require('../drivers/redis');
 Services = {
   Github: require('../services/github'),
   Instagram: require('../services/instagram'),
-  Twitter: require('../services/twitter')
+  Twitter: require('../services/twitter'),
+  iTunes: require('../services/itunes')
 };
 
 generic_callback = function(err, body) {
@@ -69,7 +70,27 @@ module.exports = function(app) {
     repo_full_name = "" + req.params.login + "/" + req.params.name;
     return Services.Github.fetch_commits(repo_full_name, res.generic_callback);
   });
-  app.get('/twitter', function(req, res) {
+  app.get('/services/instagram', function(req, res) {
+    var T, entity;
+    entity = req.query.entity;
+    return T = Services.Instagram;
+  });
+  app.get('/services/itunes', function(req, res) {
+    var T, entity;
+    entity = req.query.entity;
+    T = Services.iTunes;
+    switch (entity) {
+      case "artist":
+        return T.fetch_artist(req.query.artist_id, res.generic_callback);
+      case "artist_albums":
+        return T.fetch_albums_by_artist(req.query.artist_id, res.generic_callback);
+      case "album_tracks":
+        return T.fetch_tracks_by_album(req.query.album_upc, res.generic_callback);
+      default:
+        return res.send(500, "No valid entity specified");
+    }
+  });
+  app.get('/services/twitter', function(req, res) {
     var T, entity;
     entity = req.query.entity;
     T = Services.Twitter;

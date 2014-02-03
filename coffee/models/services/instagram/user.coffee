@@ -1,3 +1,5 @@
+# Remember to add followers/following as arrays in user object
+
 Schema = require('../../../drivers/mongo').Schema
 _ = require '../../../lib/_'
 

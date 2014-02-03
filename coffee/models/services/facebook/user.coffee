@@ -1,3 +1,5 @@
+# Remember to add friends in array in user object
+
 Schema = require('../../../drivers/mongo').Schema
 _ = require '../../../lib/_'
 
