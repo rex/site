@@ -70,6 +70,21 @@ module.exports = function(app) {
     repo_full_name = "" + req.params.login + "/" + req.params.name;
     return Services.Github.fetch_commits(repo_full_name, res.generic_callback);
   });
+  app.get('/services/github', function(req, res) {
+    var G, entity;
+    entity = req.query.entity;
+    G = Services.Github;
+    switch (entity) {
+      case "user":
+        return G.fetch_user(req.query.login, res.generic_callback);
+      case "user_repos":
+        return G.fetch_repos_by_user(req.query.login, res.generic_callback);
+      case "user_gists":
+        return G.fetch_gists_by_user(req.query.login, res.generic_callback);
+      default:
+        return res.send(500, "No valid entity specified");
+    }
+  });
   app.get('/services/instagram', function(req, res) {
     var I, entity;
     entity = req.query.entity;

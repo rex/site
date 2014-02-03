@@ -55,6 +55,16 @@ module.exports = (app) ->
     repo_full_name = "#{req.params.login}/#{req.params.name}"
     Services.Github.fetch_commits repo_full_name, res.generic_callback
 
+  app.get '/services/github', (req, res) ->
+    entity = req.query.entity
+    G = Services.Github
+
+    switch entity
+      when "user" then G.fetch_user req.query.login, res.generic_callback
+      when "user_repos" then G.fetch_repos_by_user req.query.login, res.generic_callback
+      when "user_gists" then G.fetch_gists_by_user req.query.login, res.generic_callback
+      else res.send 500, "No valid entity specified"
+
   app.get '/services/instagram', (req, res) ->
     entity = req.query.entity
     I = Services.Instagram

@@ -63,41 +63,6 @@ class Github extends Service
         , (err) ->
           callback err, new_activities
 
-  fetch_repos: (callback) ->
-    logger "Updating local cache of GitHub repositories..."
-
-    Github_API.fetch_repos (err, body) ->
-      async.each body, (repo, complete) ->
-        Models.Github_Repo.find
-          repo_id: repo.id
-        , (err, local_repo) ->
-          if err then return complete err
-          local_repo = new Models.Github_Repo local_repo
-          if local_repo and local_repo.length
-            local_repo.fromGithubRepo repo
-            local_repo.save complete
-          else
-            local_repo.fromGithubRepo repo
-            local_repo.save complete
-      , (err) ->
-        callback err, body
-
-  fetch_user: (login, callback = ->) ->
-    logger "Fetching user #{login}"
-    Github_API.fetch_user login, callback
-
-  fetch_repo: (repo_full_name, callback = ->) ->
-    logger "Fetching repo #{repo_full_name}"
-    Github_API.fetch_repo repo_full_name, callback
-
-  fetch_commit: (repo_full_name, commit_sha, callback = ->) ->
-    logger "Fetching commit #{repo_full_name}##{commit_sha}"
-    Github_API.fetch_commit repo_full_name, commit_sha, callback
-
-  fetch_commits: (repo_full_name, callback = ->) ->
-    logger "Fetching commits for #{repo_full_name}"
-    Github_API.fetch_commits repo_full_name, callback
-
   process_webhook_activity: (body, callback) ->
     async.each body.commits, (commit, next) ->
       new_commit = new Models.Github_Commit
@@ -105,27 +70,27 @@ class Github extends Service
     , (err) ->
       callback err
 
-###
   fetch_repo: (repo_full_name, callback = ->) ->
-    @fire { url: "/repos/#{repo_full_name}" }, callback
+    @api_call { url: "/repos/#{repo_full_name}" }, callback
 
-  fetch_repos: (callback = ->) ->
-    @fire { url: "/users/#{@login}/repos" }, callback
+  fetch_repos_by_user: (user_login = @login, callback = ->) ->
+    @api_call { url: "/users/#{user_login}/repos" }, callback
 
   fetch_gist: (gist_id, callback = ->) ->
-    @fire { url: "/gists/#{gist_id}" }, callback
+    @api_call { url: "/gists/#{gist_id}" }, callback
 
-  fetch_gists: (callback = ->) ->
-    @fire { url: "/users/#{@login}/gists" }, callback
+  fetch_gists_by_user: (user_login = @login, callback = ->) ->
+    @api_call { url: "/users/#{user_login}/gists" }, callback
 
-  fetch_user: (login, callback = ->) ->
-    @fire { url: "/users/#{login}" }, callback
+  fetch_user: (user_login = @login, callback = ->) ->
+    @api_call { url: "/users/#{user_login}" }, callback
 
   fetch_commit: (repo_full_name, commit_sha, callback = ->) ->
-    @fire { url: "/repos/#{repo_full_name}/commits/#{commit_sha}" }, callback
+    unless repo_full_name then return callback "Repo full name required"
+    @api_call { url: "/repos/#{repo_full_name}/commits/#{commit_sha}" }, callback
 
-  fetch_commits: (repo_full_name, callback = ->) ->
-    @fire { url: "/repos/#{repo_full_name}/commits" }, callback
-###
+  fetch_commits_by_repo: (repo_full_name, callback = ->) ->
+    unless repo_full_name then return callback "Repo full name required"
+    @api_call { url: "/repos/#{repo_full_name}/commits" }, callback
 
 module.exports = new Github
